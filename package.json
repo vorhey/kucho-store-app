@@ -1,5 +1,6 @@
 {
   "name": "bun-react-template",
+  "homepage": "https://vorhey.github.io/kuchostore",
   "version": "0.1.0",
   "private": true,
   "type": "module",
@@ -8,7 +9,9 @@
   "scripts": {
     "dev": "bun --hot src/index.tsx",
     "start": "NODE_ENV=production bun src/index.tsx",
-    "build": "bun run build.ts"
+    "build": "bun run build.ts",
+    "predeploy": "bun run build",
+    "deploy": "gh-pages -d dist"
   },
   "dependencies": {
     "@hookform/resolvers": "^4.1.0",
@@ -33,6 +36,7 @@
     "@types/bun": "latest",
     "@types/react": "^19",
     "@types/react-dom": "^19",
+    "gh-pages": "^6.3.0",
     "prettier": "3.5.3"
   }
 }
