@@ -1,6 +1,7 @@
 import { Link } from "wouter";
 import { Button } from "@/components/ui/button";
 import { motion } from "framer-motion";
+import heroImage from "@/assets/images/hero-cat.png";
 
 export default function HomePage() {
   return (
@@ -14,11 +15,7 @@ export default function HomePage() {
             animate={{ scale: 1, opacity: 1 }}
             transition={{ duration: 0.5 }}
           >
-            <img
-              src="/images/hero-cat.png"
-              alt="Cat in a box"
-              className="w-64 mx-auto"
-            />
+            <img src={heroImage} alt="Cat in a box" className="w-64 mx-auto" />
           </motion.div>
           <motion.h1
             initial={{ y: 20, opacity: 0 }}
