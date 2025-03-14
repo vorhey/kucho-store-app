@@ -15,7 +15,7 @@ export default function HomePage() {
             transition={{ duration: 0.5 }}
           >
             <img
-              src="/images/hero-cat.png"
+              src="/kuchostore/images/hero-cat.png"
               alt="Cat in a box"
               className="w-64 mx-auto"
             />

@@ -1,9 +1,7 @@
 import type { Product } from "../types/product";
 import { CardHeader, CardContent, CardFooter } from "./ui/card";
-import { Button } from "./ui/button";
 import { motion } from "framer-motion";
 import { useState } from "react";
-import notFoundCatImage from "@/assets/images/cat-not-found.svg";
 import { useLocation } from "wouter";
 
 interface ProductCardProps {
@@ -16,7 +14,7 @@ export function ProductCard({ product, onAddToCart }: ProductCardProps) {
   const [, setLocation] = useLocation();
 
   const handleImageError = () => {
-    setImgSrc(notFoundCatImage);
+    setImgSrc("/kuchostore/images/cat-not-found.svg");
   };
 
   const handleClick = () => {

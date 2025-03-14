@@ -4,7 +4,6 @@ import { useCart } from "@/context/CartContext";
 import { Button } from "@/components/ui/button";
 import { motion } from "framer-motion";
 import { useState } from "react";
-import notFoundCatImage from "@/assets/images/cat-not-found.svg";
 import { ArrowLeft, ShoppingCart } from "lucide-react";
 import { Link } from "wouter";
 import { useScrollTop } from "@/hooks/useScrollTop";
@@ -26,7 +25,7 @@ export default function ProductDetailPage() {
   useScrollTop();
 
   const handleImageError = () => {
-    setImgSrc(notFoundCatImage);
+    setImgSrc("/images/cat-not-found.svg");
   };
 
   return (
