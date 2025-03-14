@@ -10,7 +10,7 @@
     "dev": "bun --hot src/index.tsx",
     "start": "NODE_ENV=production bun src/index.tsx",
     "build": "bun run build.ts",
-    "predeploy": "bun run build",
+    "predeploy": "bun run build --public-path /kucho-store-app",
     "deploy": "gh-pages -d dist"
   },
   "dependencies": {
