@@ -142,7 +142,7 @@ const entrypoints = [...new Bun.Glob("**.html").scanSync("src")]
   .map((a) => path.resolve("src", a))
   .filter((dir) => !dir.includes("node_modules"));
 console.log(
-  `📄 Found ${entrypoints.length} HTML ${entrypoints.length === 1 ? "file" : "files"} to process\n`
+  `📄 Found ${entrypoints.length} HTML ${entrypoints.length === 1 ? "file" : "files"} to process\n`,
 );
 
 // Build all the HTML files
@@ -153,7 +153,6 @@ const result = await build({
   minify: true,
   target: "browser",
   sourcemap: "linked",
-  publicPath: "/kucho-store-app/",
   define: {
     "process.env.NODE_ENV": JSON.stringify("production"),
   },
@@ -168,7 +167,7 @@ if (existsSync(imagesDir)) {
   console.log("📸 Copying image assets...");
   await cp(imagesDir, imagesOutDir, { recursive: true });
   console.log(
-    `✅ Images copied to ${path.relative(process.cwd(), imagesOutDir)}`
+    `✅ Images copied to ${path.relative(process.cwd(), imagesOutDir)}`,
   );
 }
 
