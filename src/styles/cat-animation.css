@@ -1,0 +1,174 @@
+:root {
+  --ColorI: #ffffff;
+  --ColorII: #ffccff;
+  --ColorIII: #ff33cc;
+  --ColorIV: #990033;
+  --ColorV: #9900cc;
+}
+
+.cat-animation {
+  position: relative;
+  width: 100%;
+  height: 250px;
+  min-height: 200px;
+  max-height: 300px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.cat-animation svg {
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-miterlimit: 10;
+  width: min(90%, 300px);
+  height: auto;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) scale(100%);
+}
+
+.cat-animation .fillNone {
+  fill: none;
+}
+.cat-animation .fillWhite {
+  fill: var(--ColorI);
+}
+.cat-animation .fillColA {
+  fill: var(--ColorII);
+}
+.cat-animation .fillColB {
+  fill: var(--ColorIII);
+}
+.cat-animation .fillColC {
+  fill: var(--ColorIV);
+}
+.cat-animation .fillColD {
+  fill: var(--ColorV);
+}
+
+.cat-animation .stkWhite {
+  stroke: var(--ColorI);
+}
+.cat-animation .stkColA {
+  stroke: var(--ColorII);
+}
+.cat-animation .stkColB {
+  stroke: var(--ColorIII);
+}
+.cat-animation .stkColC {
+  stroke: var(--ColorIV);
+}
+.cat-animation .stkColD {
+  stroke: var(--ColorV);
+}
+
+.stk4 {
+  stroke-width: 4;
+}
+.stk5 {
+  stroke-width: 5;
+}
+.stk6 {
+  stroke-width: 6;
+}
+.stk10 {
+  stroke-width: 10;
+}
+.stk12 {
+  stroke-width: 12;
+}
+
+.cat-animation #Direction {
+  transform-origin: 500px 500px;
+  transform: rotate(60deg);
+}
+
+.cat-animation #Vuelo {
+  animation: AnimaVuelo 1s infinite ease-in-out;
+}
+
+@keyframes AnimaVuelo {
+  0% {
+    transform: translate(0, 0px);
+  }
+  50% {
+    transform: translate(0, -30px);
+  }
+  100% {
+    transform: translate(0, 0px);
+  }
+}
+
+.cat-animation #Flama {
+  transform-origin: 505.6281px 655.3718px;
+  animation: AnimaFire 1s infinite ease-in-out;
+}
+
+@keyframes AnimaFire {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.2);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+.cat-animation #Michi {
+  animation: Asomando 1s infinite ease-in-out;
+}
+
+@keyframes Asomando {
+  0% {
+    transform: translate(0, -7px);
+  }
+  25% {
+    transform: translate(-7, 0px);
+  }
+  50% {
+    transform: translate(0, 7px);
+  }
+  75% {
+    transform: translate(7, 0px);
+  }
+  100% {
+    transform: translate(0, -7px);
+  }
+}
+
+.cat-animation #StarA {
+  animation: AnimaEstrella 2s infinite ease-in-out;
+}
+
+.cat-animation #StarB {
+  animation: AnimaEstrella 1.5s infinite ease-in-out;
+}
+
+.cat-animation #StarC {
+  animation: AnimaEstrella 3s infinite ease-in-out;
+}
+
+.cat-animation #StarD {
+  animation: AnimaEstrella 2.5s infinite ease-in-out;
+}
+
+@keyframes AnimaEstrella {
+  0% {
+    transform: translate(0, 0px);
+    opacity: 0;
+  }
+
+  50% {
+    opacity: 1;
+  }
+
+  100% {
+    transform: translate(0, 500px);
+    opacity: 0;
+  }
+}

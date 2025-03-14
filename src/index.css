@@ -1,0 +1,12 @@
+@import "../styles/globals.css";
+@import "./styles/cat-animation.css";
+
+@layer base {
+  :root {
+    @apply font-sans;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+  }
+}
