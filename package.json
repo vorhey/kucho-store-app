@@ -7,9 +7,9 @@
   "main": "src/index.tsx",
   "module": "src/index.tsx",
   "scripts": {
-    "dev": "bun --hot src/index.tsx --public-path=/public",
+    "dev": "bun --hot src/index.tsx",
     "start": "NODE_ENV=production bun src/index.tsx",
-    "build": "bun run build.ts --public-path=/public",
+    "build": "bun run build.ts --public-path=/kucho-store-app",
     "predeploy": "bun run build",
     "deploy": "gh-pages -d dist"
   },
