@@ -1,6 +1,5 @@
 {
   "name": "bun-react-template",
-  "homepage": "https://vorhey.github.io/kucho-store-app",
   "version": "0.1.0",
   "private": true,
   "type": "module",
