@@ -153,7 +153,7 @@ const result = await build({
   minify: true,
   target: "browser",
   sourcemap: "linked",
-  publicPath: "/kucho-store-app/", // Add this line
+  publicPath: "/kucho-store-app/",
   define: {
     "process.env.NODE_ENV": JSON.stringify("production"),
   },
