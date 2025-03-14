@@ -153,6 +153,7 @@ const result = await build({
   minify: true,
   target: "browser",
   sourcemap: "linked",
+  publicPath: "https://vorhey.github.io/kucho-store-app/",
   define: {
     "process.env.NODE_ENV": JSON.stringify("production"),
   },
