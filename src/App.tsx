@@ -10,21 +10,19 @@ import "./index.css";
 
 export function App() {
   return (
-    <Router base="/kucho-store-app">
-      <CartProvider>
-        <div className="min-h-screen flex flex-col">
-          <NavBar />
-          <div className="pt-14 flex-grow">
-            <Switch>
-              <Route path="/" component={HomePage} />
-              <Route path="/shop" component={ShopPage} />
-              <Route path="/cart" component={CartPage} />
-              <Route path="/product/:id" component={ProductDetailPage} />
-            </Switch>
-          </div>
-          <Footer />
+    <CartProvider>
+      <div className="min-h-screen flex flex-col">
+        <NavBar />
+        <div className="pt-14 flex-grow">
+          <Switch>
+            <Route path="/" component={HomePage} />
+            <Route path="/shop" component={ShopPage} />
+            <Route path="/cart" component={CartPage} />
+            <Route path="/product/:id" component={ProductDetailPage} />
+          </Switch>
         </div>
-      </CartProvider>
-    </Router>
+        <Footer />
+      </div>
+    </CartProvider>
   );
 }
