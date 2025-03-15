@@ -3,6 +3,7 @@ import { CardHeader, CardContent, CardFooter } from "./ui/card";
 import { motion } from "framer-motion";
 import { useState } from "react";
 import { useLocation } from "wouter";
+import notFoundImage from "@/assets/images/not-found.png";
 
 interface ProductCardProps {
   product: Product;
@@ -14,7 +15,7 @@ export function ProductCard({ product, onAddToCart }: ProductCardProps) {
   const [, setLocation] = useLocation();
 
   const handleImageError = () => {
-    setImgSrc("/kuchostore/images/cat-not-found.svg");
+    setImgSrc(notFoundImage);
   };
 
   const handleClick = () => {

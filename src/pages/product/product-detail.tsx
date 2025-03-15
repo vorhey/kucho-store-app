@@ -7,7 +7,7 @@ import { useState } from "react";
 import { ArrowLeft, ShoppingCart } from "lucide-react";
 import { Link } from "wouter";
 import { useScrollTop } from "@/hooks/useScrollTop";
-import catNotFound from "@/assets/images/cat-not-found.svg";
+import notFoundImage from "@/assets/images/not-found.png";
 
 export default function ProductDetailPage() {
   const { id } = useParams<{ id: string }>();
@@ -26,7 +26,7 @@ export default function ProductDetailPage() {
   useScrollTop();
 
   const handleImageError = () => {
-    setImgSrc(catNotFound);
+    setImgSrc(notFoundImage);
   };
 
   return (
