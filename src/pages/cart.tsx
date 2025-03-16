@@ -13,6 +13,8 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useScrollTop } from "@/hooks/useScrollTop";
 import { useState } from "react";
 import notFoundImage from "@/assets/images/not-found.png";
+import { logUserAction } from "@/services/auditLogger";
+import { CONFIRM_ORDER_ACTION } from "@/constants";
 
 export default function CartPage() {
   const { cart, removeFromCart } = useCart();
@@ -53,6 +55,15 @@ export default function CartPage() {
 
   const handleImageError = (productId: string) => {
     setImageErrors((prev) => ({ ...prev, [productId]: true }));
+  };
+
+  const handleConfirmOrder = () => {
+    logUserAction("123", CONFIRM_ORDER_ACTION, {
+      cart: cart.map((item) => ({
+        productId: item.product.id,
+        quantity: item.quantity,
+      })),
+    });
   };
 
   return (
@@ -231,7 +242,11 @@ export default function CartPage() {
                         </motion.span>
                       </div>
 
-                      <Button className="w-full py-6 cursor-pointer" size="lg">
+                      <Button
+                        className="w-full py-6 cursor-pointer"
+                        size="lg"
+                        onClick={handleConfirmOrder}
+                      >
                         Proceder al pago
                       </Button>
                     </div>
