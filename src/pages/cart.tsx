@@ -13,8 +13,8 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useScrollTop } from "@/hooks/useScrollTop";
 import { useState } from "react";
 import notFoundImage from "@/assets/images/not-found.png";
-import { logUserAction } from "@/services/auditLogger";
 import { CONFIRM_ORDER_ACTION } from "@/constants";
+import { useLogUserAction } from "@/hooks/useAuditLog";
 
 export default function CartPage() {
   const { cart, removeFromCart } = useCart();
@@ -22,6 +22,7 @@ export default function CartPage() {
   const [imageErrors, setImageErrors] = useState<{ [key: string]: boolean }>(
     {},
   );
+  const logUserAction = useLogUserAction();
 
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -64,6 +65,7 @@ export default function CartPage() {
         quantity: item.quantity,
       })),
     });
+    // setLocation("/checkout");
   };
 
   return (
