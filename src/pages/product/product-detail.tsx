@@ -1,11 +1,10 @@
-import { useParams } from "wouter";
+import { useParams, Link } from "wouter";
 import { products } from "@/data/products";
 import { useCart } from "@/context/CartContext";
 import { Button } from "@/components/ui/button";
 import { motion } from "framer-motion";
 import { useState } from "react";
 import { ArrowLeft, ShoppingCart } from "lucide-react";
-import { Link } from "wouter";
 import { useScrollTop } from "@/hooks/useScrollTop";
 import notFoundImage from "@/assets/images/not-found.png";
 
@@ -29,12 +28,17 @@ export default function ProductDetailPage() {
     setImgSrc(notFoundImage);
   };
 
+  const handleGoBack = (e: React.MouseEvent) => {
+    e.preventDefault();
+    window.history.back();
+  };
+
   return (
     <div className="container mx-auto px-4 py-8">
-      <Link href="/shop">
+      <Link href="" onClick={handleGoBack}>
         <Button variant="ghost" className="mb-6">
           <ArrowLeft className="mr-2 h-4 w-4" />
-          Volver a la tienda
+          Volver atrás
         </Button>
       </Link>
 

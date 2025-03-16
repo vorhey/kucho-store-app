@@ -17,7 +17,9 @@ import notFoundImage from "@/assets/images/not-found.png";
 export default function CartPage() {
   const { cart, removeFromCart } = useCart();
   const [, setLocation] = useLocation();
-  const [imageErrors, setImageErrors] = useState<{ [key: string]: boolean }>({});
+  const [imageErrors, setImageErrors] = useState<{ [key: string]: boolean }>(
+    {}
+  );
 
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -50,7 +52,7 @@ export default function CartPage() {
   useScrollTop();
 
   const handleImageError = (productId: string) => {
-    setImageErrors(prev => ({ ...prev, [productId]: true }));
+    setImageErrors((prev) => ({ ...prev, [productId]: true }));
   };
 
   return (
@@ -84,61 +86,104 @@ export default function CartPage() {
           </motion.div>
         </>
       ) : (
-        <div className="space-y-4 mt-4 overflow-hidden">
-          <AnimatePresence mode="popLayout">
-            {cart.map((item) => (
-              <motion.div
-                key={item.product.id}
-                variants={itemVariants}
-                initial="hidden"
-                animate="visible"
-                exit="exit"
-                layout
-                style={{ position: 'relative' }}
-              >
-                <Card 
-                  className="overflow-hidden hover:shadow-lg transition-shadow cursor-pointer"
-                  onClick={() => setLocation(`/product/${item.product.id}`)}
-                >
-                  <div className="flex flex-col sm:flex-row">
-                    <div className="w-full sm:w-48 h-56">
-                      <img
-                        src={imageErrors[item.product.id] ? notFoundImage : item.product.imageUrl}
-                        alt={item.product.name}
-                        onError={() => handleImageError(item.product.id)}
-                        className="w-full h-full object-cover"
-                      />
+        <>
+          <div className="flex flex-row">
+            <div className="space-y-4 mt-4 overflow-hidden">
+              <AnimatePresence mode="popLayout">
+                {cart.map((item) => (
+                  <motion.div
+                    key={item.product.id}
+                    variants={itemVariants}
+                    initial="hidden"
+                    animate="visible"
+                    exit="exit"
+                    layout
+                    style={{ position: "relative" }}
+                  >
+                    <Card
+                      className="overflow-hidden hover:shadow-lg transition-shadow cursor-pointer"
+                      onClick={() => setLocation(`/product/${item.product.id}`)}
+                    >
+                      <div className="flex flex-col sm:flex-row">
+                        <div className="w-full sm:w-48 h-56">
+                          <img
+                            src={
+                              imageErrors[item.product.id]
+                                ? notFoundImage
+                                : item.product.imageUrl
+                            }
+                            alt={item.product.name}
+                            onError={() => handleImageError(item.product.id)}
+                            className="w-full h-full object-cover"
+                          />
+                        </div>
+                        <div className="flex-1 flex flex-col">
+                          <CardHeader className="p-4 flex flex-row justify-between items-center">
+                            <h3 className="text-lg font-semibold">
+                              {item.product.name}
+                            </h3>
+                            <span className="text-sm text-gray-500">
+                              Cantidad: {item.quantity}
+                            </span>
+                          </CardHeader>
+                          <CardContent className="p-4 flex-grow">
+                            <p className="text-2xl font-bold text-primary">
+                              ${item.product.price.toFixed(2)}
+                            </p>
+                            <p className="text-sm text-gray-600 mt-2">
+                              {item.product.description}
+                            </p>
+                          </CardContent>
+                          <CardFooter className="p-4 border-t">
+                            <Button
+                              variant="destructive"
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                removeFromCart(item.product.id);
+                              }}
+                            >
+                              <Trash className="h-4 w-4 mr-2" />
+                              Eliminar
+                            </Button>
+                          </CardFooter>
+                        </div>
+                      </div>
+                    </Card>
+                  </motion.div>
+                ))}
+              </AnimatePresence>
+            </div>
+            <Card>
+              <CardHeader className="p-4">
+                <h3 className="text-lg font-semibold">Resumen de compra</h3>
+              </CardHeader>
+              <CardContent className="p-4">
+                {cart.map((item) => (
+                  <motion.div
+                    key={item.product.id}
+                    variants={itemVariants}
+                    initial="hidden"
+                    animate="visible"
+                    exit="exit"
+                  >
+                    <div className="flex justify-between mt-2">
+                      <span>{item.product.name}</span>
+                      <span>${item.product.price.toFixed(2)}</span>
                     </div>
-                    <div className="flex-1 flex flex-col">
-                      <CardHeader className="p-4 flex flex-row justify-between items-center">
-                        <h3 className="text-lg font-semibold">{item.product.name}</h3>
-                        <span className="text-sm text-gray-500">Cantidad: {item.quantity}</span>
-                      </CardHeader>
-                      <CardContent className="p-4 flex-grow">
-                        <p className="text-2xl font-bold text-primary">
-                          ${item.product.price.toFixed(2)}
-                        </p>
-                        <p className="text-sm text-gray-600 mt-2">{item.product.description}</p>
-                      </CardContent>
-                      <CardFooter className="p-4 border-t">
-                        <Button
-                          variant="destructive"
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            removeFromCart(item.product.id);
-                          }}
-                        >
-                          <Trash className="h-4 w-4 mr-2" />
-                          Eliminar
-                        </Button>
-                      </CardFooter>
-                    </div>
-                  </div>
-                </Card>
-              </motion.div>
-            ))}
-          </AnimatePresence>
-        </div>
+                  </motion.div>
+                ))}
+              </CardContent>
+              <CardFooter className="p-4 border-t">
+                <div className="flex justify-between mt-2">
+                  <span className="font-semibold">Total</span>
+                  <span className="font-semibold">
+                    ${cart.reduce((acc, item) => acc + item.product.price, 0)}
+                  </span>
+                </div>
+              </CardFooter>
+            </Card>
+          </div>
+        </>
       )}
     </div>
   );
