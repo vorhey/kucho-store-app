@@ -18,7 +18,7 @@ export default function CartPage() {
   const { cart, removeFromCart } = useCart();
   const [, setLocation] = useLocation();
   const [imageErrors, setImageErrors] = useState<{ [key: string]: boolean }>(
-    {}
+    {},
   );
 
   const containerVariants = {
@@ -56,7 +56,7 @@ export default function CartPage() {
   };
 
   return (
-    <div className="max-w-4xl mx-auto px-4 py-4 sm:py-8">
+    <div className="px-4 py-4 sm:py-8">
       {cart.length === 0 ? (
         <>
           <CatAnimation />
@@ -87,101 +87,158 @@ export default function CartPage() {
         </>
       ) : (
         <>
-          <div className="flex flex-row">
-            <div className="space-y-4 mt-4 overflow-hidden">
-              <AnimatePresence mode="popLayout">
-                {cart.map((item) => (
-                  <motion.div
-                    key={item.product.id}
-                    variants={itemVariants}
-                    initial="hidden"
-                    animate="visible"
-                    exit="exit"
-                    layout
-                    style={{ position: "relative" }}
-                  >
-                    <Card
-                      className="overflow-hidden hover:shadow-lg transition-shadow cursor-pointer"
-                      onClick={() => setLocation(`/product/${item.product.id}`)}
+          <div className="container mx-auto max-w-7xl">
+            <div className="flex flex-col lg:flex-row gap-8">
+              <div className="flex-grow space-y-4 mt-4 overflow-hidden w-full lg:w-2/3">
+                <AnimatePresence mode="popLayout">
+                  {cart.map((item) => (
+                    <motion.div
+                      key={item.product.id}
+                      variants={itemVariants}
+                      initial="hidden"
+                      animate="visible"
+                      exit="exit"
+                      layout
+                      style={{ position: "relative" }}
                     >
-                      <div className="flex flex-col sm:flex-row">
-                        <div className="w-full sm:w-48 h-56">
-                          <img
-                            src={
-                              imageErrors[item.product.id]
-                                ? notFoundImage
-                                : item.product.imageUrl
-                            }
-                            alt={item.product.name}
-                            onError={() => handleImageError(item.product.id)}
-                            className="w-full h-full object-cover"
-                          />
+                      <Card
+                        className="overflow-hidden hover:shadow-lg transition-shadow cursor-pointer"
+                        onClick={() =>
+                          setLocation(`/product/${item.product.id}`)
+                        }
+                      >
+                        <div className="flex flex-col sm:flex-row">
+                          <div className="w-full sm:w-48 h-56">
+                            <img
+                              src={
+                                imageErrors[item.product.id]
+                                  ? notFoundImage
+                                  : item.product.imageUrl
+                              }
+                              alt={item.product.name}
+                              onError={() => handleImageError(item.product.id)}
+                              className="w-full h-full object-cover"
+                            />
+                          </div>
+                          <div className="flex-1 flex flex-col">
+                            <CardHeader className="p-4 flex flex-row justify-between items-center">
+                              <h3 className="text-lg font-semibold">
+                                {item.product.name}
+                              </h3>
+                              <span className="text-sm text-gray-500">
+                                Cantidad: {item.quantity}
+                              </span>
+                            </CardHeader>
+                            <CardContent className="p-4 flex-grow">
+                              <p className="text-2xl font-bold text-primary">
+                                ${item.product.price.toFixed(2)}
+                              </p>
+                              <p className="text-sm text-gray-600 mt-2">
+                                {item.product.description}
+                              </p>
+                            </CardContent>
+                            <CardFooter className="p-4 border-t">
+                              <Button
+                                variant="destructive"
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  removeFromCart(item.product.id);
+                                }}
+                              >
+                                <Trash className="h-4 w-4 mr-2" />
+                                Eliminar
+                              </Button>
+                            </CardFooter>
+                          </div>
                         </div>
-                        <div className="flex-1 flex flex-col">
-                          <CardHeader className="p-4 flex flex-row justify-between items-center">
-                            <h3 className="text-lg font-semibold">
-                              {item.product.name}
-                            </h3>
-                            <span className="text-sm text-gray-500">
-                              Cantidad: {item.quantity}
-                            </span>
-                          </CardHeader>
-                          <CardContent className="p-4 flex-grow">
-                            <p className="text-2xl font-bold text-primary">
+                      </Card>
+                    </motion.div>
+                  ))}
+                </AnimatePresence>
+              </div>
+              <div className="mt-4 w-full lg:w-1/3 lg:max-w-md self-start">
+                <Card className="min-h-[45vh] overflow-hidden bg-gradient-to-br from-white to-gray-50 shadow-lg">
+                  <CardHeader className="p-6 border-b">
+                    <h3 className="text-xl font-bold text-primary flex items-center">
+                      <ShoppingCart className="h-5 w-5 mr-2" />
+                      Resumen de compra
+                    </h3>
+                  </CardHeader>
+                  <CardContent className="p-6 divide-y divide-gray-100">
+                    <AnimatePresence>
+                      {cart.map((item) => (
+                        <motion.div
+                          key={item.product.id}
+                          initial={{ opacity: 0, y: 10 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          exit={{ opacity: 0, x: -20 }}
+                          transition={{ duration: 0.3 }}
+                          className="py-3 first:pt-0 last:pb-0"
+                        >
+                          <div className="flex justify-between items-center">
+                            <div className="flex items-center">
+                              <div className="w-8 h-8 rounded-full overflow-hidden mr-3 bg-gray-100">
+                                <img
+                                  src={
+                                    imageErrors[item.product.id]
+                                      ? notFoundImage
+                                      : item.product.imageUrl
+                                  }
+                                  alt=""
+                                  className="w-full h-full object-cover"
+                                  onError={() =>
+                                    handleImageError(item.product.id)
+                                  }
+                                />
+                              </div>
+                              <span className="font-medium">
+                                {item.product.name} × {item.quantity}
+                              </span>
+                            </div>
+                            <span className="font-semibold">
                               ${item.product.price.toFixed(2)}
-                            </p>
-                            <p className="text-sm text-gray-600 mt-2">
-                              {item.product.description}
-                            </p>
-                          </CardContent>
-                          <CardFooter className="p-4 border-t">
-                            <Button
-                              variant="destructive"
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                removeFromCart(item.product.id);
-                              }}
-                            >
-                              <Trash className="h-4 w-4 mr-2" />
-                              Eliminar
-                            </Button>
-                          </CardFooter>
-                        </div>
+                            </span>
+                          </div>
+                        </motion.div>
+                      ))}
+                    </AnimatePresence>
+                  </CardContent>
+                  <CardFooter className="p-6 bg-gray-50 border-t">
+                    <div className="w-full space-y-4">
+                      <div className="flex justify-between items-center text-sm text-gray-500">
+                        <span>Subtotal</span>
+                        <span>
+                          $
+                          {cart
+                            .reduce((acc, item) => acc + item.product.price, 0)
+                            .toFixed(2)}
+                        </span>
                       </div>
-                    </Card>
-                  </motion.div>
-                ))}
-              </AnimatePresence>
-            </div>
-            <Card>
-              <CardHeader className="p-4">
-                <h3 className="text-lg font-semibold">Resumen de compra</h3>
-              </CardHeader>
-              <CardContent className="p-4">
-                {cart.map((item) => (
-                  <motion.div
-                    key={item.product.id}
-                    variants={itemVariants}
-                    initial="hidden"
-                    animate="visible"
-                    exit="exit"
-                  >
-                    <div className="flex justify-between mt-2">
-                      <span>{item.product.name}</span>
-                      <span>${item.product.price.toFixed(2)}</span>
+
+                      <div className="flex justify-between items-center text-lg font-bold">
+                        <span>Total</span>
+                        <motion.span
+                          key={cart.length} // Force animation on cart changes
+                          initial={{ scale: 1 }}
+                          animate={{ scale: [1, 1.1, 1] }}
+                          transition={{ duration: 0.5 }}
+                          className="text-primary"
+                        >
+                          $
+                          {cart
+                            .reduce((acc, item) => acc + item.product.price, 0)
+                            .toFixed(2)}
+                        </motion.span>
+                      </div>
+
+                      <Button className="w-full py-6 cursor-pointer" size="lg">
+                        Proceder al pago
+                      </Button>
                     </div>
-                  </motion.div>
-                ))}
-              </CardContent>
-              <CardFooter className="p-4 border-t">
-                <div className="flex justify-between mt-2">
-                  <span className="font-semibold">Total</span>
-                  <span className="font-semibold">
-                    ${cart.reduce((acc, item) => acc + item.product.price, 0)}
-                  </span>
-                </div>
-              </CardFooter>
-            </Card>
+                  </CardFooter>
+                </Card>
+              </div>
+            </div>
           </div>
         </>
       )}
