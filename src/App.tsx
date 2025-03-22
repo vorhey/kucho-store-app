@@ -1,4 +1,4 @@
-import { Route, Router, Switch } from "wouter";
+import { Route, Switch } from "wouter";
 import ShopPage from "./pages/shop";
 import HomePage from "./pages/home";
 import CartPage from "./pages/cart";
