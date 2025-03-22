@@ -4,15 +4,17 @@ import { useCart } from "@/context/CartContext";
 import { Button } from "@/components/ui/button";
 import { motion } from "framer-motion";
 import { useState } from "react";
-import { ArrowLeft, ShoppingCart } from "lucide-react";
+import { ArrowLeft, ShoppingCart, Minus, Plus } from "lucide-react";
 import { useScrollTop } from "@/hooks/useScrollTop";
 import notFoundImage from "@/assets/images/not-found.png";
 
 export default function ProductDetailPage() {
   const { id } = useParams<{ id: string }>();
-  const { addToCart } = useCart();
+  const { addToCart, decreaseFromCart, cart } = useCart();
   const product = products.find((p) => p.id === id);
   const [imgSrc, setImgSrc] = useState(product?.imageUrl);
+  const cartItem = cart.find((item) => item.product.id === id);
+  const quantityInCart = cartItem ? cartItem.quantity : 0;
 
   if (!product) {
     return (
@@ -77,14 +79,39 @@ export default function ProductDetailPage() {
               Stock disponible: {product.stock}
             </p>
           </div>
-          <Button
-            onClick={() => addToCart(product)}
-            size="lg"
-            className="w-full md:w-auto"
-          >
-            <ShoppingCart className="mr-2 h-4 w-4" />
-            Agregar al carrito
-          </Button>
+          {quantityInCart > 0 ? (
+            <div className="flex items-center space-x-2">
+              <Button
+                variant="outline"
+                size="icon"
+                onClick={() => decreaseFromCart(product.id)}
+                disabled={quantityInCart <= 0}
+              >
+                <Minus className="h-4 w-4" />
+              </Button>
+
+              <span className="mx-2 text-lg font-medium">{quantityInCart}</span>
+
+              <Button
+                variant="outline"
+                size="icon"
+                onClick={() => addToCart(product)}
+                disabled={quantityInCart >= product.stock}
+              >
+                <Plus className="h-4 w-4" />
+              </Button>
+            </div>
+          ) : (
+            <Button
+              onClick={() => addToCart(product)}
+              size="lg"
+              className="w-full md:w-auto"
+              disabled={product.stock <= 0}
+            >
+              <ShoppingCart className="mr-2 h-4 w-4" />
+              Agregar al carrito
+            </Button>
+          )}
         </motion.div>
       </div>
     </div>

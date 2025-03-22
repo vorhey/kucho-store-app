@@ -5,6 +5,7 @@ interface CartContextType {
   cart: CartItem[];
   addToCart: (product: Product) => void;
   removeFromCart: (productId: string) => void;
+  decreaseFromCart: (productId: string) => void;
 }
 
 const CART_STORAGE_KEY = "cart";
@@ -41,8 +42,24 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
     );
   };
 
+  const decreaseFromCart = (productId: string) => {
+    setCart((prevCart) => {
+      const existing = prevCart.find((item) => item.product.id === productId);
+      if (existing && existing.quantity > 1) {
+        return prevCart.map((item) =>
+          item.product.id === productId
+            ? { ...item, quantity: item.quantity - 1 }
+            : item,
+        );
+      }
+      return prevCart.filter((item) => item.product.id !== productId);
+    });
+  };
+
   return (
-    <CartContext.Provider value={{ cart, addToCart, removeFromCart }}>
+    <CartContext.Provider
+      value={{ cart, addToCart, removeFromCart, decreaseFromCart }}
+    >
       {children}
     </CartContext.Provider>
   );

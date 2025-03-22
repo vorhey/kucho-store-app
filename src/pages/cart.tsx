@@ -204,7 +204,7 @@ export default function CartPage() {
                                   }
                                 />
                               </div>
-                              <span className="font-medium">
+                              <span className="font-medium max-w-[135px] xs:max-w-full truncate block">
                                 {item.product.name} × {item.quantity}
                               </span>
                             </div>
