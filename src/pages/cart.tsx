@@ -20,7 +20,7 @@ export default function CartPage() {
   const { cart, removeFromCart } = useCart();
   const [, setLocation] = useLocation();
   const [imageErrors, setImageErrors] = useState<{ [key: string]: boolean }>(
-    {}
+    {},
   );
   const logUserAction = useLogUserAction();
 
@@ -152,7 +152,9 @@ export default function CartPage() {
                             </CardContent>
                             <CardFooter className="p-4 border-t">
                               <Button
-                                variant="destructive"
+                                type="button"
+                                variant="outline"
+                                className="hover:cursor-pointer"
                                 onClick={(e) => {
                                   e.stopPropagation();
                                   removeFromCart(item.product.id);

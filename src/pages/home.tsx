@@ -1,7 +1,9 @@
 import { Link } from "wouter";
 import { Button } from "@/components/ui/button";
 import { motion } from "framer-motion";
+import { PackageOpen } from "lucide-react";
 import heroImage from "@/assets/images/hero-cat.png";
+import kittyImage from "@/assets/images/kitty-face.png";
 
 export default function HomePage() {
   return (
@@ -46,9 +48,12 @@ export default function HomePage() {
                 transition={{ type: "spring", stiffness: 400, damping: 10 }}
               >
                 <Button
+                  type="button"
+                  variant="outline"
                   size="lg"
                   className="rounded-full px-8 text-lg h-12 group mt-16 hover:cursor-pointer"
                 >
+                  <img src={kittyImage} alt="Kitty face" className="w-6 h-6" />
                   Explorar colección
                   <motion.svg
                     xmlns="http://www.w3.org/2000/svg"

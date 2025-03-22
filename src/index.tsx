@@ -1,5 +1,6 @@
 import { serve } from "bun";
 import index from "./index.html";
+import { products } from "./data/products";
 
 const server = serve({
   fetch: (req) => {
@@ -13,12 +14,14 @@ const server = serve({
         timestamp: new Date().toISOString(),
       });
     }
-
     return fetch(req);
   },
   routes: {
     // Serve index.html for all unmatched routes.
     "/*": index,
+    "/api/products": async (req) => {
+      return Response.json(products);
+    },
   },
   development: process.env.NODE_ENV !== "production",
 });

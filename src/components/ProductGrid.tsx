@@ -4,7 +4,7 @@ import { motion } from "framer-motion";
 import { FloatingArrowUp } from "./FloatingArrowUp";
 
 interface ProductGridProps {
-  products: Product[];
+  products: Product[] | null;
   onAddToCart: (product: Product) => void;
 }
 
@@ -23,7 +23,7 @@ export function ProductGrid({ products, onAddToCart }: ProductGridProps) {
           },
         }}
       >
-        {products.map((product) => (
+        {products?.map((product) => (
           <ProductCard
             key={product.id}
             product={product}
