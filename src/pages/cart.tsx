@@ -20,7 +20,7 @@ export default function CartPage() {
   const { cart, removeFromCart } = useCart();
   const [, setLocation] = useLocation();
   const [imageErrors, setImageErrors] = useState<{ [key: string]: boolean }>(
-    {},
+    {}
   );
   const logUserAction = useLogUserAction();
 
@@ -190,7 +190,7 @@ export default function CartPage() {
                         >
                           <div className="flex justify-between items-center">
                             <div className="flex items-center">
-                              <div className="w-8 h-8 rounded-full overflow-hidden mr-3 bg-gray-100">
+                              <div className="w-8 h-8 rounded-full overflow-hidden mr-3 bg-gray-100 relative">
                                 <img
                                   src={
                                     imageErrors[item.product.id]
@@ -203,9 +203,12 @@ export default function CartPage() {
                                     handleImageError(item.product.id)
                                   }
                                 />
+                                <div className="absolute top-0 right-0 bg-black text-white rounded-full w-8 h-8 flex items-center justify-center text-[15px] font-extrabold opacity-60 hover:opacity-0">
+                                  {item.quantity}
+                                </div>
                               </div>
                               <span className="font-medium max-w-[135px] xs:max-w-full truncate block">
-                                {item.product.name} × {item.quantity}
+                                {item.product.name}
                               </span>
                             </div>
                             <span className="font-semibold">
