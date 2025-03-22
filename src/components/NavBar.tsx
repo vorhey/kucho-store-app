@@ -35,7 +35,7 @@ export function NavBar() {
             >
               <ShoppingBag size={24} />
               {cartCount > 0 ? (
-                <span className="ml-2 flex items-center justify-center pl-2 pr-2 pt-1 pb-1 text-xs font-semibold text-white bg-red-500 rounded-sm">
+                <span className="ml-2 flex items-center justify-center pl-2 pr-2 pt-1 pb-1 text-xs font-semibold text-black outline outline-pink-200 rounded-sm bg-pink-100">
                   {cartCount}
                 </span>
               ) : (
@@ -75,7 +75,7 @@ export function NavBar() {
               <span className="after:content-[''] after:absolute after:w-full after:scale-x-0 after:h-0.5 after:-bottom-1.5 after:left-0 after:bg-stone-500 after:transition-transform after:duration-300 group-hover:after:scale-x-100 flex items-center">
                 Carrito
                 {cartCount > 0 ? (
-                  <span className="ml-2 flex items-center justify-center pl-2 pr-2 pt-1 pb-1 text-xs font-semibold text-white bg-red-500 rounded-sm">
+                  <span className="ml-2 flex items-center justify-center pl-2 pr-2 pt-1 pb-1 text-xs font-semibold text-black outline outline-pink-200 bg-pink-100 rounded-sm">
                     {cartCount}
                   </span>
                 ) : (

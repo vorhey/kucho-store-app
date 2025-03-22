@@ -154,7 +154,7 @@ export default function CartPage() {
                               <Button
                                 type="button"
                                 variant="outline"
-                                className="hover:cursor-pointer"
+                                className="hover:bg-pink-50"
                                 onClick={(e) => {
                                   e.stopPropagation();
                                   removeFromCart(item.product.id);
@@ -236,7 +236,7 @@ export default function CartPage() {
                       <div className="flex justify-between items-center text-lg font-bold">
                         <span>Total</span>
                         <motion.span
-                          key={cart.length} // Force animation on cart changes
+                          key={cart.length}
                           initial={{ scale: 1 }}
                           animate={{ scale: [1, 1.1, 1] }}
                           transition={{ duration: 0.5 }}
@@ -250,7 +250,8 @@ export default function CartPage() {
                       </div>
 
                       <Button
-                        className="w-full py-6 cursor-pointer"
+                        variant="secondary"
+                        className="w-full py-6 cursor-pointer bg-indigo-200 hover:bg-indigo-300"
                         size="lg"
                         onClick={handleConfirmOrder}
                       >
