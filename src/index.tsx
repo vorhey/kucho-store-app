@@ -7,6 +7,12 @@ const server = serve({
     const url = new URL(req.url);
     const method = req.method;
 
+    if (url.pathname === "/api/products") {
+      return new Response(JSON.stringify(products), {
+        headers: { "Content-Type": "application/json" },
+      });
+    }
+
     if (url.pathname === "/api/audit-logs" && method === "POST") {
       return Response.json({
         success: true,
