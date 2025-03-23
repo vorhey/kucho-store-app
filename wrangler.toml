@@ -1,0 +1,6 @@
+name = "kucho-store-app"
+compatibility_date = "2025-03-23"
+workers_dev = true
+
+[site]
+bucket = "./dist"
