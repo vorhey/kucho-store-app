@@ -1,7 +1,6 @@
 import { Link } from "wouter";
 import { Button } from "@/components/ui/button";
 import { motion } from "framer-motion";
-import { PackageOpen } from "lucide-react";
 import heroImage from "@/assets/images/hero-cat.png";
 import kittyImage from "@/assets/images/kitty-face.png";
 
@@ -26,7 +25,7 @@ export default function HomePage() {
             className="text-4xl sm:text-6xl md:text-7xl font-bold tracking-tight"
           >
             <span className="bg-gradient-to-r from-primary to-purple-600 dark:from-primary dark:to-purple-400 bg-clip-text text-transparent">
-              Bienvenido a Kucho Store
+              Bienvenido a Kucho Store!
             </span>
           </motion.h1>
           <motion.p
