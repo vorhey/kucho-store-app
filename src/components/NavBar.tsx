@@ -1,12 +1,22 @@
 import { Link } from "wouter";
 import { useState, useRef } from "react";
-import { Menu, X, ShoppingBag, PawPrint, Cat, Volleyball } from "lucide-react";
+import {
+  Menu,
+  X,
+  ShoppingBag,
+  PawPrint,
+  Cat,
+  Volleyball,
+  User,
+} from "lucide-react";
 import { useCart } from "@/context/CartContext";
 import { useClickOutside } from "@/hooks/useClickOutside";
+import { useAuth } from "@/context/AuthContext";
 
 export function NavBar() {
   const [isOpen, setIsOpen] = useState(false);
   const { cart } = useCart();
+  const { user } = useAuth();
   const navRef = useRef<HTMLElement>(null);
   const cartCount = cart.reduce((sum, item) => sum + item.quantity, 0);
 
@@ -83,6 +93,13 @@ export function NavBar() {
                 )}
               </span>
             </Link>
+            <Link
+              href={user ? "/profile" : "/signin"}
+              className="flex items-center gap-2 text-gray-600 hover:text-gray-800 transition duration-200 ease-in-out relative group"
+            >
+              <User size={18} />
+              <span className="after:content-[''] after:absolute after:w-full after:scale-x-0 after:h-0.5 after:-bottom-1.5 after:left-0 after:bg-stone-500 after:transition-transform after:duration-300 group-hover:after:scale-x-100"></span>
+            </Link>
           </div>
         </div>
 
@@ -115,6 +132,14 @@ export function NavBar() {
           >
             <ShoppingBag size={18} />
             <span>Carrito{cartCount > 0 ? ` (${cartCount})` : ""}</span>
+          </Link>
+          <Link
+            href={user ? "/profile" : "/signin"}
+            className="flex items-center gap-3 text-gray-600 hover:text-gray-800 px-2 py-2"
+            onClick={() => setIsOpen(false)}
+          >
+            <User size={18} />
+            {user ? <span>Perfil</span> : <span>Iniciar sesión</span>}
           </Link>
         </div>
       </div>
