@@ -6,11 +6,10 @@
   "main": "src/index.tsx",
   "module": "src/index.tsx",
   "scripts": {
-    "dev": "bun --hot src/index.tsx",
+    "dev": "concurrently --kill-others-on-fail \"bun --hot src/index.tsx\" \"bun run wrangler\"",
     "start": "NODE_ENV=production bun src/index.tsx",
     "build": "bun run build.ts",
-    "watch": "bun run watch.ts",
-    "wrangler": "wrangler pages dev dist --live-reload"
+    "wrangler": "wrangler pages dev --proxy 3000 --port 8788"
   },
   "dependencies": {
     "@hookform/resolvers": "^4.1.0",
@@ -37,6 +36,7 @@
     "@types/bun": "latest",
     "@types/react": "^19",
     "@types/react-dom": "^19",
+    "concurrently": "^9.1.2",
     "prettier": "3.5.3"
   }
 }

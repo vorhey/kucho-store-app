@@ -4,7 +4,7 @@ import type {
 } from "@/interfaces/auditLog";
 
 export const saveLog = async (
-  logData: AuditLogRequest,
+  logData: AuditLogRequest
 ): Promise<AuditLogApiResponse> => {
   try {
     const response = await fetch("/api/audit-logs", {
@@ -12,7 +12,6 @@ export const saveLog = async (
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(logData),
     });
-    console.log("Audit log response:", response);
     return await response.json();
   } catch (error) {
     console.error("Audit log error:", error);
