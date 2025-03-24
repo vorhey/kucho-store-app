@@ -1,7 +1,3 @@
 name = "kucho-store-app"
 compatibility_date = "2025-03-23"
-workers_dev = true
-pages_build_output_dir = "dist"
 
-[build]
-watch_dir = "src"
