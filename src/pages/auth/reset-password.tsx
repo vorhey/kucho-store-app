@@ -25,9 +25,11 @@ export default function ResetPasswordPage() {
     return (
       <div className="container mx-auto mt-8 max-w-md">
         <div className="bg-white p-8 rounded-lg shadow-md text-center">
-          <p className="text-red-500 mb-4">Invalid or missing reset token.</p>
+          <p className="text-red-500 mb-4">
+            Token de restablecimiento inválido o faltante.
+          </p>
           <Button onClick={() => setLocation("/request-reset")}>
-            Request New Reset Link
+            Solicitar Nuevo Enlace de Restablecimiento
           </Button>
         </div>
       </div>
@@ -35,7 +37,7 @@ export default function ResetPasswordPage() {
   }
 
   const onSubmit = async (
-    data: ResetPasswordData & { confirmPassword: string }
+    data: ResetPasswordData & { confirmPassword: string },
   ) => {
     try {
       const response = await resetPassword({ token, password: data.password });
@@ -43,10 +45,10 @@ export default function ResetPasswordPage() {
         setSuccess(true);
         setError("");
       } else {
-        setError(response.message || "An error occurred");
+        setError(response.message || "Ocurrió un error");
       }
     } catch (err) {
-      setError("An error occurred while resetting password");
+      setError("Ocurrió un error al restablecer la contraseña");
     }
   };
 
@@ -55,28 +57,30 @@ export default function ResetPasswordPage() {
   return (
     <div className="container mx-auto mt-8 max-w-md">
       <div className="bg-white p-8 rounded-lg shadow-md">
-        <h1 className="text-2xl font-bold mb-6">Set New Password</h1>
+        <h1 className="text-2xl font-bold mb-6">Establecer Nueva Contraseña</h1>
 
         {success ? (
           <div className="text-center">
             <p className="text-green-600 mb-4">
-              Your password has been successfully reset.
+              Tu contraseña ha sido restablecida exitosamente.
             </p>
-            <Button onClick={() => setLocation("/signin")}>Sign In</Button>
+            <Button onClick={() => setLocation("/signin")}>
+              Iniciar Sesión
+            </Button>
           </div>
         ) : (
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
             <div>
               <label className="block text-sm font-medium mb-1">
-                New Password
+                Nueva Contraseña
               </label>
               <Input
                 type="password"
                 {...register("password", {
-                  required: "Password is required",
+                  required: "La contraseña es requerida",
                   minLength: {
                     value: 8,
-                    message: "Password must be at least 8 characters",
+                    message: "La contraseña debe tener al menos 8 caracteres",
                   },
                 })}
                 className="w-full"
@@ -90,14 +94,14 @@ export default function ResetPasswordPage() {
 
             <div>
               <label className="block text-sm font-medium mb-1">
-                Confirm Password
+                Confirmar Contraseña
               </label>
               <Input
                 type="password"
                 {...register("confirmPassword", {
-                  required: "Please confirm your password",
+                  required: "Por favor confirma tu contraseña",
                   validate: (value) =>
-                    value === password || "Passwords do not match",
+                    value === password || "Las contraseñas no coinciden",
                 })}
                 className="w-full"
               />
@@ -111,7 +115,7 @@ export default function ResetPasswordPage() {
             {error && <div className="text-red-500 text-sm">{error}</div>}
 
             <Button type="submit" className="w-full">
-              Reset Password
+              Restablecer Contraseña
             </Button>
           </form>
         )}

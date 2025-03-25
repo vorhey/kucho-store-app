@@ -134,7 +134,7 @@ export default function SignUpPage() {
           <motion.div variants={itemVariants}>
             <motion.button
               type="submit"
-              className="w-full"
+              className="w-full bg-primary text-white rounded-lg py-2"
               whileHover={{ scale: 1.03 }}
               whileTap={{ scale: 0.97 }}
             >
