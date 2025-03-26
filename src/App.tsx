@@ -12,6 +12,7 @@ import SignInPage from "./pages/auth/signin";
 import SignUpPage from "./pages/auth/signup";
 import ResetPasswordPage from "./pages/auth/reset-password";
 import RequestResetPage from "./pages/auth/request-reset";
+import ProfilePage from "./pages/auth/profile";
 import "./index.css";
 
 const queryClient = new QueryClient();
@@ -33,6 +34,7 @@ export function App() {
                 <Route path="/signup" component={SignUpPage} />
                 <Route path="/reset-password" component={ResetPasswordPage} />
                 <Route path="/request-reset" component={RequestResetPage} />
+                <Route path="/profile" component={ProfilePage} />
               </Switch>
             </div>
             <Footer />

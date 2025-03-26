@@ -30,3 +30,9 @@ export interface ResetPasswordData {
 export interface RequestPasswordResetData {
   email: string;
 }
+
+export interface UserProfileData {
+  name: string;
+  email: string;
+  phone: string;
+}

@@ -27,7 +27,7 @@ export async function signIn(data: SignInData): Promise<AuthResponse> {
 }
 
 export async function requestPasswordReset(
-  data: RequestPasswordResetData
+  data: RequestPasswordResetData,
 ): Promise<AuthResponse> {
   const response = await fetch(`${API_BASE}/request-reset`, {
     method: "POST",
@@ -38,7 +38,7 @@ export async function requestPasswordReset(
 }
 
 export async function resetPassword(
-  data: ResetPasswordData
+  data: ResetPasswordData,
 ): Promise<AuthResponse> {
   const response = await fetch(`${API_BASE}/reset-password`, {
     method: "POST",
@@ -52,6 +52,15 @@ export async function validateSession(): Promise<AuthResponse> {
   const response = await fetch(`${API_BASE}/validate`, {
     method: "GET",
     headers: { "Content-Type": "application/json" },
+  });
+  return response.json();
+}
+
+export async function updateUserProfile(data): Promise<AuthResponse> {
+  const response = await fetch(`${API_BASE}/update-profile`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(data),
   });
   return response.json();
 }
