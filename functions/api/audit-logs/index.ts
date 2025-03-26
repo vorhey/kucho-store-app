@@ -1,8 +1,18 @@
-export async function onRequestPost({ request, env }) {
+export async function onRequestPost({ request, env }: { request: Request; env: { DB: any } }): Promise<Response> {
   try {
     const logData = await request.json();
 
-    const { type, timestamp, details, ...rest } = logData;
+    interface LogData {
+      type: string;
+      timestamp: string | number;
+      details: Record<string, unknown>;
+      userId?: string;
+      action?: string;
+      event?: string;
+      [key: string]: unknown;
+    }
+
+    const { type, timestamp, details, ...rest } = logData as LogData;
     const stmt = env.DB.prepare(`
       INSERT INTO audit_logs (log_type, user_id, action, event, details, timestamp)
       VALUES (?, ?, ?, ?, ?, ?)
@@ -15,7 +25,7 @@ export async function onRequestPost({ request, env }) {
         rest.action || null,
         rest.event || null,
         JSON.stringify(details),
-        new Date(timestamp).toISOString()
+        new Date(timestamp).toISOString(),
       )
       .run();
 
@@ -29,11 +39,11 @@ export async function onRequestPost({ request, env }) {
     return Response.json(
       {
         success: false,
-        error: error.name,
-        message: error.message,
+        error: error instanceof Error ? error.name : 'Unknown Error',
+        message: error instanceof Error ? error.message : 'An unknown error occurred',
         timestamp: new Date().toISOString(),
       },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }
