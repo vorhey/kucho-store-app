@@ -4,7 +4,7 @@ compatibility_date = "2024-09-23"
 compatibility_flags = ["nodejs_compat"]
 
 [vars]
-BUN_VERSION=1.2.7
+BUN_VERSION="1.2.7"
 JWT_SECRET = "x8wks81zZksKOaxk8291"
 
 [[d1_databases]]
