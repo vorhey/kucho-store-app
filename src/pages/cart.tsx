@@ -131,6 +131,7 @@ export default function CartPage() {
                               alt={item.product.name}
                               onError={() => handleImageError(item.product.id)}
                               className="w-full h-full object-cover"
+                              loading="lazy"
                             />
                           </div>
                           <div className="flex-1 flex flex-col">
