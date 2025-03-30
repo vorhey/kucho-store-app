@@ -98,7 +98,7 @@ export function NavBar() {
               className="flex items-center gap-2 text-gray-600 hover:text-gray-800 transition duration-200 ease-in-out relative group"
             >
               <User size={18} />
-              <span className="after:content-[''] after:absolute after:w-full after:scale-x-0 after:h-0.5 after:-bottom-1.5 after:left-0 after:bg-stone-500 after:transition-transform after:duration-300 group-hover:after:scale-x-100"></span>
+              <span className="after:content-[''] after:absolute after:w-full after:scale-x-0 after:h-0.5 after:-bottom-1.5 after:right-1 after:bg-stone-500 after:transition-transform after:duration-300 group-hover:after:scale-x-100"></span>
             </Link>
           </div>
         </div>
