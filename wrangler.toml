@@ -5,11 +5,9 @@ compatibility_flags = ["nodejs_compat"]
 
 [vars]
 BUN_VERSION=1.2.7
+JWT_SECRET = "x8wks81zZksKOaxk8291"
 
 [[d1_databases]]
 binding = "DB"
 database_name = "kucho-store-db"
 database_id = "882f097a-6ae9-404e-adf0-b8313548d1e1"
-
-[vars]
-JWT_SECRET = "x8wks81zZksKOaxk8291"
