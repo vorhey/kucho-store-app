@@ -6,10 +6,13 @@
   "main": "src/index.tsx",
   "module": "src/index.tsx",
   "scripts": {
-    "dev": "concurrently --kill-others-on-fail \"bun --hot src/index.tsx\" \"bun run wrangler\"",
+    "dev": "bun --hot src/index.tsx",
     "start": "NODE_ENV=production bun src/index.tsx",
     "build": "bun run build.ts",
-    "wrangler": "wrangler pages dev --proxy 3000 --port 8788"
+    "build:watch": "bun run build-watch.ts",
+    "wrangler": "wrangler pages dev dist",
+    "browser-sync": "browser-sync start --proxy 'localhost:8788' --files 'dist/**/*,src/**/*' --no-notify",
+    "dev:wrangler": "concurrently \"bun run build:watch\" \"bun run wrangler\" \"bun run browser-sync\""
   },
   "dependencies": {
     "@hookform/resolvers": "^4.1.0",
@@ -31,7 +34,7 @@
     "tailwindcss-animate": "^1.0.7",
     "uuid": "^11.1.0",
     "wouter": "^3.6.0",
-    "wrangler": "^4.4.0",
+    "wrangler": "^4.6.0",
     "zod": "^3.24.2"
   },
   "devDependencies": {
@@ -40,6 +43,7 @@
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "@types/uuid": "^10.0.0",
+    "browser-sync": "^3.0.3",
     "concurrently": "^9.1.2",
     "prettier": "3.5.3"
   }
