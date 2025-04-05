@@ -1,4 +1,10 @@
-export async function onRequestPost({ request, env }: { request: Request; env: { DB: any } }): Promise<Response> {
+export async function onRequestPost({
+  request,
+  env,
+}: {
+  request: Request;
+  env: { DB: D1Database };
+}): Promise<Response> {
   try {
     const logData = await request.json();
 
@@ -31,7 +37,7 @@ export async function onRequestPost({ request, env }: { request: Request; env: {
 
     return Response.json({
       success: true,
-      logId: result.lastRowId,
+      logId: result.meta.last_row_id,
       timestamp: new Date().toISOString(),
       message: "Log saved successfully",
     });
@@ -39,8 +45,9 @@ export async function onRequestPost({ request, env }: { request: Request; env: {
     return Response.json(
       {
         success: false,
-        error: error instanceof Error ? error.name : 'Unknown Error',
-        message: error instanceof Error ? error.message : 'An unknown error occurred',
+        error: error instanceof Error ? error.name : "Unknown Error",
+        message:
+          error instanceof Error ? error.message : "An unknown error occurred",
         timestamp: new Date().toISOString(),
       },
       { status: 500 },

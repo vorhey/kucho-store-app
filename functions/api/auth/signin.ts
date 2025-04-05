@@ -1,15 +1,34 @@
 import { sign } from "jsonwebtoken";
 
-export async function onRequestPost({ request, env }) {
+type Credentials = {
+  email: string;
+  password: string;
+};
+
+type User = {
+  id: string;
+  email: string;
+  password_hash: string;
+  name: string;
+};
+
+export async function onRequestPost({
+  request,
+  env,
+}: {
+  request: Request;
+  env: { DB: D1Database; JWT_SECRET: string };
+}) {
   try {
-    const { email, password } = await request.json();
+    const jsonData = await request.json<Credentials>();
+    const { email, password } = jsonData;
 
     const stmt = env.DB.prepare(`
       SELECT id, email, password_hash, name
       FROM users WHERE email = ?
     `);
 
-    const user = await stmt.bind(email).first();
+    const user: User = await stmt.bind(email).first();
 
     if (!user) {
       throw new Error("Invalid credentials");
@@ -48,7 +67,7 @@ export async function onRequestPost({ request, env }) {
         success: false,
         message: error.message,
       },
-      { status: 400 }
+      { status: 400 },
     );
   }
 }
