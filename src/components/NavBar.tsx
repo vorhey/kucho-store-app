@@ -27,7 +27,7 @@ export function NavBar() {
       ref={navRef}
       className="fixed top-0 left-0 w-full bg-white shadow-md z-50"
     >
-      <div className="container mx-auto px-6 py-4">
+      <div className="container mx-auto py-4">
         <div className="flex items-center justify-between">
           <Link
             href="/"
@@ -51,6 +51,9 @@ export function NavBar() {
               ) : (
                 ""
               )}
+            </Link>
+            <Link href={user ? "/profile" : "/signin"}>
+              <User size={18} />
             </Link>
             <button onClick={() => setIsOpen(!isOpen)}>
               {isOpen ? <X /> : <Menu />}
