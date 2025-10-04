@@ -49,7 +49,7 @@ export default function ProfilePage() {
 
   return (
     <motion.div
-      className="container mx-auto mt-8 md:mt-24 max-w-md space-y-6 px-4"
+      className="container mx-auto px-4 py-6 sm:py-8 max-w-md space-y-6"
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.4 }}

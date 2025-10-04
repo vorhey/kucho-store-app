@@ -24,7 +24,7 @@ export default function ResetPasswordPage() {
 
   if (!token) {
     return (
-      <div className="container mx-auto mt-8 max-w-md space-y-6 px-4">
+      <div className="container mx-auto px-4 py-6 sm:py-8 max-w-md space-y-6">
         <Breadcrumbs />
         <div className="bg-white p-8 rounded-lg shadow-md text-center">
           <p className="text-red-500 mb-4">
@@ -57,7 +57,7 @@ export default function ResetPasswordPage() {
   const password = watch("password");
 
   return (
-    <div className="container mx-auto mt-8 max-w-md space-y-6 px-4">
+    <div className="container mx-auto px-4 py-6 sm:py-8 max-w-md space-y-6">
       <Breadcrumbs />
       <div className="bg-white p-8 rounded-lg shadow-md">
         <h1 className="text-2xl font-bold mb-6">Establecer Nueva Contraseña</h1>

@@ -57,7 +57,7 @@ export default function SignUpPage() {
   };
 
   return (
-    <div className="container mx-auto mt-8 md:mt-24 max-w-md space-y-6 px-4">
+    <div className="container mx-auto px-4 py-6 sm:py-8 max-w-md space-y-6">
       <Breadcrumbs />
       <motion.div
         className="bg-white p-8 rounded-lg shadow-md"
