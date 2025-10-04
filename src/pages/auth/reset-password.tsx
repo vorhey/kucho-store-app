@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useForm } from "react-hook-form";
 import type { ResetPasswordData } from "@/types/auth";
+import { Breadcrumbs } from "@/components/Breadcrumbs";
 
 export default function ResetPasswordPage() {
   const [error, setError] = useState("");
@@ -23,7 +24,8 @@ export default function ResetPasswordPage() {
 
   if (!token) {
     return (
-      <div className="container mx-auto mt-8 max-w-md">
+      <div className="container mx-auto mt-8 max-w-md space-y-6 px-4">
+        <Breadcrumbs />
         <div className="bg-white p-8 rounded-lg shadow-md text-center">
           <p className="text-red-500 mb-4">
             Token de restablecimiento inválido o faltante.
@@ -55,7 +57,8 @@ export default function ResetPasswordPage() {
   const password = watch("password");
 
   return (
-    <div className="container mx-auto mt-8 max-w-md">
+    <div className="container mx-auto mt-8 max-w-md space-y-6 px-4">
+      <Breadcrumbs />
       <div className="bg-white p-8 rounded-lg shadow-md">
         <h1 className="text-2xl font-bold mb-6">Establecer Nueva Contraseña</h1>
 

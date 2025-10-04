@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { updateUserProfile } from "@/services/auth";
 import type { UserProfileData } from "@/types/auth";
+import { Breadcrumbs } from "@/components/Breadcrumbs";
 
 export default function ProfilePage() {
   const [error, setError] = useState("");
@@ -48,11 +49,12 @@ export default function ProfilePage() {
 
   return (
     <motion.div
-      className="container mx-auto mt-8 md:mt-24 max-w-md"
+      className="container mx-auto mt-8 md:mt-24 max-w-md space-y-6 px-4"
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.4 }}
     >
+      <Breadcrumbs />
       <motion.div
         className="bg-white p-8 rounded-lg shadow-md"
         initial={{ scale: 0.95 }}

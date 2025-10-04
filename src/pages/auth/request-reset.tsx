@@ -6,6 +6,7 @@ import { Input } from "@/components/ui/input";
 import { useForm } from "react-hook-form";
 import { motion, AnimatePresence } from "framer-motion";
 import type { RequestPasswordResetData } from "@/types/auth";
+import { Breadcrumbs } from "@/components/Breadcrumbs";
 
 export default function RequestResetPage() {
   const [error, setError] = useState("");
@@ -35,11 +36,12 @@ export default function RequestResetPage() {
 
   return (
     <motion.div
-      className="container mx-auto mt-8 md:mt-24 max-w-md"
+      className="container mx-auto mt-8 md:mt-24 max-w-md space-y-6 px-4"
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.4 }}
     >
+      <Breadcrumbs />
       <motion.div
         className="bg-white p-8 rounded-lg shadow-md"
         initial={{ scale: 0.95 }}
