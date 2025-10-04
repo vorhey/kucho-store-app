@@ -8,6 +8,7 @@ import {
   Cat,
   Volleyball,
   User,
+  ShoppingCart,
 } from "lucide-react";
 import { useCart } from "@/context/CartContext";
 import { useClickOutside } from "@/hooks/useClickOutside";
@@ -43,9 +44,9 @@ export function NavBar() {
               href="/cart"
               className="flex items-center gap-2 text-gray-600"
             >
-              <ShoppingBag size={24} />
+              <ShoppingCart size={24} />
               {cartCount > 0 ? (
-                <span className="ml-2 flex items-center justify-center pl-2 pr-2 pt-1 pb-1 text-xs font-semibold text-black outline outline-pink-200 rounded-sm bg-pink-100">
+                <span className="ml-1 flex items-center justify-center pl-2 pr-2 pt-1 pb-1 text-xs font-semibold text-black outline outline-pink-200 rounded-sm bg-pink-100">
                   {cartCount}
                 </span>
               ) : (
@@ -66,7 +67,7 @@ export function NavBar() {
               href="/"
               className="flex items-center gap-2 text-gray-600 hover:text-gray-800 transition duration-200 ease-in-out relative group"
             >
-              <Volleyball size={18} />
+              <Cat size={18} />
               <span className="after:content-[''] after:absolute after:w-full after:scale-x-0 after:h-0.5 after:-bottom-1.5 after:left-0 after:bg-stone-500 after:transition-transform after:duration-300 group-hover:after:scale-x-100">
                 Inicio
               </span>
@@ -75,20 +76,20 @@ export function NavBar() {
               href="/shop"
               className="flex items-center gap-2 text-gray-600 hover:text-gray-800 transition duration-200 ease-in-out relative group"
             >
-              <PawPrint size={18} />
+              <ShoppingBag size={18} />
               <span className="after:content-[''] after:absolute after:w-full after:scale-x-0 after:h-0.5 after:-bottom-1.5 after:left-0 after:bg-stone-500 after:transition-transform after:duration-300 group-hover:after:scale-x-100">
-                Shop
+                Tienda
               </span>
             </Link>
             <Link
               href="/cart"
               className="flex items-center gap-2 text-gray-600 hover:text-gray-800 transition duration-200 ease-in-out relative group"
             >
-              <ShoppingBag size={18} />
+              <ShoppingCart size={18} />
               <span className="after:content-[''] after:absolute after:w-full after:scale-x-0 after:h-0.5 after:-bottom-1.5 after:left-0 after:bg-stone-500 after:transition-transform after:duration-300 group-hover:after:scale-x-100 flex items-center">
                 Carrito
                 {cartCount > 0 ? (
-                  <span className="ml-2 flex items-center justify-center pl-2 pr-2 pt-1 pb-1 text-xs font-semibold text-black outline outline-pink-200 bg-pink-100 rounded-sm">
+                  <span className="ml-1 flex items-center justify-center pl-2 pr-2 pt-1 pb-1 text-xs font-semibold text-black outline outline-pink-200 bg-pink-100 rounded-sm">
                     {cartCount}
                   </span>
                 ) : (
@@ -117,7 +118,7 @@ export function NavBar() {
             className="flex items-center gap-3 text-gray-600 hover:text-gray-800 px-2 py-2"
             onClick={() => setIsOpen(false)}
           >
-            <Volleyball size={18} />
+            <Cat size={18} />
             <span>Inicio</span>
           </Link>
           <Link
@@ -125,15 +126,15 @@ export function NavBar() {
             className="flex items-center gap-3 text-gray-600 hover:text-gray-800 px-2 py-2"
             onClick={() => setIsOpen(false)}
           >
-            <PawPrint size={18} />
-            <span>Shop</span>
+            <ShoppingBag size={18} />
+            <span>Tienda</span>
           </Link>
           <Link
             href="/cart"
             className="flex items-center gap-3 text-gray-600 hover:text-gray-800 px-2 py-2"
             onClick={() => setIsOpen(false)}
           >
-            <ShoppingBag size={18} />
+            <ShoppingCart size={18} />
             <span>Carrito{cartCount > 0 ? ` (${cartCount})` : ""}</span>
           </Link>
           <Link
