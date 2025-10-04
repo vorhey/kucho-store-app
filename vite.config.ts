@@ -3,16 +3,26 @@ import react from "@vitejs/plugin-react";
 import { cloudflare } from "@cloudflare/vite-plugin";
 import path from "path";
 
-export default defineConfig({
+export default defineConfig(({ mode }) => ({
   plugins: [
     react(),
-    cloudflare({
-      configPath: "./wrangler.toml",
-    }),
+    // Only use cloudflare plugin in build mode, not dev mode
+    ...(mode === 'production' ? [cloudflare({ configPath: "./wrangler.toml" })] : []),
   ],
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "./src"),
+    },
+  },
+  server: {
+    hmr: {
+      overlay: true,
+    },
+    proxy: {
+      '/api': {
+        target: 'http://localhost:8788',
+        changeOrigin: true,
+      },
     },
   },
   build: {
@@ -20,4 +30,4 @@ export default defineConfig({
     sourcemap: true,
     minify: true,
   },
-});
+}));

@@ -6,6 +6,9 @@ import heroImage from "@/assets/images/hero-cat.png";
 import kittyImage from "@/assets/images/kitty-face.png";
 
 export default function HomePage() {
+  // This timestamp will update on HMR if working correctly
+  console.log("HomePage rendered at:", new Date().toLocaleTimeString());
+
   return (
     <div>
       {/* Hero Section */}
@@ -48,7 +51,7 @@ export default function HomePage() {
                     type="button"
                     variant="outline"
                     size="lg"
-                    className="rounded-full px-8 text-lg h-12 group bg-white hover:cursor-pointer border-none shadow-none"
+                    className="rounded-full px-8 text-lg h-12 group bg-white hover:cursor-pointer border-none shadow-none !flex items-center gap-2"
                   >
                     <img
                       src={kittyImage}
@@ -58,7 +61,7 @@ export default function HomePage() {
                     Explorar colección
                     <motion.svg
                       xmlns="http://www.w3.org/2000/svg"
-                      className="ml-2 h-5 w-5"
+                      className="h-5 w-5"
                       fill="none"
                       viewBox="0 0 24 24"
                       stroke="currentColor"

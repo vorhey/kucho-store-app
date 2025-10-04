@@ -7,10 +7,11 @@
   "module": "src/index.tsx",
   "scripts": {
     "dev": "vite",
+    "dev:api": "wrangler pages dev dist --port 8788",
+    "dev:full": "concurrently \"vite\" \"wrangler pages dev dist --port 8788\"",
     "build": "vite build",
     "preview": "vite preview",
-    "wrangler": "wrangler pages dev dist",
-    "dev:pages": "vite build --watch"
+    "serve": "wrangler pages dev dist"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.2.2",
