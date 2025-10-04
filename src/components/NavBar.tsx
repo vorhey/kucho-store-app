@@ -48,15 +48,13 @@ export function NavBar() {
             </Link>
             <Link
               href="/cart"
-              className="flex items-center gap-2 text-gray-600"
+              className="relative flex items-center gap-2 text-gray-600"
             >
               <ShoppingCart size={24} />
-              {cartCount > 0 ? (
-                <span className="ml-1 flex items-center justify-center pl-2 pr-2 pt-1 pb-1 text-xs font-semibold text-black outline outline-pink-200 rounded-sm bg-pink-100">
+              {cartCount > 0 && (
+                <span className="absolute -top-2 -right-2 flex items-center justify-center min-w-[18px] h-[18px] px-1 text-xs font-semibold text-white bg-pink-500 rounded-full">
                   {cartCount}
                 </span>
-              ) : (
-                ""
               )}
             </Link>
             <Link href={user ? "/profile" : "/signin"}>
@@ -91,16 +89,16 @@ export function NavBar() {
               href="/cart"
               className="flex items-center gap-2 text-gray-600 hover:text-gray-800 transition duration-200 ease-in-out relative group"
             >
-              <ShoppingCart size={18} />
-              <span className="after:content-[''] after:absolute after:w-full after:scale-x-0 after:h-0.5 after:-bottom-1.5 after:left-0 after:bg-stone-500 after:transition-transform after:duration-300 group-hover:after:scale-x-100 flex items-center">
-                Carrito
-                {cartCount > 0 ? (
-                  <span className="ml-1 flex items-center justify-center pl-2 pr-2 pt-1 pb-1 text-xs font-semibold text-black outline outline-pink-200 bg-pink-100 rounded-sm">
+              <div className="relative">
+                <ShoppingCart size={18} />
+                {cartCount > 0 && (
+                  <span className="absolute -top-2 -right-2 flex items-center justify-center min-w-[16px] h-[16px] px-1 text-[10px] font-semibold text-white bg-pink-500 rounded-full">
                     {cartCount}
                   </span>
-                ) : (
-                  ""
                 )}
+              </div>
+              <span className="after:content-[''] after:absolute after:w-full after:scale-x-0 after:h-0.5 after:-bottom-1.5 after:left-0 after:bg-stone-500 after:transition-transform after:duration-300 group-hover:after:scale-x-100">
+                Carrito
               </span>
             </Link>
             <Link
