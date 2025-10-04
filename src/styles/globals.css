@@ -140,6 +140,33 @@
   }
 }
 
+.rainbow-border-animated {
+  position: relative;
+  padding: 2px;
+  border-radius: 9999px;
+  background: linear-gradient(270deg, #ff0080, #ff8c00, #40e0d0, #ff0080);
+  background-size: 600% 600%;
+  animation: rainbow-border 3s linear infinite;
+}
+
+@keyframes rainbow-border {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+.rainbow-border-animated > * {
+  background: white;
+  border-radius: 9999px;
+  display: block;
+}
+
 @layer base {
   * {
     @apply border-border outline-ring/50;

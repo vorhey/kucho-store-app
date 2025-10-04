@@ -43,33 +43,39 @@ export default function HomePage() {
                 whileHover={{ scale: 1.5 }}
                 transition={{ type: "spring", stiffness: 400, damping: 10 }}
               >
-                <Button
-                  type="button"
-                  variant="outline"
-                  size="lg"
-                  className="rounded-full px-8 text-lg h-12 group mt-2 hover:cursor-pointer"
-                >
-                  <img src={kittyImage} alt="Kitty face" className="w-6 h-6" />
-                  Explorar colección
-                  <motion.svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    className="ml-2 h-5 w-5"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                    initial={{ x: 0 }}
-                    animate={{ x: 0 }}
-                    whileHover={{ x: 3 }}
-                    transition={{ duration: 0.2 }}
+                <div className="rainbow-border-animated mt-2 inline-block">
+                  <Button
+                    type="button"
+                    variant="outline"
+                    size="lg"
+                    className="rounded-full px-8 text-lg h-12 group bg-white hover:cursor-pointer border-none shadow-none"
                   >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth="2"
-                      d="M9 5l7 7-7 7"
+                    <img
+                      src={kittyImage}
+                      alt="Kitty face"
+                      className="w-6 h-6"
                     />
-                  </motion.svg>
-                </Button>
+                    Explorar colección
+                    <motion.svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      className="ml-2 h-5 w-5"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                      initial={{ x: 0 }}
+                      animate={{ x: 0 }}
+                      whileHover={{ x: 3 }}
+                      transition={{ duration: 0.2 }}
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth="2"
+                        d="M9 5l7 7-7 7"
+                      />
+                    </motion.svg>
+                  </Button>
+                </div>
               </motion.div>
             </Link>
           </motion.div>

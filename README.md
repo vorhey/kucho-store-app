@@ -1,21 +1,60 @@
-# bun-react-tailwind-shadcn-template
+# kucho-store-app
 
-To install dependencies:
+A React application built with Vite and Cloudflare Pages.
+
+## Tech Stack
+
+- **Vite** - Build tool and dev server
+- **React 19** - UI framework
+- **Tailwind CSS v4** - Styling
+- **Cloudflare Pages** - Deployment with D1 database
+- **Cloudflare Vite Plugin** - Workers integration during development
+
+## Installation
 
 ```bash
 bun install
+# or
+npm install
 ```
 
-To start a development server:
+## Development
+
+Start the Vite dev server with Cloudflare Workers integration:
 
 ```bash
 bun dev
+# or
+npm run dev
 ```
 
-To run for production:
+This will start the development server at `http://localhost:5173/` with hot module replacement and the Cloudflare Vite plugin enabled for local Workers development.
+
+## Build
+
+Build for production:
 
 ```bash
-bun start
+bun run build
+# or
+npm run build
 ```
 
-This project was created using `bun init` in bun v1.2.4. [Bun](https://bun.sh) is a fast all-in-one JavaScript runtime.
+## Preview
+
+Preview the production build locally:
+
+```bash
+bun run preview
+# or
+npm run preview
+```
+
+## Deployment
+
+Deploy to Cloudflare Pages:
+
+```bash
+wrangler pages deploy dist
+```
+
