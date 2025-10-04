@@ -1,11 +1,12 @@
-import { Cat, Heart, Instagram, Facebook, Twitter } from "lucide-react";
+import { Cat, Heart } from "lucide-react";
+import { SiInstagram, SiFacebook, SiX } from "@icons-pack/react-simple-icons";
 import { Link } from "wouter";
 
 export function Footer() {
   const currentYear = new Date().getFullYear();
 
   return (
-    <footer className="bg-white shadow-inner mt-auto">
+    <footer className="bg-white mt-auto">
       <div className="container mx-auto px-6 py-8">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           {/* Logo and Description */}
@@ -15,7 +16,7 @@ export function Footer() {
               <span className="text-xl font-bold">KuchoStore</span>
             </Link>
             <p className="mt-2 text-sm text-gray-600 text-center md:text-left">
-              Productos purr-fectos para amantes de los gatos
+              Productos para amantes de los gatos
             </p>
           </div>
 
@@ -50,19 +51,19 @@ export function Footer() {
                 href="#"
                 className="text-gray-600 hover:text-primary transition"
               >
-                <Instagram size={20} />
+                <SiInstagram size={20} color="default" title="Instagram" />
               </a>
               <a
                 href="#"
                 className="text-gray-600 hover:text-primary transition"
               >
-                <Facebook size={20} />
+                <SiFacebook size={20} color="default" title="Facebook" />
               </a>
               <a
                 href="#"
                 className="text-gray-600 hover:text-primary transition"
               >
-                <Twitter size={20} />
+                <SiX size={20} color="default" title="X (Twitter)" />
               </a>
             </div>
           </div>
