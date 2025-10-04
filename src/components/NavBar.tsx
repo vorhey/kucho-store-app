@@ -41,6 +41,12 @@ export function NavBar() {
           {/* Mobile menu button and cart */}
           <div className="md:hidden flex items-center gap-4">
             <Link
+              href="/shop"
+              className="flex items-center gap-2 text-gray-600"
+            >
+              <ShoppingBag size={24} />
+            </Link>
+            <Link
               href="/cart"
               className="flex items-center gap-2 text-gray-600"
             >
