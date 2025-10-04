@@ -1,6 +1,7 @@
 import { Link } from "wouter";
 import { Button } from "@/components/ui/button";
 import { motion } from "framer-motion";
+import { HeartIcon } from "lucide-react";
 import heroImage from "@/assets/images/hero-cat.png";
 import kittyImage from "@/assets/images/kitty-face.png";
 
@@ -22,20 +23,16 @@ export default function HomePage() {
             initial={{ y: 20, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
             transition={{ duration: 0.5, delay: 0.2 }}
-            className="text-4xl sm:text-6xl md:text-7xl font-bold tracking-tight"
+            className="text-4xl sm:text-6xl md:text-7xl tracking-tight"
           >
             <span className="bg-gradient-to-r from-primary to-purple-600 dark:from-primary dark:to-purple-400 bg-clip-text text-transparent">
-              Bienvenido a Kucho Store!
+              Kucho Store{" "}
+              <HeartIcon
+                className="inline w-10 h-10 align-middle relative -top-2 text-pink-500"
+                strokeWidth={2}
+              />
             </span>
           </motion.h1>
-          <motion.p
-            initial={{ y: 20, opacity: 0 }}
-            animate={{ y: 0, opacity: 1 }}
-            transition={{ duration: 0.5, delay: 0.4 }}
-            className="text-xl sm:text-2xl text-muted-foreground max-w-2xl mx-auto"
-          >
-            Encuentra los Productos Purr-fectos para Amantes de los Gatos
-          </motion.p>
           <motion.div
             initial={{ y: 20, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
@@ -50,7 +47,7 @@ export default function HomePage() {
                   type="button"
                   variant="outline"
                   size="lg"
-                  className="rounded-full px-8 text-lg h-12 group mt-16 hover:cursor-pointer"
+                  className="rounded-full px-8 text-lg h-12 group mt-2 hover:cursor-pointer"
                 >
                   <img src={kittyImage} alt="Kitty face" className="w-6 h-6" />
                   Explorar colección
