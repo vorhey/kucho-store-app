@@ -21,9 +21,13 @@ export function ProductCard({ product, onAddToCart }: ProductCardProps) {
   const { removeFromCart } = useCart();
   const cartItem = cart.find((item) => item.product.id === product.id);
   const quantityInCart = cartItem ? cartItem.quantity : 0;
-  const [quantity, setQuantity] = useState(quantityInCart > 0 ? quantityInCart : 1);
+  const [quantity, setQuantity] = useState(
+    quantityInCart > 0 ? quantityInCart : 1,
+  );
   const [showCatAnimation, setShowCatAnimation] = useState(false);
-  const catAnimationTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const catAnimationTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(
+    null,
+  );
 
   // Sync input value with cart changes
   useEffect(() => {
@@ -100,7 +104,10 @@ export function ProductCard({ product, onAddToCart }: ProductCardProps) {
       <CardFooter className="p-4 pt-0">
         <div className="relative w-full flex flex-col gap-2">
           <div className="mb-2">
-            <Label htmlFor={`quantity-${product.id}`} className="text-gray-700 mb-1 block">
+            <Label
+              htmlFor={`quantity-${product.id}`}
+              className="text-gray-700 mb-1 block"
+            >
               Cantidad
             </Label>
             <div className="flex items-center gap-2">
@@ -110,10 +117,12 @@ export function ProductCard({ product, onAddToCart }: ProductCardProps) {
                   type="number"
                   min={0}
                   value={quantity}
-                  onClick={e => e.stopPropagation()}
-                  onChange={e => setQuantity(Math.max(1, Number(e.target.value)))}
-                  className="file:text-foreground placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground dark:bg-input/30 border-input w-full min-w-0 rounded-md border bg-transparent px-3 py-1 text-base shadow-xs transition-[color,box-shadow] outline-none file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive h-8 !w-14 font-mono text-center"
-                  style={{ appearance: 'textfield' }}
+                  onClick={(e) => e.stopPropagation()}
+                  onChange={(e) =>
+                    setQuantity(Math.max(1, Number(e.target.value)))
+                  }
+                  className="file:text-foreground placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground dark:bg-input/30 border-input  min-w-0 rounded-md border bg-transparent px-3 py-1 text-base shadow-xs transition-[color,box-shadow] outline-none file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive h-8 !w-14 font-mono text-center"
+                  style={{ appearance: "textfield" }}
                   data-slot="input"
                 />
                 <button
@@ -124,7 +133,18 @@ export function ProductCard({ product, onAddToCart }: ProductCardProps) {
                   onClick={decreaseQuantity}
                   tabIndex={-1}
                 >
-                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="size-4">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="24"
+                    height="24"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    className="size-4"
+                  >
                     <path d="M5 12l14 0"></path>
                   </svg>
                 </button>
@@ -136,7 +156,18 @@ export function ProductCard({ product, onAddToCart }: ProductCardProps) {
                   onClick={increaseQuantity}
                   tabIndex={-1}
                 >
-                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="size-4">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="24"
+                    height="24"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    className="size-4"
+                  >
                     <path d="M12 5l0 14"></path>
                     <path d="M5 12l14 0"></path>
                   </svg>
@@ -162,10 +193,10 @@ export function ProductCard({ product, onAddToCart }: ProductCardProps) {
               transition={{ duration: 0.2 }}
             >
               {quantity === 0
-                ? 'Vaciar carrito'
+                ? "Vaciar carrito"
                 : quantityInCart > 0 && quantity < quantityInCart
-                  ? 'Actualizar carrito'
-                  : 'Agregar al carrito'}
+                  ? "Actualizar carrito"
+                  : "Agregar al carrito"}
             </motion.span>
             <AnimatePresence>
               {showCatAnimation && (

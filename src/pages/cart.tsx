@@ -1,4 +1,6 @@
 import { useCart } from "../context/CartContext";
+import { Input } from "../components/ui/input";
+import { Label } from "../components/ui/label";
 import {
   Card,
   CardHeader,
@@ -18,41 +20,41 @@ import { useLogUserAction } from "@/hooks/useAuditLog";
 import { Breadcrumbs } from "@/components/Breadcrumbs";
 import { getCartBreadcrumbs } from "@/lib/breadcrumbs";
 
+const containerVariants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.2,
+    },
+  },
+};
+
+const itemVariants = {
+  hidden: { opacity: 0, y: 20 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: {
+      duration: 0.5,
+    },
+  },
+  exit: {
+    opacity: 0,
+    x: -300,
+    transition: {
+      duration: 0.5,
+    },
+  },
+};
+
 export default function CartPage() {
-  const { cart, removeFromCart } = useCart();
+  const { cart, removeFromCart, addToCart } = useCart();
   const [, setLocation] = useLocation();
   const [imageErrors, setImageErrors] = useState<{ [key: string]: boolean }>(
     {},
   );
   const logUserAction = useLogUserAction();
-
-  const containerVariants = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: {
-        staggerChildren: 0.2,
-      },
-    },
-  };
-
-  const itemVariants = {
-    hidden: { opacity: 0, y: 20 },
-    visible: {
-      opacity: 1,
-      y: 0,
-      transition: {
-        duration: 0.5,
-      },
-    },
-    exit: {
-      opacity: 0,
-      x: -300,
-      transition: {
-        duration: 0.5,
-      },
-    },
-  };
 
   useScrollTop();
 
@@ -75,33 +77,7 @@ export default function CartPage() {
       <div className="space-y-8">
         <Breadcrumbs items={getCartBreadcrumbs()} />
         {cart.length === 0 ? (
-          <div className="flex flex-col items-center gap-6">
-            <CatAnimation />
-            <motion.div
-              className="text-center"
-              variants={containerVariants}
-              initial="hidden"
-              animate="visible"
-            >
-              <motion.div variants={itemVariants}>
-                <ShoppingCart className="mx-auto h-16 w-16 text-gray-400 mb-4" />
-              </motion.div>
-              <motion.h2
-                variants={itemVariants}
-                className="text-xl font-medium text-gray-900 mb-2"
-              >
-                Tu carro esta vacio
-              </motion.h2>
-              <motion.p variants={itemVariants} className="text-gray-500 mb-6">
-                Al parecer no has agregado ningun producto a tu carro de compras.
-              </motion.p>
-              <motion.div variants={itemVariants}>
-                <Link href="/shop">
-                  <Button className="px-8">Explorar coleccion</Button>
-                </Link>
-              </motion.div>
-            </motion.div>
-          </div>
+          <EmptyCart />
         ) : (
           <div className="flex flex-col lg:flex-row gap-8">
             <div className="flex-grow space-y-4 overflow-hidden w-full lg:w-2/3">
@@ -135,21 +111,133 @@ export default function CartPage() {
                           />
                         </div>
                         <div className="flex-1 flex flex-col">
-                          <CardHeader className="p-4 flex flex-row justify-between items-center">
-                            <h3 className="text-lg font-semibold">
-                              {item.product.name}
-                            </h3>
-                            <span className="text-sm text-gray-500">
-                              Cantidad: {item.quantity}
-                            </span>
+                          <CardHeader className="p-4 flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2">
+                            <div>
+                              <h3 className="text-lg font-semibold">
+                                {item.product.name}
+                              </h3>
+                              <div className="flex gap-4 mt-1 text-gray-600">
+                                <span>
+                                  Unitario:{" "}
+                                  <span className="font-semibold text-gray-900">
+                                    ${item.product.price.toFixed(2)}
+                                  </span>
+                                </span>
+                                <span>
+                                  Subtotal:{" "}
+                                  <span className="font-semibold text-gray-900">
+                                    $
+                                    {(
+                                      item.product.price * item.quantity
+                                    ).toFixed(2)}
+                                  </span>
+                                </span>
+                              </div>
+                            </div>
                           </CardHeader>
                           <CardContent className="p-4 flex-grow">
-                            <p className="text-2xl font-bold text-primary">
-                              ${item.product.price.toFixed(2)}
-                            </p>
-                            <p className="text-sm text-gray-600 mt-2">
-                              {item.product.description}
-                            </p>
+                            <div className="flex flex-col gap-1">
+                              <Label
+                                htmlFor={`cart-qty-${item.product.id}`}
+                                className="text-gray-500 text-sm mb-1"
+                              >
+                                Cantidad
+                              </Label>
+                              <div className="flex items-center gap-2">
+                                <div className="flex w-fit items-stretch [&>input]:flex-1 [&>button]:focus-visible:z-10 [&>button]:focus-visible:relative [&>input]:w-14 has-[select[aria-hidden=true]:last-child]:[&>[data-slot=select-trigger]:last-of-type]:rounded-r-md has-[>[data-slot=button-group]]:gap-2 [&>*:not(:first-child)]:rounded-l-none [&>*:not(:first-child)]:border-l-0 [&>*:not(:last-child)]:rounded-r-none">
+                                  <Input
+                                    id={`cart-qty-${item.product.id}`}
+                                    type="number"
+                                    min={0}
+                                    value={item.quantity}
+                                    onClick={(e) => e.stopPropagation()}
+                                    onChange={(e) => {
+                                      const val = Math.max(
+                                        0,
+                                        Number(e.target.value),
+                                      );
+                                      if (val === 0) {
+                                        removeFromCart(item.product.id);
+                                      } else {
+                                        addToCart(item.product, val);
+                                      }
+                                    }}
+                                    className="file:text-foreground placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground dark:bg-input/30 border-input w-full min-w-0 rounded-md border bg-transparent px-3 py-1 text-base shadow-xs transition-[color,box-shadow] outline-none file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive h-8 font-mono text-center"
+                                    style={{ appearance: "textfield" }}
+                                    data-slot="input"
+                                  />
+                                  <button
+                                    data-slot="button"
+                                    className="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 size-8"
+                                    type="button"
+                                    aria-label="Decrement"
+                                    onClick={(e) => {
+                                      e.stopPropagation();
+                                      if (item.quantity > 1) {
+                                        addToCart(
+                                          item.product,
+                                          item.quantity - 1,
+                                        );
+                                      } else if (item.quantity === 1) {
+                                        removeFromCart(item.product.id);
+                                      }
+                                    }}
+                                    tabIndex={-1}
+                                  >
+                                    <svg
+                                      xmlns="http://www.w3.org/2000/svg"
+                                      width="24"
+                                      height="24"
+                                      viewBox="0 0 24 24"
+                                      fill="none"
+                                      stroke="currentColor"
+                                      strokeWidth="2"
+                                      strokeLinecap="round"
+                                      strokeLinejoin="round"
+                                      className="size-4"
+                                    >
+                                      <path d="M5 12l14 0"></path>
+                                    </svg>
+                                  </button>
+                                  <button
+                                    data-slot="button"
+                                    className="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 size-8"
+                                    type="button"
+                                    aria-label="Increment"
+                                    onClick={(e) => {
+                                      e.stopPropagation();
+                                      addToCart(
+                                        item.product,
+                                        item.quantity + 1,
+                                      );
+                                    }}
+                                    tabIndex={-1}
+                                  >
+                                    <svg
+                                      xmlns="http://www.w3.org/2000/svg"
+                                      width="24"
+                                      height="24"
+                                      viewBox="0 0 24 24"
+                                      fill="none"
+                                      stroke="currentColor"
+                                      strokeWidth="2"
+                                      strokeLinecap="round"
+                                      strokeLinejoin="round"
+                                      className="size-4"
+                                    >
+                                      <path d="M12 5l0 14"></path>
+                                      <path d="M5 12l14 0"></path>
+                                    </svg>
+                                  </button>
+                                </div>
+                              </div>
+                            </div>
+                            {/* <p className="text-2xl font-bold text-primary"> */}
+                            {/*   ${item.product.price.toFixed(2)} */}
+                            {/* </p> */}
+                            {/* <p className="text-sm text-gray-600 mt-2"> */}
+                            {/*   {item.product.description} */}
+                            {/* </p> */}
                           </CardContent>
                           <CardFooter className="p-4 border-t">
                             <Button
@@ -202,7 +290,9 @@ export default function CartPage() {
                                 }
                                 alt=""
                                 className="w-full h-full object-cover"
-                                onError={() => handleImageError(item.product.id)}
+                                onError={() =>
+                                  handleImageError(item.product.id)
+                                }
                               />
                               <div className="absolute top-0 right-0 bg-black text-white rounded-full w-8 h-8 flex items-center justify-center text-[15px] font-extrabold opacity-60 hover:opacity-0">
                                 {item.quantity}
@@ -227,7 +317,11 @@ export default function CartPage() {
                       <span>
                         $
                         {cart
-                          .reduce((acc, item) => acc + item.product.price, 0)
+                          .reduce(
+                            (acc, item) =>
+                              acc + item.product.price * item.quantity,
+                            0,
+                          )
                           .toFixed(2)}
                       </span>
                     </div>
@@ -243,7 +337,11 @@ export default function CartPage() {
                       >
                         $
                         {cart
-                          .reduce((acc, item) => acc + item.product.price, 0)
+                          .reduce(
+                            (acc, item) =>
+                              acc + item.product.price * item.quantity,
+                            0,
+                          )
                           .toFixed(2)}
                       </motion.span>
                     </div>
@@ -263,6 +361,38 @@ export default function CartPage() {
           </div>
         )}
       </div>
+    </div>
+  );
+}
+
+function EmptyCart() {
+  return (
+    <div className="flex flex-col items-center gap-6">
+      <CatAnimation />
+      <motion.div
+        className="text-center"
+        variants={containerVariants}
+        initial="hidden"
+        animate="visible"
+      >
+        <motion.div variants={itemVariants}>
+          <ShoppingCart className="mx-auto h-16 w-16 text-gray-400 mb-4" />
+        </motion.div>
+        <motion.h2
+          variants={itemVariants}
+          className="text-xl font-medium text-gray-900 mb-2"
+        >
+          Tu carro esta vacio
+        </motion.h2>
+        <motion.p variants={itemVariants} className="text-gray-500 mb-6">
+          Al parecer no has agregado ningun producto a tu carro de compras.
+        </motion.p>
+        <motion.div variants={itemVariants}>
+          <Link href="/shop">
+            <Button className="px-8">Explorar coleccion</Button>
+          </Link>
+        </motion.div>
+      </motion.div>
     </div>
   );
 }
