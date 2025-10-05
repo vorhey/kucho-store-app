@@ -1,5 +1,23 @@
 @import "tailwindcss";
 
+/* Hide number input arrows for all browsers */
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+input[type="number"] {
+  -moz-appearance: textfield;
+}
+
+/* Soften or remove focus ring/border for number inputs */
+input[type="number"]:focus,
+input[type="number"]:focus-visible {
+  outline: none !important;
+  box-shadow: 0 0 0 2px var(--input, #e5e7eb); /* subtle highlight, matches input border */
+  border-color: var(--input, #e5e7eb);
+}
+
 @plugin "tailwindcss-animate";
 
 @custom-variant dark (&:is(.dark *));

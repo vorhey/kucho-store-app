@@ -52,8 +52,10 @@ export function ProductCard({ product, onAddToCart }: ProductCardProps) {
     setQuantity((prev) => (prev > 0 ? prev - 1 : 0));
   };
 
-  const handleAddToCartClick = (e: React.MouseEvent) => {
-    e.stopPropagation();
+  const handleAddToCartClick = (e?: React.MouseEvent | React.KeyboardEvent) => {
+    if (e && typeof e.stopPropagation === "function") {
+      e.stopPropagation();
+    }
     if (quantity === 0) {
       removeFromCart(product.id);
       return;
@@ -118,9 +120,28 @@ export function ProductCard({ product, onAddToCart }: ProductCardProps) {
                   min={0}
                   value={quantity}
                   onClick={(e) => e.stopPropagation()}
-                  onChange={(e) =>
-                    setQuantity(Math.max(1, Number(e.target.value)))
-                  }
+                  onChange={(e) => {
+                    const val = e.target.value;
+                    // Allow empty string for editing
+                    if (val === "") {
+                      setQuantity("");
+                    } else {
+                      const num = Number(val);
+                      if (!isNaN(num)) setQuantity(num);
+                    }
+                  }}
+                  onBlur={() => {
+                    // On blur, enforce minimum value of 1
+                    if (quantity === "" || Number(quantity) < 1) {
+                      setQuantity(1);
+                    }
+                  }}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter") {
+                      e.preventDefault();
+                      handleAddToCartClick();
+                    }
+                  }}
                   className="file:text-foreground placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground dark:bg-input/30 border-input  min-w-0 rounded-md border bg-transparent px-3 py-1 text-base shadow-xs transition-[color,box-shadow] outline-none file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive h-8 !w-14 font-mono text-center"
                   style={{ appearance: "textfield" }}
                   data-slot="input"
