@@ -125,12 +125,21 @@ export default function CartPage() {
                                 </span>
                                 <span>
                                   Subtotal:{" "}
-                                  <span className="font-semibold text-gray-900">
+                                  <motion.span
+                                    className="font-semibold text-gray-900"
+                                    key={item.product.price * item.quantity}
+                                    initial={{ scale: 1, color: "#111827" }}
+                                    animate={{
+                                      scale: [1, 1.15, 1],
+                                      color: ["#111827", "#f472b6", "#111827"],
+                                    }}
+                                    transition={{ duration: 0.5 }}
+                                  >
                                     $
                                     {(
                                       item.product.price * item.quantity
                                     ).toFixed(2)}
-                                  </span>
+                                  </motion.span>
                                 </span>
                               </div>
                             </div>
@@ -314,7 +323,19 @@ export default function CartPage() {
                   <div className="w-full space-y-4">
                     <div className="flex justify-between items-center text-sm text-gray-500">
                       <span>Subtotal</span>
-                      <span>
+                      <motion.span
+                        key={cart.reduce(
+                          (acc, item) =>
+                            acc + item.product.price * item.quantity,
+                          0,
+                        )}
+                        initial={{ scale: 1, color: "#6b7280" }}
+                        animate={{
+                          scale: [1, 1.15, 1],
+                          color: ["#6b7280", "#f472b6", "#6b7280"],
+                        }}
+                        transition={{ duration: 0.5 }}
+                      >
                         $
                         {cart
                           .reduce(
@@ -323,7 +344,7 @@ export default function CartPage() {
                             0,
                           )
                           .toFixed(2)}
-                      </span>
+                      </motion.span>
                     </div>
 
                     <div className="flex justify-between items-center text-lg font-bold">

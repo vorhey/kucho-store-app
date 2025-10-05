@@ -3,7 +3,7 @@ import { CardHeader, CardContent, CardFooter } from "./ui/card";
 import { Input } from "./ui/input";
 import { Label } from "./ui/label";
 import { AnimatePresence, motion } from "framer-motion";
-import { Cat } from "lucide-react";
+import { Cat, Trash2, RotateCcw, ShoppingCart } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { useCart } from "@/context/CartContext";
 import { useLocation } from "wouter";
@@ -192,11 +192,21 @@ export function ProductCard({ product, onAddToCart }: ProductCardProps) {
               }}
               transition={{ duration: 0.2 }}
             >
-              {quantity === 0
-                ? "Vaciar carrito"
-                : quantityInCart > 0 && quantity < quantityInCart
-                  ? "Actualizar carrito"
-                  : "Agregar al carrito"}
+              {quantity === 0 ? (
+                <span className="inline-flex items-center">
+                  <Trash2 className="w-4 h-4 mr-2" aria-hidden /> Vaciar carrito
+                </span>
+              ) : quantityInCart > 0 && quantity < quantityInCart ? (
+                <span className="inline-flex items-center">
+                  <RotateCcw className="w-4 h-4 mr-2" aria-hidden /> Actualizar
+                  carrito
+                </span>
+              ) : (
+                <span className="inline-flex items-center">
+                  <ShoppingCart className="w-4 h-4 mr-2" aria-hidden /> Agregar
+                  al carrito
+                </span>
+              )}
             </motion.span>
             <AnimatePresence>
               {showCatAnimation && (
