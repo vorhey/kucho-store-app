@@ -92,7 +92,10 @@ export function ProductCard({ product, onAddToCart }: ProductCardProps) {
               className="flex-1 outline outline-pink-200 inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-background hover:bg-pink-50 hover:text-accent-foreground h-10 px-4 py-2 cursor-pointer relative overflow-hidden"
             >
               <motion.span
-                animate={{ opacity: showCatAnimation ? 0 : 1, y: showCatAnimation ? -8 : 0 }}
+                animate={{
+                  opacity: showCatAnimation ? 0 : 1,
+                  y: showCatAnimation ? -8 : 0,
+                }}
                 transition={{ duration: 0.2 }}
               >
                 Agregar al carrito
@@ -108,7 +111,8 @@ export function ProductCard({ product, onAddToCart }: ProductCardProps) {
                     className="absolute inset-0 flex items-center justify-center"
                     aria-hidden
                   >
-                    <Cat className="h-6 w-6 text-pink-500" strokeWidth={2.2} />
+                    <Cat className="h-6 w-6 text-pink-500" strokeWidth={2.2} />{" "}
+                    Agregado!
                   </motion.span>
                 )}
               </AnimatePresence>
