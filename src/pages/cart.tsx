@@ -9,7 +9,7 @@ import {
 } from "../components/ui/card";
 import { Button } from "../components/ui/button";
 import { Link, useLocation } from "wouter";
-import { ShoppingCart, Trash } from "lucide-react";
+import { ShoppingCart, Trash, Minus, Plus } from "lucide-react";
 import { CatAnimation } from "../components/CatAnimation";
 import { motion, AnimatePresence } from "framer-motion";
 import { useScrollTop } from "@/hooks/useScrollTop";
@@ -255,20 +255,7 @@ export default function CartPage() {
                                     }}
                                     tabIndex={-1}
                                   >
-                                    <svg
-                                      xmlns="http://www.w3.org/2000/svg"
-                                      width="24"
-                                      height="24"
-                                      viewBox="0 0 24 24"
-                                      fill="none"
-                                      stroke="currentColor"
-                                      strokeWidth="2"
-                                      strokeLinecap="round"
-                                      strokeLinejoin="round"
-                                      className="size-4"
-                                    >
-                                      <path d="M5 12l14 0"></path>
-                                    </svg>
+                                    <Minus className="size-4" />
                                   </button>
                                   <button
                                     data-slot="button"
@@ -285,21 +272,7 @@ export default function CartPage() {
                                     }}
                                     tabIndex={-1}
                                   >
-                                    <svg
-                                      xmlns="http://www.w3.org/2000/svg"
-                                      width="24"
-                                      height="24"
-                                      viewBox="0 0 24 24"
-                                      fill="none"
-                                      stroke="currentColor"
-                                      strokeWidth="2"
-                                      strokeLinecap="round"
-                                      strokeLinejoin="round"
-                                      className="size-4"
-                                    >
-                                      <path d="M12 5l0 14"></path>
-                                      <path d="M5 12l14 0"></path>
-                                    </svg>
+                                    <Plus className="size-4" />
                                   </button>
                                 </div>
                               </div>

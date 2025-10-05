@@ -1,7 +1,7 @@
 import { Link } from "wouter";
 import { Button } from "@/components/ui/button";
 import { motion } from "framer-motion";
-import { HeartIcon } from "lucide-react";
+import { HeartIcon, ChevronRight } from "lucide-react";
 import heroImage from "@/assets/images/hero-cat.png";
 import kittyImage from "@/assets/images/kitty-face.png";
 
@@ -59,24 +59,14 @@ export default function HomePage() {
                       className="w-6 h-6"
                     />
                     Explorar colección
-                    <motion.svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      className="h-5 w-5"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke="currentColor"
+                    <motion.div
                       initial={{ x: 0 }}
                       animate={{ x: 0 }}
                       whileHover={{ x: 3 }}
                       transition={{ duration: 0.2 }}
                     >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth="2"
-                        d="M9 5l7 7-7 7"
-                      />
-                    </motion.svg>
+                      <ChevronRight className="h-5 w-5" />
+                    </motion.div>
                   </Button>
                 </div>
               </motion.div>

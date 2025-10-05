@@ -3,7 +3,7 @@ import { CardHeader, CardContent, CardFooter } from "./ui/card";
 import { Input } from "./ui/input";
 import { Label } from "./ui/label";
 import { AnimatePresence, motion } from "framer-motion";
-import { Cat, Trash2, RotateCcw, ShoppingCart } from "lucide-react";
+import { Cat, Trash2, RotateCcw, ShoppingCart, Eye, Minus, Plus } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { useCart } from "@/context/CartContext";
 import { useLocation } from "wouter";
@@ -102,25 +102,7 @@ export function ProductCard({ product, onAddToCart }: ProductCardProps) {
             className="inline-flex items-center gap-1 px-3 py-1 rounded-md bg-gradient-to-r from-blue-100 to-blue-200 text-xs font-semibold text-blue-700 shadow-sm hover:scale-105 hover:brightness-110 transition-all duration-150 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-offset-2 cursor-pointer"
             tabIndex={0}
           >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              className="w-4 h-4 mr-1 text-blue-500"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-              strokeWidth="2"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
-              />
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M2.458 12C3.732 7.943 7.523 5 12 5c4.477 0 8.268 2.943 9.542 7-1.274 4.057-5.065 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
-              />
-            </svg>
+            <Eye className="w-4 h-4 mr-1 text-blue-500" />
             ver detalles
           </button>
         </div>
@@ -183,20 +165,7 @@ export function ProductCard({ product, onAddToCart }: ProductCardProps) {
                   onClick={decreaseQuantity}
                   tabIndex={-1}
                 >
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="24"
-                    height="24"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    className="size-4"
-                  >
-                    <path d="M5 12l14 0"></path>
-                  </svg>
+                  <Minus className="size-4" />
                 </button>
                 <button
                   data-slot="button"
@@ -206,21 +175,7 @@ export function ProductCard({ product, onAddToCart }: ProductCardProps) {
                   onClick={increaseQuantity}
                   tabIndex={-1}
                 >
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="24"
-                    height="24"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    className="size-4"
-                  >
-                    <path d="M12 5l0 14"></path>
-                    <path d="M5 12l14 0"></path>
-                  </svg>
+                  <Plus className="size-4" />
                 </button>
               </div>
               {quantityInCart > 0 && (

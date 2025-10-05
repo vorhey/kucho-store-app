@@ -4,7 +4,7 @@ import { useCart } from "@/context/CartContext";
 import { Button } from "@/components/ui/button";
 import { motion } from "framer-motion";
 import { useState, useEffect, useRef } from "react";
-import { ArrowLeft, ShoppingCart, Trash2, RotateCcw, Cat } from "lucide-react";
+import { ArrowLeft, ShoppingCart, Trash2, RotateCcw, Cat, Minus, Plus } from "lucide-react";
 import { AnimatePresence } from "framer-motion";
 import { useScrollTop } from "@/hooks/useScrollTop";
 import notFoundImage from "@/assets/images/not-found.png";
@@ -13,7 +13,7 @@ import { getProductBreadcrumbs } from "@/lib/breadcrumbs";
 
 export default function ProductDetailPage() {
   const { id } = useParams<{ id: string }>();
-  const { addToCart, decreaseFromCart, removeFromCart, cart } = useCart();
+  const { addToCart, removeFromCart, cart } = useCart();
   const product = products.find((p) => p.id === id);
   const [imgSrc, setImgSrc] = useState(product?.imageUrl);
   const cartItem = cart.find((item) => item.product.id === id);
@@ -22,7 +22,9 @@ export default function ProductDetailPage() {
     quantityInCart > 0 ? quantityInCart : 1,
   );
   const [showCatAnimation, setShowCatAnimation] = useState(false);
-  const catAnimationTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const catAnimationTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(
+    null,
+  );
 
   // Sync input value with cart changes
   useEffect(() => {
@@ -126,7 +128,12 @@ export default function ProductDetailPage() {
           </div>
           <div className="relative w-full flex flex-col gap-2">
             <div className="mb-2">
-              <label htmlFor={`quantity-${product.id}`} className="text-gray-700 mb-1 block">Cantidad</label>
+              <label
+                htmlFor={`quantity-${product.id}`}
+                className="text-gray-700 mb-1 block"
+              >
+                Cantidad
+              </label>
               <div className="flex items-center gap-2">
                 <div className="flex w-fit items-stretch [&>input]:flex-1 [&>button]:focus-visible:z-10 [&>button]:focus-visible:relative [&>input]:w-14 has-[select[aria-hidden=true]:last-child]:[&>[data-slot=select-trigger]:last-of-type]:rounded-r-md has-[>[data-slot=button-group]]:gap-2 [&>*:not(:first-child)]:rounded-l-none [&>*:not(:first-child)]:border-l-0 [&>*:not(:last-child)]:rounded-r-none">
                   <input
@@ -166,24 +173,13 @@ export default function ProductDetailPage() {
                     aria-label="Decrement"
                     onClick={(e) => {
                       e.stopPropagation();
-                      setQuantity((prev) => (typeof prev === "number" ? Math.max(0, prev - 1) : 0));
+                      setQuantity((prev) =>
+                        typeof prev === "number" ? Math.max(0, prev - 1) : 0,
+                      );
                     }}
                     tabIndex={-1}
                   >
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      width="24"
-                      height="24"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth="2"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      className="size-4"
-                    >
-                      <path d="M5 12l14 0"></path>
-                    </svg>
+                    <Minus className="size-4" />
                   </button>
                   <button
                     data-slot="button"
@@ -192,29 +188,19 @@ export default function ProductDetailPage() {
                     aria-label="Increment"
                     onClick={(e) => {
                       e.stopPropagation();
-                      setQuantity((prev) => (typeof prev === "number" ? prev + 1 : 1));
+                      setQuantity((prev) =>
+                        typeof prev === "number" ? prev + 1 : 1,
+                      );
                     }}
                     tabIndex={-1}
                   >
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      width="24"
-                      height="24"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth="2"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      className="size-4"
-                    >
-                      <path d="M12 5l0 14"></path>
-                      <path d="M5 12l14 0"></path>
-                    </svg>
+                    <Plus className="size-4" />
                   </button>
                 </div>
                 {quantityInCart > 0 && (
-                  <span className="ml-2 px-2 py-1 rounded bg-pink-50 text-pink-600 text-xs font-semibold border border-pink-200">En carrito: {quantityInCart}</span>
+                  <span className="ml-2 px-2 py-1 rounded bg-pink-50 text-pink-600 text-xs font-semibold border border-pink-200">
+                    En carrito: {quantityInCart}
+                  </span>
                 )}
               </div>
             </div>
@@ -233,17 +219,20 @@ export default function ProductDetailPage() {
               >
                 {quantity === 0 ? (
                   <span className="inline-flex items-center">
-                    <Trash2 className="w-4 h-4 mr-2" aria-hidden /> Vaciar carrito
-                  </span>
-                ) : quantityInCart > 0 && typeof quantity === "number" && quantity < quantityInCart ? (
-                  <span className="inline-flex items-center">
-                    <RotateCcw className="w-4 h-4 mr-2" aria-hidden /> Actualizar
+                    <Trash2 className="w-4 h-4 mr-2" aria-hidden /> Vaciar
                     carrito
+                  </span>
+                ) : quantityInCart > 0 &&
+                  typeof quantity === "number" &&
+                  quantity < quantityInCart ? (
+                  <span className="inline-flex items-center">
+                    <RotateCcw className="w-4 h-4 mr-2" aria-hidden />{" "}
+                    Actualizar carrito
                   </span>
                 ) : (
                   <span className="inline-flex items-center">
-                    <ShoppingCart className="w-4 h-4 mr-2" aria-hidden /> Agregar
-                    al carrito
+                    <ShoppingCart className="w-4 h-4 mr-2" aria-hidden />{" "}
+                    Agregar al carrito
                   </span>
                 )}
               </motion.span>
@@ -258,7 +247,7 @@ export default function ProductDetailPage() {
                     className="absolute inset-0 flex items-center justify-center"
                     aria-hidden
                   >
-                    <Cat className="h-6 w-6 text-pink-500" strokeWidth={2.2} />{' '}
+                    <Cat className="h-6 w-6 text-pink-500" strokeWidth={2.2} />{" "}
                     Listo!
                   </motion.span>
                 )}
