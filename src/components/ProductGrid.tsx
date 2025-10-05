@@ -5,7 +5,7 @@ import { FloatingArrowUp } from "./FloatingArrowUp";
 
 interface ProductGridProps {
   products: Product[] | null;
-  onAddToCart: (product: Product) => void;
+  onAddToCart: (product: Product, quantity: number) => void;
 }
 
 export function ProductGrid({ products, onAddToCart }: ProductGridProps) {

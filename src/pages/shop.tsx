@@ -9,8 +9,8 @@ import { getShopBreadcrumbs } from "@/lib/breadcrumbs";
 export default function ShopPage() {
   const { addToCart } = useCart();
 
-  const handleAddToCart = (product: Product) => {
-    addToCart(product);
+  const handleAddToCart = (product: Product, quantity: number) => {
+    addToCart(product, quantity);
   };
 
   const query = useQuery({
