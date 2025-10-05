@@ -11,7 +11,11 @@
     "dev:full": "concurrently \"vite\" \"wrangler pages dev dist --port 8788\"",
     "build": "vite build",
     "preview": "vite preview",
-    "serve": "wrangler pages dev dist"
+    "serve": "wrangler pages dev dist",
+    "lint": "biome check --fix",
+    "lint:check": "biome check",
+    "format": "biome format --write",
+    "format:check": "biome format"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.2.2",
@@ -37,6 +41,7 @@
     "zod": "^4.1.11"
   },
   "devDependencies": {
+    "@biomejs/biome": "^2.2.5",
     "@cloudflare/vite-plugin": "^1.13.10",
     "@tailwindcss/postcss": "^4.1.14",
     "@types/bun": "^1.2.5",

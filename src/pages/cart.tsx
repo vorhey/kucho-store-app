@@ -51,7 +51,6 @@ const itemVariants = {
 
 export default function CartPage() {
   const { cart, removeFromCart, addToCart } = useCart();
-  const [, setLocation] = useLocation();
   const [imageErrors, setImageErrors] = useState<{ [key: string]: boolean }>(
     {},
   );
@@ -148,12 +147,12 @@ export default function CartPage() {
                     style={{ position: "relative" }}
                   >
                     <Card className="overflow-hidden hover:shadow-lg transition-shadow">
-                      <div className="flex flex-col sm:flex-row">
-                        <div className="w-full sm:w-48 h-56">
+                      <div className="flex items-center p-4 gap-4">
+                        <div className="w-24 h-24 flex-shrink-0">
                           <Link
                             href={`/product/${item.product.id}`}
-                            onClick={(e) => e.stopPropagation()} // Prevent bubbling to Card
-                            className="block w-full h-full"
+                            onClick={(e) => e.stopPropagation()}
+                            className="block w-full h-full rounded-md overflow-hidden"
                           >
                             <img
                               src={
@@ -165,140 +164,117 @@ export default function CartPage() {
                               onError={() => handleImageError(item.product.id)}
                               className="w-full h-full object-cover"
                               loading="lazy"
-                              style={{ display: "block" }}
                             />
                           </Link>
                         </div>
-                        <div className="flex-1 flex flex-col">
-                          <CardHeader className="p-4 flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2">
-                            <div>
-                              <h3 className="text-lg font-semibold">
-                                {item.product.name}
-                              </h3>
-                              <div className="flex gap-4 mt-1 text-gray-600">
-                                <span>
-                                  Unitario:{" "}
-                                  <span className="font-semibold text-gray-900">
-                                    ${item.product.price.toFixed(2)}
-                                  </span>
+                        <div className="flex-grow grid grid-cols-1 md:grid-cols-3 items-center gap-4">
+                          <div>
+                            <h3 className="text-lg font-semibold">
+                              {item.product.name}
+                            </h3>
+                            <div className="flex gap-4 mt-1 text-gray-600 text-sm">
+                              <span>
+                                Unitario:{" "}
+                                <span className="font-semibold text-gray-900">
+                                  ${item.product.price.toFixed(2)}
                                 </span>
-                                <span>
-                                  Subtotal:{" "}
-                                  <motion.span
-                                    className="font-semibold text-gray-900"
-                                    key={item.product.price * item.quantity}
-                                    initial={{ scale: 1, color: "#111827" }}
-                                    animate={{
-                                      scale: [1, 1.15, 1],
-                                      color: ["#111827", "#f472b6", "#111827"],
-                                    }}
-                                    transition={{ duration: 0.5 }}
-                                  >
-                                    $
-                                    {(
-                                      item.product.price * item.quantity
-                                    ).toFixed(2)}
-                                  </motion.span>
-                                </span>
-                              </div>
+                              </span>
+                              <span>
+                                Subtotal:{" "}
+                                <motion.span
+                                  className="font-semibold text-gray-900"
+                                  key={item.product.price * item.quantity}
+                                  initial={{ scale: 1, color: "#111827" }}
+                                  animate={{
+                                    scale: [1, 1.15, 1],
+                                    color: ["#111827", "#f472b6", "#111827"],
+                                  }}
+                                  transition={{ duration: 0.5 }}
+                                >
+                                  $
+                                  {(item.product.price * item.quantity).toFixed(
+                                    2,
+                                  )}
+                                </motion.span>
+                              </span>
                             </div>
-                          </CardHeader>
-                          <CardContent className="p-4 flex-grow">
-                            <div className="flex flex-col gap-1">
-                              <Label
-                                htmlFor={`cart-qty-${item.product.id}`}
-                                className="text-gray-500 text-sm mb-1"
+                          </div>
+
+                          <div className="flex items-center gap-2 justify-self-center">
+                            <div className="flex w-fit items-stretch [&>input]:flex-1 [&>button]:focus-visible:z-10 [&>button]:focus-visible:relative [&>input]:w-14 has-[select[aria-hidden=true]:last-child]:[&>[data-slot=select-trigger]:last-of-type]:rounded-r-md has-[>[data-slot=button-group]]:gap-2 [&>*:not(:first-child)]:rounded-l-none [&>*:not(:first-child)]:border-l-0 [&>*:not(:last-child)]:rounded-r-none">
+                              <button
+                                data-slot="button"
+                                className="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 size-8"
+                                type="button"
+                                aria-label="Decrement"
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  if (item.quantity > 1) {
+                                    addToCart(item.product, item.quantity - 1);
+                                    clearQuantityInput(item.product.id);
+                                  } else if (item.quantity === 1) {
+                                    clearQuantityInput(item.product.id);
+                                    removeFromCart(item.product.id);
+                                  }
+                                }}
+                                tabIndex={-1}
                               >
-                                Cantidad
-                              </Label>
-                              <div className="flex items-center gap-2">
-                                <div className="flex w-fit items-stretch [&>input]:flex-1 [&>button]:focus-visible:z-10 [&>button]:focus-visible:relative [&>input]:w-14 has-[select[aria-hidden=true]:last-child]:[&>[data-slot=select-trigger]:last-of-type]:rounded-r-md has-[>[data-slot=button-group]]:gap-2 [&>*:not(:first-child)]:rounded-l-none [&>*:not(:first-child)]:border-l-0 [&>*:not(:last-child)]:rounded-r-none">
-                                  <Input
-                                    id={`cart-qty-${item.product.id}`}
-                                    type="number"
-                                    min={0}
-                                    value={
-                                      quantityInputs[item.product.id] ??
-                                      item.quantity.toString()
-                                    }
-                                    onClick={(e) => e.stopPropagation()}
-                                    onChange={(e) => {
-                                      handleQuantityInputChange(
-                                        item.product,
-                                        e.target.value,
-                                      );
-                                    }}
-                                    onBlur={() =>
-                                      handleQuantityInputBlur(item.product.id)
-                                    }
-                                    className="file:text-foreground placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground dark:bg-input/30 border-input w-full min-w-0 rounded-md border bg-transparent px-3 py-1 text-base shadow-xs transition-[color,box-shadow] outline-none file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive h-8 font-mono text-center"
-                                    style={{ appearance: "textfield" }}
-                                    data-slot="input"
-                                  />
-                                  <button
-                                    data-slot="button"
-                                    className="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 size-8"
-                                    type="button"
-                                    aria-label="Decrement"
-                                    onClick={(e) => {
-                                      e.stopPropagation();
-                                      if (item.quantity > 1) {
-                                        addToCart(
-                                          item.product,
-                                          item.quantity - 1,
-                                        );
-                                        clearQuantityInput(item.product.id);
-                                      } else if (item.quantity === 1) {
-                                        clearQuantityInput(item.product.id);
-                                        removeFromCart(item.product.id);
-                                      }
-                                    }}
-                                    tabIndex={-1}
-                                  >
-                                    <Minus className="size-4" />
-                                  </button>
-                                  <button
-                                    data-slot="button"
-                                    className="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 size-8"
-                                    type="button"
-                                    aria-label="Increment"
-                                    onClick={(e) => {
-                                      e.stopPropagation();
-                                      addToCart(
-                                        item.product,
-                                        item.quantity + 1,
-                                      );
-                                      clearQuantityInput(item.product.id);
-                                    }}
-                                    tabIndex={-1}
-                                  >
-                                    <Plus className="size-4" />
-                                  </button>
-                                </div>
-                              </div>
+                                <Minus className="size-4" />
+                              </button>
+                              <Input
+                                id={`cart-qty-${item.product.id}`}
+                                type="number"
+                                min={0}
+                                value={
+                                  quantityInputs[item.product.id] ??
+                                  item.quantity.toString()
+                                }
+                                onClick={(e) => e.stopPropagation()}
+                                onChange={(e) => {
+                                  handleQuantityInputChange(
+                                    item.product,
+                                    e.target.value,
+                                  );
+                                }}
+                                onBlur={() =>
+                                  handleQuantityInputBlur(item.product.id)
+                                }
+                                className="file:text-foreground placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground dark:bg-input/30 border-input w-full min-w-0 rounded-md border bg-transparent px-3 py-1 text-base shadow-xs transition-[color,box-shadow] outline-none file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive h-8 font-mono text-center"
+                                style={{ appearance: "textfield" }}
+                                data-slot="input"
+                              />
+                              <button
+                                data-slot="button"
+                                className="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 size-8"
+                                type="button"
+                                aria-label="Increment"
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  addToCart(item.product, item.quantity + 1);
+                                  clearQuantityInput(item.product.id);
+                                }}
+                                tabIndex={-1}
+                              >
+                                <Plus className="size-4" />
+                              </button>
                             </div>
-                            {/* <p className="text-2xl font-bold text-primary"> */}
-                            {/*   ${item.product.price.toFixed(2)} */}
-                            {/* </p> */}
-                            {/* <p className="text-sm text-gray-600 mt-2"> */}
-                            {/*   {item.product.description} */}
-                            {/* </p> */}
-                          </CardContent>
-                          <CardFooter className="p-4 border-t">
+                          </div>
+
+                          <div className="flex justify-end">
                             <Button
                               type="button"
-                              variant="outline"
-                              className="hover:bg-pink-50"
+                              variant="ghost"
+                              size="icon"
+                              className="hover:bg-pink-50 text-gray-500 hover:text-red-500"
                               onClick={(e) => {
                                 e.stopPropagation();
                                 clearQuantityInput(item.product.id);
                                 removeFromCart(item.product.id);
                               }}
                             >
-                              <Trash className="h-4 w-4 mr-2" />
-                              Eliminar
+                              <Trash className="h-5 w-5" />
                             </Button>
-                          </CardFooter>
+                          </div>
                         </div>
                       </div>
                     </Card>
