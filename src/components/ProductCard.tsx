@@ -1,84 +1,92 @@
-import type { Product } from "../types/product";
-import { CardHeader, CardContent, CardFooter } from "./ui/card";
-import { Input } from "./ui/input";
-import { Label } from "./ui/label";
-import { AnimatePresence, motion } from "framer-motion";
-import { Cat, Trash2, RotateCcw, ShoppingCart, Eye, Minus, Plus } from "lucide-react";
-import { useEffect, useRef, useState } from "react";
-import { useCart } from "@/context/CartContext";
-import { useLocation } from "wouter";
-import notFoundImage from "@/assets/images/not-found.png";
+import { AnimatePresence, motion } from "framer-motion"
+import {
+  Cat,
+  Eye,
+  Minus,
+  Plus,
+  RotateCcw,
+  ShoppingCart,
+  Trash2,
+} from "lucide-react"
+import { useEffect, useRef, useState } from "react"
+import { useLocation } from "wouter"
+import notFoundImage from "@/assets/images/not-found.png"
+import { useCart } from "@/context/CartContext"
+import type { Product } from "../types/product"
+import { CardContent, CardFooter, CardHeader } from "./ui/card"
+import { Input } from "./ui/input"
+import { Label } from "./ui/label"
 
 interface ProductCardProps {
-  product: Product;
-  onAddToCart: (product: Product, quantity: number) => void;
+  product: Product
+  onAddToCart: (product: Product, quantity: number) => void
 }
 
 export function ProductCard({ product, onAddToCart }: ProductCardProps) {
-  const [imgSrc, setImgSrc] = useState(product.imageUrl);
-  const [, setLocation] = useLocation();
-  const { cart } = useCart();
-  const { removeFromCart } = useCart();
-  const cartItem = cart.find((item) => item.product.id === product.id);
-  const quantityInCart = cartItem ? cartItem.quantity : 0;
+  const [imgSrc, setImgSrc] = useState(product.imageUrl)
+  const [, setLocation] = useLocation()
+  const { cart } = useCart()
+  const { removeFromCart } = useCart()
+  const cartItem = cart.find((item) => item.product.id === product.id)
+  const quantityInCart = cartItem ? cartItem.quantity : 0
   const [quantity, setQuantity] = useState(
-    quantityInCart > 0 ? quantityInCart : 1,
-  );
-  const [showCatAnimation, setShowCatAnimation] = useState(false);
+    quantityInCart > 0 ? quantityInCart : 1
+  )
+  const [showCatAnimation, setShowCatAnimation] = useState(false)
   const catAnimationTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(
-    null,
-  );
+    null
+  )
 
   // Sync input value with cart changes
   useEffect(() => {
-    setQuantity(quantityInCart > 0 ? quantityInCart : 1);
-  }, [quantityInCart]);
+    setQuantity(quantityInCart > 0 ? quantityInCart : 1)
+  }, [quantityInCart])
 
   const handleImageError = () => {
-    setImgSrc(notFoundImage);
-  };
+    setImgSrc(notFoundImage)
+  }
 
   const handleClick = () => {
-    setLocation(`/product/${product.id}`);
-  };
+    setLocation(`/product/${product.id}`)
+  }
 
   const increaseQuantity = (e: React.MouseEvent) => {
-    e.stopPropagation();
-    setQuantity((prev) => prev + 1);
-  };
+    e.stopPropagation()
+    setQuantity((prev) => prev + 1)
+  }
 
   const decreaseQuantity = (e: React.MouseEvent) => {
-    e.stopPropagation();
-    setQuantity((prev) => (prev > 0 ? prev - 1 : 0));
-  };
+    e.stopPropagation()
+    setQuantity((prev) => (prev > 0 ? prev - 1 : 0))
+  }
 
   const handleAddToCartClick = (e?: React.MouseEvent | React.KeyboardEvent) => {
     if (e && typeof e.stopPropagation === "function") {
-      e.stopPropagation();
+      e.stopPropagation()
     }
     if (quantity === 0) {
-      removeFromCart(product.id);
-      return;
+      removeFromCart(product.id)
+      return
     }
-    onAddToCart(product, quantity);
-    setShowCatAnimation(true);
+    onAddToCart(product, quantity)
+    setShowCatAnimation(true)
 
     if (catAnimationTimeoutRef.current) {
-      clearTimeout(catAnimationTimeoutRef.current);
+      clearTimeout(catAnimationTimeoutRef.current)
     }
 
     catAnimationTimeoutRef.current = setTimeout(() => {
-      setShowCatAnimation(false);
-    }, 1200);
-  };
+      setShowCatAnimation(false)
+    }, 1200)
+  }
 
   useEffect(() => {
     return () => {
       if (catAnimationTimeoutRef.current) {
-        clearTimeout(catAnimationTimeoutRef.current);
+        clearTimeout(catAnimationTimeoutRef.current)
       }
-    };
-  }, []);
+    }
+  }, [])
 
   return (
     <motion.div
@@ -132,25 +140,25 @@ export function ProductCard({ product, onAddToCart }: ProductCardProps) {
                   value={quantity}
                   onClick={(e) => e.stopPropagation()}
                   onChange={(e) => {
-                    const val = e.target.value;
+                    const val = e.target.value
                     // Allow empty string for editing
                     if (val === "") {
-                      setQuantity("");
+                      setQuantity("")
                     } else {
-                      const num = Number(val);
-                      if (!isNaN(num)) setQuantity(num);
+                      const num = Number(val)
+                      if (!isNaN(num)) setQuantity(num)
                     }
                   }}
                   onBlur={() => {
                     // On blur, enforce minimum value of 1
                     if (quantity === "" || Number(quantity) < 1) {
-                      setQuantity(1);
+                      setQuantity(1)
                     }
                   }}
                   onKeyDown={(e) => {
                     if (e.key === "Enter") {
-                      e.preventDefault();
-                      handleAddToCartClick();
+                      e.preventDefault()
+                      handleAddToCartClick()
                     }
                   }}
                   className="file:text-foreground placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground dark:bg-input/30 border-input  min-w-0 rounded-md border bg-transparent px-3 py-1 text-base shadow-xs transition-[color,box-shadow] outline-none file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive h-8 !w-14 font-mono text-center"
@@ -233,5 +241,5 @@ export function ProductCard({ product, onAddToCart }: ProductCardProps) {
         </div>
       </CardFooter>
     </motion.div>
-  );
+  )
 }

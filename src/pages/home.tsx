@@ -1,13 +1,13 @@
-import { Link } from "wouter";
-import { Button } from "@/components/ui/button";
-import { motion } from "framer-motion";
-import { HeartIcon, ChevronRight } from "lucide-react";
-import heroImage from "@/assets/images/hero-cat.png";
-import kittyImage from "@/assets/images/kitty-face.png";
+import { motion } from "framer-motion"
+import { ChevronRight, HeartIcon } from "lucide-react"
+import { Link } from "wouter"
+import heroImage from "@/assets/images/hero-cat.png"
+import kittyImage from "@/assets/images/kitty-face.png"
+import { Button } from "@/components/ui/button"
 
 export default function HomePage() {
   // This timestamp will update on HMR if working correctly
-  console.log("HomePage rendered at:", new Date().toLocaleTimeString());
+  console.log("HomePage rendered at:", new Date().toLocaleTimeString())
 
   return (
     <div>
@@ -75,5 +75,5 @@ export default function HomePage() {
         </div>
       </section>
     </div>
-  );
+  )
 }

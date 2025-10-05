@@ -1,42 +1,42 @@
-import { Link, useLocation } from "wouter";
-import { useState, useRef, useEffect } from "react";
-import { Menu, X, ShoppingBag, Cat, User, ShoppingCart } from "lucide-react";
-import { useCart } from "@/context/CartContext";
-import { useClickOutside } from "@/hooks/useClickOutside";
-import { useAuth } from "@/context/AuthContext";
+import { Cat, Menu, ShoppingBag, ShoppingCart, User, X } from "lucide-react"
+import { useEffect, useRef, useState } from "react"
+import { Link, useLocation } from "wouter"
+import { useAuth } from "@/context/AuthContext"
+import { useCart } from "@/context/CartContext"
+import { useClickOutside } from "@/hooks/useClickOutside"
 
 export function NavBar() {
-  const [isOpen, setIsOpen] = useState(false);
-  const { cart } = useCart();
-  const { user } = useAuth();
-  const navRef = useRef<HTMLElement>(null);
-  const [location] = useLocation();
-  const cartCount = cart.reduce((sum, item) => sum + item.quantity, 0);
-  const [prevCount, setPrevCount] = useState(cartCount);
-  const [bounce, setBounce] = useState(false);
+  const [isOpen, setIsOpen] = useState(false)
+  const { cart } = useCart()
+  const { user } = useAuth()
+  const navRef = useRef<HTMLElement>(null)
+  const [location] = useLocation()
+  const cartCount = cart.reduce((sum, item) => sum + item.quantity, 0)
+  const [prevCount, setPrevCount] = useState(cartCount)
+  const [bounce, setBounce] = useState(false)
 
   useEffect(() => {
     if (cartCount > prevCount) {
-      setBounce(true);
-      setTimeout(() => setBounce(false), 800);
+      setBounce(true)
+      setTimeout(() => setBounce(false), 800)
     }
-    setPrevCount(cartCount);
-  }, [cartCount, prevCount]);
+    setPrevCount(cartCount)
+  }, [cartCount, prevCount])
 
   const resolveIsActive = (target: string | string[]) => {
-    const paths = Array.isArray(target) ? target : [target];
+    const paths = Array.isArray(target) ? target : [target]
     return paths.some((path) =>
-      path === "/" ? location === "/" : location.startsWith(path),
-    );
-  };
+      path === "/" ? location === "/" : location.startsWith(path)
+    )
+  }
 
   const mobileLinkClasses = (path: string | string[]) => {
     const baseClasses =
-      "flex items-center gap-3 text-gray-600 hover:text-gray-800 px-2 py-2 rounded-md transition-colors duration-200";
+      "flex items-center gap-3 text-gray-600 hover:text-gray-800 px-2 py-2 rounded-md transition-colors duration-200"
     return resolveIsActive(path)
       ? `${baseClasses} bg-pink-100 text-pink-700`
-      : baseClasses;
-  };
+      : baseClasses
+  }
 
   const authPaths = [
     "/signin",
@@ -44,10 +44,10 @@ export function NavBar() {
     "/request-reset",
     "/reset-password",
     "/forgot-password",
-  ];
-  const userLinkTarget = user ? "/profile" : authPaths;
+  ]
+  const userLinkTarget = user ? "/profile" : authPaths
 
-  useClickOutside(navRef, () => setIsOpen(false));
+  useClickOutside(navRef, () => setIsOpen(false))
 
   return (
     <nav
@@ -100,6 +100,7 @@ export function NavBar() {
               <User size={18} />
             </Link>
             <button
+              type="button"
               onClick={() => setIsOpen(!isOpen)}
               className={`transition-transform duration-300 ease-in-out hover:scale-110 ${
                 isOpen ? "rotate-180" : ""
@@ -198,5 +199,5 @@ export function NavBar() {
         </div>
       </div>
     </nav>
-  );
+  )
 }

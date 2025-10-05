@@ -1,7 +1,7 @@
 import type {
   AuditLogApiResponse,
   AuditLogRequest,
-} from "@/interfaces/auditLog";
+} from "@/interfaces/auditLog"
 
 export const saveLog = async (
   logData: AuditLogRequest
@@ -11,10 +11,10 @@ export const saveLog = async (
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(logData),
-    });
-    return await response.json();
+    })
+    return await response.json()
   } catch (error) {
-    console.error("Audit log error:", error);
-    throw error;
+    console.error("Audit log error:", error)
+    throw error
   }
-};
+}

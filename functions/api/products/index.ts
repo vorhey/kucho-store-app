@@ -1,4 +1,4 @@
-export function onRequest(context) {
+export function onRequest(_context) {
   return Response.json(
     [
       {
@@ -110,6 +110,6 @@ export function onRequest(context) {
         "Access-Control-Allow-Methods": "GET, OPTIONS",
         "Access-Control-Max-Age": "86400",
       },
-    },
-  );
+    }
+  )
 }

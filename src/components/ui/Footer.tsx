@@ -1,9 +1,9 @@
-import { Cat, Heart } from "lucide-react";
-import { SiInstagram, SiFacebook, SiX } from "@icons-pack/react-simple-icons";
-import { Link } from "wouter";
+import { SiFacebook, SiInstagram, SiX } from "@icons-pack/react-simple-icons"
+import { Cat, Heart } from "lucide-react"
+import { Link } from "wouter"
 
 export function Footer() {
-  const currentYear = new Date().getFullYear();
+  const currentYear = new Date().getFullYear()
 
   return (
     <footer className="bg-white mt-auto">
@@ -49,18 +49,21 @@ export function Footer() {
             <div className="flex space-x-4">
               <a
                 href="#"
+                aria-label="Instagram"
                 className="text-gray-600 hover:text-primary transition"
               >
                 <SiInstagram size={20} color="default" title="Instagram" />
               </a>
               <a
                 href="#"
+                aria-label="Facebook"
                 className="text-gray-600 hover:text-primary transition"
               >
                 <SiFacebook size={20} color="default" title="Facebook" />
               </a>
               <a
                 href="#"
+                aria-label="X (Twitter)"
                 className="text-gray-600 hover:text-primary transition"
               >
                 <SiX size={20} color="default" title="X (Twitter)" />
@@ -79,5 +82,5 @@ export function Footer() {
         </div>
       </div>
     </footer>
-  );
+  )
 }

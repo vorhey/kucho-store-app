@@ -12,10 +12,7 @@
     "build": "vite build",
     "preview": "vite preview",
     "serve": "wrangler pages dev dist",
-    "lint": "biome check --fix",
-    "lint:check": "biome check",
-    "format": "biome format --write",
-    "format:check": "biome format"
+    "format": "biome format --write && biome check --fix"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.2.2",

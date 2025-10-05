@@ -1,39 +1,39 @@
-import { useState } from "react";
-import { useLocation } from "wouter";
-import { requestPasswordReset } from "@/services/auth";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { useForm } from "react-hook-form";
-import { motion, AnimatePresence } from "framer-motion";
-import type { RequestPasswordResetData } from "@/types/auth";
-import { Breadcrumbs } from "@/components/Breadcrumbs";
-import { getRequestResetBreadcrumbs } from "@/lib/breadcrumbs";
+import { AnimatePresence, motion } from "framer-motion"
+import { useState } from "react"
+import { useForm } from "react-hook-form"
+import { useLocation } from "wouter"
+import { Breadcrumbs } from "@/components/Breadcrumbs"
+import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
+import { getRequestResetBreadcrumbs } from "@/lib/breadcrumbs"
+import { requestPasswordReset } from "@/services/auth"
+import type { RequestPasswordResetData } from "@/types/auth"
 
 export default function RequestResetPage() {
-  const [error, setError] = useState("");
-  const [success, setSuccess] = useState(false);
-  const [, setLocation] = useLocation();
+  const [error, setError] = useState("")
+  const [success, setSuccess] = useState(false)
+  const [, setLocation] = useLocation()
   const {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<RequestPasswordResetData>();
+  } = useForm<RequestPasswordResetData>()
 
   const onSubmit = async (data: RequestPasswordResetData) => {
     try {
-      const response = await requestPasswordReset(data);
+      const response = await requestPasswordReset(data)
       if (response.success) {
-        setSuccess(true);
-        setError("");
+        setSuccess(true)
+        setError("")
       } else {
-        setError(response.message || "Ocurrió un error");
+        setError(response.message || "Ocurrió un error")
       }
     } catch (err) {
       setError(
-        "Ocurrió un error al solicitar el restablecimiento de contraseña",
-      );
+        "Ocurrió un error al solicitar el restablecimiento de contraseña"
+      )
     }
-  };
+  }
 
   return (
     <motion.div
@@ -168,5 +168,5 @@ export default function RequestResetPage() {
         </AnimatePresence>
       </motion.div>
     </motion.div>
-  );
+  )
 }
