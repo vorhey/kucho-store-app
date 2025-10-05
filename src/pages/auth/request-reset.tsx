@@ -7,6 +7,7 @@ import { useForm } from "react-hook-form";
 import { motion, AnimatePresence } from "framer-motion";
 import type { RequestPasswordResetData } from "@/types/auth";
 import { Breadcrumbs } from "@/components/Breadcrumbs";
+import { getRequestResetBreadcrumbs } from "@/lib/breadcrumbs";
 
 export default function RequestResetPage() {
   const [error, setError] = useState("");
@@ -41,7 +42,7 @@ export default function RequestResetPage() {
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.4 }}
     >
-      <Breadcrumbs />
+      <Breadcrumbs items={getRequestResetBreadcrumbs()} />
       <motion.div
         className="bg-white p-8 rounded-lg shadow-md"
         initial={{ scale: 0.95 }}

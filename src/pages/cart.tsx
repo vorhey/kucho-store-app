@@ -16,6 +16,7 @@ import notFoundImage from "@/assets/images/not-found.png";
 import { CONFIRM_ORDER_ACTION } from "@/constants";
 import { useLogUserAction } from "@/hooks/useAuditLog";
 import { Breadcrumbs } from "@/components/Breadcrumbs";
+import { getCartBreadcrumbs } from "@/lib/breadcrumbs";
 
 export default function CartPage() {
   const { cart, removeFromCart } = useCart();
@@ -72,7 +73,7 @@ export default function CartPage() {
   return (
     <div className="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
       <div className="space-y-8">
-        <Breadcrumbs />
+        <Breadcrumbs items={getCartBreadcrumbs()} />
         {cart.length === 0 ? (
           <div className="flex flex-col items-center gap-6">
             <CatAnimation />

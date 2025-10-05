@@ -8,6 +8,7 @@ import { ArrowLeft, ShoppingCart, Minus, Plus } from "lucide-react";
 import { useScrollTop } from "@/hooks/useScrollTop";
 import notFoundImage from "@/assets/images/not-found.png";
 import { Breadcrumbs } from "@/components/Breadcrumbs";
+import { getProductBreadcrumbs } from "@/lib/breadcrumbs";
 
 export default function ProductDetailPage() {
   const { id } = useParams<{ id: string }>();
@@ -38,7 +39,7 @@ export default function ProductDetailPage() {
 
   return (
     <div className="container mx-auto px-4 py-8 space-y-6">
-      <Breadcrumbs finalLabel={product.name} />
+      <Breadcrumbs items={getProductBreadcrumbs(product.name)} />
       <Link href="" onClick={handleGoBack}>
         <Button variant="ghost">
           <ArrowLeft className="mr-2 h-4 w-4" />

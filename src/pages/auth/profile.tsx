@@ -6,6 +6,7 @@ import { Input } from "@/components/ui/input";
 import { updateUserProfile } from "@/services/auth";
 import type { UserProfileData } from "@/types/auth";
 import { Breadcrumbs } from "@/components/Breadcrumbs";
+import { getProfileBreadcrumbs } from "@/lib/breadcrumbs";
 
 export default function ProfilePage() {
   const [error, setError] = useState("");
@@ -54,7 +55,7 @@ export default function ProfilePage() {
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.4 }}
     >
-      <Breadcrumbs />
+      <Breadcrumbs items={getProfileBreadcrumbs()} />
       <motion.div
         className="bg-white p-8 rounded-lg shadow-md"
         initial={{ scale: 0.95 }}

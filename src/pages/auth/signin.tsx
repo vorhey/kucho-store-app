@@ -8,6 +8,7 @@ import type { SignInData } from "@/types/auth";
 import { motion } from "framer-motion";
 import { useScrollTop } from "@/hooks/useScrollTop";
 import { Breadcrumbs } from "@/components/Breadcrumbs";
+import { getSignInBreadcrumbs } from "@/lib/breadcrumbs";
 
 export default function SignInPage() {
   const [error, setError] = useState("");
@@ -50,7 +51,7 @@ export default function SignInPage() {
 
   return (
     <div className="container mx-auto px-4 py-6 sm:py-8 max-w-md space-y-6">
-      <Breadcrumbs />
+      <Breadcrumbs items={getSignInBreadcrumbs()} />
       <motion.div
         className="bg-white p-8 rounded-lg shadow-md"
         initial="hidden"
