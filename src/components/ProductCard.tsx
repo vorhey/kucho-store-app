@@ -85,16 +85,45 @@ export function ProductCard({ product, onAddToCart }: ProductCardProps) {
       initial={{ opacity: 0, scale: 0.9 }}
       animate={{ opacity: 1, scale: 1 }}
       transition={{ duration: 0.3 }}
-      className="flex flex-col h-full rounded-lg border bg-card text-card-foreground shadow-sm cursor-pointer"
-      onClick={handleClick}
+      className="flex flex-col h-full rounded-lg border bg-card text-card-foreground shadow-sm"
     >
       <CardHeader className="p-4">
         <img
           src={imgSrc}
           alt={product.name}
           onError={handleImageError}
-          className="w-full h-48 object-cover rounded-md"
+          className="w-full h-48 object-cover rounded-md cursor-pointer"
+          onClick={handleClick}
         />
+        <div className="w-full text-center mt-1">
+          <button
+            type="button"
+            onClick={handleClick}
+            className="inline-flex items-center gap-1 px-3 py-1 rounded-md bg-gradient-to-r from-blue-100 to-blue-200 text-xs font-semibold text-blue-700 shadow-sm hover:scale-105 hover:brightness-110 transition-all duration-150 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-offset-2 cursor-pointer"
+            tabIndex={0}
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              className="w-4 h-4 mr-1 text-blue-500"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+              strokeWidth="2"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
+              />
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M2.458 12C3.732 7.943 7.523 5 12 5c4.477 0 8.268 2.943 9.542 7-1.274 4.057-5.065 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
+              />
+            </svg>
+            ver detalles
+          </button>
+        </div>
       </CardHeader>
       <CardContent className="p-4 flex-grow flex flex-col justify-between">
         <div>
