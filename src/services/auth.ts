@@ -4,17 +4,17 @@ import type {
   ResetPasswordData,
   SignInData,
   SignUpData,
-} from "@/types/auth"
+} from "@/types/auth";
 
-const API_BASE = "/api/auth"
+const API_BASE = "/api/auth";
 
 export async function signUp(data: SignUpData): Promise<AuthResponse> {
   const response = await fetch(`${API_BASE}/signup`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(data),
-  })
-  return response.json()
+  });
+  return response.json();
 }
 
 export async function signIn(data: SignInData): Promise<AuthResponse> {
@@ -22,8 +22,8 @@ export async function signIn(data: SignInData): Promise<AuthResponse> {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(data),
-  })
-  return response.json()
+  });
+  return response.json();
 }
 
 export async function requestPasswordReset(
@@ -33,8 +33,8 @@ export async function requestPasswordReset(
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(data),
-  })
-  return response.json()
+  });
+  return response.json();
 }
 
 export async function resetPassword(
@@ -44,8 +44,8 @@ export async function resetPassword(
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(data),
-  })
-  return response.json()
+  });
+  return response.json();
 }
 
 export async function validateSession(): Promise<AuthResponse> {
@@ -54,7 +54,7 @@ export async function validateSession(): Promise<AuthResponse> {
   //   headers: { "Content-Type": "application/json" },
   // });
   // return response.json();
-  return { success: true, message: "validated" }
+  return { success: true, message: "validated" };
 }
 
 export async function updateUserProfile(data): Promise<AuthResponse> {
@@ -62,6 +62,6 @@ export async function updateUserProfile(data): Promise<AuthResponse> {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(data),
-  })
-  return response.json()
+  });
+  return response.json();
 }

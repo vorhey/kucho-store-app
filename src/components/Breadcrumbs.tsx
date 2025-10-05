@@ -1,23 +1,23 @@
-import { motion } from "framer-motion"
-import type { LucideIcon } from "lucide-react"
-import { ChevronRight } from "lucide-react"
-import { Link } from "wouter"
-import { cn } from "@/lib/utils"
+import { motion } from "framer-motion";
+import type { LucideIcon } from "lucide-react";
+import { ChevronRight } from "lucide-react";
+import { Link } from "wouter";
+import { cn } from "@/lib/utils";
 
 interface BreadcrumbItem {
-  label: string
-  href?: string
-  icon?: LucideIcon
+  label: string;
+  href?: string;
+  icon?: LucideIcon;
 }
 
 interface BreadcrumbsProps {
-  className?: string
-  items: BreadcrumbItem[]
+  className?: string;
+  items: BreadcrumbItem[];
 }
 
 export function Breadcrumbs({ className, items }: BreadcrumbsProps) {
   if (items?.length === 0) {
-    return null
+    return null;
   }
 
   return (
@@ -32,8 +32,8 @@ export function Breadcrumbs({ className, items }: BreadcrumbsProps) {
         <div className="relative z-10 flex flex-wrap items-center gap-3">
           <ol className="flex flex-wrap items-center gap-x-3 gap-y-2 text-sm font-medium">
             {items?.map((crumb, index) => {
-              const isLast = index === items?.length - 1
-              const Icon = crumb.icon
+              const isLast = index === items?.length - 1;
+              const Icon = crumb.icon;
 
               return (
                 <li
@@ -61,11 +61,11 @@ export function Breadcrumbs({ className, items }: BreadcrumbsProps) {
                     </span>
                   )}
                 </li>
-              )
+              );
             })}
           </ol>
         </div>
       </div>
     </motion.nav>
-  )
+  );
 }

@@ -1,27 +1,27 @@
-import { useState } from "react"
-import { useForm } from "react-hook-form"
-import { useLocation } from "wouter"
-import { Breadcrumbs } from "@/components/Breadcrumbs"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { getResetPasswordBreadcrumbs } from "@/lib/breadcrumbs"
-import { resetPassword } from "@/services/auth"
-import type { ResetPasswordData } from "@/types/auth"
+import { useState } from "react";
+import { useForm } from "react-hook-form";
+import { useLocation } from "wouter";
+import { Breadcrumbs } from "@/components/Breadcrumbs";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { getResetPasswordBreadcrumbs } from "@/lib/breadcrumbs";
+import { resetPassword } from "@/services/auth";
+import type { ResetPasswordData } from "@/types/auth";
 
 export default function ResetPasswordPage() {
-  const [error, setError] = useState("")
-  const [success, setSuccess] = useState(false)
-  const [, setLocation] = useLocation()
+  const [error, setError] = useState("");
+  const [success, setSuccess] = useState(false);
+  const [, setLocation] = useLocation();
   const {
     register,
     handleSubmit,
     formState: { errors },
     watch,
-  } = useForm<ResetPasswordData & { confirmPassword: string }>()
+  } = useForm<ResetPasswordData & { confirmPassword: string }>();
 
   // Get token from URL query params
-  const params = new URLSearchParams(window.location.search)
-  const token = params.get("token")
+  const params = new URLSearchParams(window.location.search);
+  const token = params.get("token");
 
   if (!token) {
     return (
@@ -36,26 +36,26 @@ export default function ResetPasswordPage() {
           </Button>
         </div>
       </div>
-    )
+    );
   }
 
   const onSubmit = async (
     data: ResetPasswordData & { confirmPassword: string }
   ) => {
     try {
-      const response = await resetPassword({ token, password: data.password })
+      const response = await resetPassword({ token, password: data.password });
       if (response.success) {
-        setSuccess(true)
-        setError("")
+        setSuccess(true);
+        setError("");
       } else {
-        setError(response.message || "Ocurrió un error")
+        setError(response.message || "Ocurrió un error");
       }
     } catch (_err) {
-      setError("Ocurrió un error al restablecer la contraseña")
+      setError("Ocurrió un error al restablecer la contraseña");
     }
-  }
+  };
 
-  const password = watch("password")
+  const password = watch("password");
 
   return (
     <div className="container mx-auto px-4 py-6 sm:py-8 max-w-md space-y-6">
@@ -133,5 +133,5 @@ export default function ResetPasswordPage() {
         )}
       </div>
     </div>
-  )
+  );
 }

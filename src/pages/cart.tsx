@@ -1,25 +1,25 @@
-import { AnimatePresence, motion } from "framer-motion"
-import { Minus, Plus, ShoppingCart, Trash } from "lucide-react"
-import { useState } from "react"
-import { Link } from "wouter"
-import notFoundImage from "@/assets/images/not-found.png"
-import { Breadcrumbs } from "@/components/Breadcrumbs"
-import { CONFIRM_ORDER_ACTION } from "@/constants"
-import { useLogUserAction } from "@/hooks/useAuditLog"
-import { useScrollTop } from "@/hooks/useScrollTop"
-import { getCartBreadcrumbs } from "@/lib/breadcrumbs"
-import type { Product } from "@/types/product"
-import { CatAnimation } from "../components/CatAnimation"
-import { Button } from "../components/ui/button"
+import { AnimatePresence, motion } from "framer-motion";
+import { Minus, Plus, ShoppingCart, Trash } from "lucide-react";
+import { useState } from "react";
+import { Link } from "wouter";
+import notFoundImage from "@/assets/images/not-found.png";
+import { Breadcrumbs } from "@/components/Breadcrumbs";
+import { CONFIRM_ORDER_ACTION } from "@/constants";
+import { useLogUserAction } from "@/hooks/useAuditLog";
+import { useScrollTop } from "@/hooks/useScrollTop";
+import { getCartBreadcrumbs } from "@/lib/breadcrumbs";
+import type { Product } from "@/types/product";
+import { CatAnimation } from "../components/CatAnimation";
+import { Button } from "../components/ui/button";
 import {
   Card,
   CardContent,
   CardFooter,
   CardHeader,
-} from "../components/ui/card"
-import { Input } from "../components/ui/input"
+} from "../components/ui/card";
+import { Input } from "../components/ui/input";
 
-import { useCart } from "../context/CartContext"
+import { useCart } from "../context/CartContext";
 
 const containerVariants = {
   hidden: { opacity: 0 },
@@ -29,7 +29,7 @@ const containerVariants = {
       staggerChildren: 0.2,
     },
   },
-}
+};
 
 const itemVariants = {
   hidden: { opacity: 0, y: 20 },
@@ -47,21 +47,23 @@ const itemVariants = {
       duration: 0.5,
     },
   },
-}
+};
 
 export default function CartPage() {
-  const { cart, removeFromCart, addToCart } = useCart()
-  const [imageErrors, setImageErrors] = useState<{ [key: string]: boolean }>({})
+  const { cart, removeFromCart, addToCart } = useCart();
+  const [imageErrors, setImageErrors] = useState<{ [key: string]: boolean }>(
+    {}
+  );
   const [quantityInputs, setQuantityInputs] = useState<Record<string, string>>(
     {}
-  )
-  const logUserAction = useLogUserAction()
+  );
+  const logUserAction = useLogUserAction();
 
-  useScrollTop()
+  useScrollTop();
 
   const handleImageError = (productId: string) => {
-    setImageErrors((prev) => ({ ...prev, [productId]: true }))
-  }
+    setImageErrors((prev) => ({ ...prev, [productId]: true }));
+  };
 
   const handleConfirmOrder = () => {
     logUserAction("123", CONFIRM_ORDER_ACTION, {
@@ -69,60 +71,60 @@ export default function CartPage() {
         productId: item.product.id,
         quantity: item.quantity,
       })),
-    })
+    });
     // setLocation("/checkout");
-  }
+  };
 
   const setQuantityInput = (productId: string, value: string) => {
     setQuantityInputs((prev) => {
       if (prev[productId] === value) {
-        return prev
+        return prev;
       }
-      return { ...prev, [productId]: value }
-    })
-  }
+      return { ...prev, [productId]: value };
+    });
+  };
 
   const clearQuantityInput = (productId: string) => {
     setQuantityInputs((prev) => {
       if (!(productId in prev)) {
-        return prev
+        return prev;
       }
-      const { [productId]: _, ...rest } = prev
-      return rest
-    })
-  }
+      const { [productId]: _, ...rest } = prev;
+      return rest;
+    });
+  };
 
   const handleQuantityInputChange = (product: Product, value: string) => {
     if (value === "") {
-      setQuantityInput(product.id, value)
-      return
+      setQuantityInput(product.id, value);
+      return;
     }
 
-    const numericValue = Number(value)
+    const numericValue = Number(value);
 
     if (!Number.isFinite(numericValue)) {
-      return
+      return;
     }
 
     if (numericValue <= 0) {
-      clearQuantityInput(product.id)
-      removeFromCart(product.id)
-      return
+      clearQuantityInput(product.id);
+      removeFromCart(product.id);
+      return;
     }
 
-    addToCart(product, numericValue)
-    clearQuantityInput(product.id)
-  }
+    addToCart(product, numericValue);
+    clearQuantityInput(product.id);
+  };
 
   const handleQuantityInputBlur = (productId: string) => {
     setQuantityInputs((prev) => {
       if (prev[productId] !== "") {
-        return prev
+        return prev;
       }
-      const { [productId]: _, ...rest } = prev
-      return rest
-    })
-  }
+      const { [productId]: _, ...rest } = prev;
+      return rest;
+    });
+  };
 
   return (
     <div className="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
@@ -206,13 +208,13 @@ export default function CartPage() {
                                 type="button"
                                 aria-label="Decrement"
                                 onClick={(e) => {
-                                  e.stopPropagation()
+                                  e.stopPropagation();
                                   if (item.quantity > 1) {
-                                    addToCart(item.product, item.quantity - 1)
-                                    clearQuantityInput(item.product.id)
+                                    addToCart(item.product, item.quantity - 1);
+                                    clearQuantityInput(item.product.id);
                                   } else if (item.quantity === 1) {
-                                    clearQuantityInput(item.product.id)
-                                    removeFromCart(item.product.id)
+                                    clearQuantityInput(item.product.id);
+                                    removeFromCart(item.product.id);
                                   }
                                 }}
                                 tabIndex={-1}
@@ -232,7 +234,7 @@ export default function CartPage() {
                                   handleQuantityInputChange(
                                     item.product,
                                     e.target.value
-                                  )
+                                  );
                                 }}
                                 onBlur={() =>
                                   handleQuantityInputBlur(item.product.id)
@@ -247,9 +249,9 @@ export default function CartPage() {
                                 type="button"
                                 aria-label="Increment"
                                 onClick={(e) => {
-                                  e.stopPropagation()
-                                  addToCart(item.product, item.quantity + 1)
-                                  clearQuantityInput(item.product.id)
+                                  e.stopPropagation();
+                                  addToCart(item.product, item.quantity + 1);
+                                  clearQuantityInput(item.product.id);
                                 }}
                                 tabIndex={-1}
                               >
@@ -265,9 +267,9 @@ export default function CartPage() {
                               size="icon"
                               className="hover:bg-pink-50 text-gray-500 hover:text-red-500"
                               onClick={(e) => {
-                                e.stopPropagation()
-                                clearQuantityInput(item.product.id)
-                                removeFromCart(item.product.id)
+                                e.stopPropagation();
+                                clearQuantityInput(item.product.id);
+                                removeFromCart(item.product.id);
                               }}
                             >
                               <Trash className="h-5 w-5" />
@@ -394,7 +396,7 @@ export default function CartPage() {
         )}
       </div>
     </div>
-  )
+  );
 }
 
 function EmptyCart() {
@@ -426,5 +428,5 @@ function EmptyCart() {
         </motion.div>
       </motion.div>
     </div>
-  )
+  );
 }

@@ -1,24 +1,24 @@
-import { AnimatePresence, motion } from "framer-motion"
-import { useState } from "react"
-import { useForm } from "react-hook-form"
-import { Breadcrumbs } from "@/components/Breadcrumbs"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { getProfileBreadcrumbs } from "@/lib/breadcrumbs"
-import { updateUserProfile } from "@/services/auth"
-import type { UserProfileData } from "@/types/auth"
+import { AnimatePresence, motion } from "framer-motion";
+import { useState } from "react";
+import { useForm } from "react-hook-form";
+import { Breadcrumbs } from "@/components/Breadcrumbs";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { getProfileBreadcrumbs } from "@/lib/breadcrumbs";
+import { updateUserProfile } from "@/services/auth";
+import type { UserProfileData } from "@/types/auth";
 
 export default function ProfilePage() {
-  const [error, setError] = useState("")
-  const [success, setSuccess] = useState(false)
-  const [isEditing, setIsEditing] = useState(false)
+  const [error, setError] = useState("");
+  const [success, setSuccess] = useState(false);
+  const [isEditing, setIsEditing] = useState(false);
 
   // Mock user data - in a real app, this would come from your auth context or API
   const [userData, setUserData] = useState({
     name: "Usuario Ejemplo",
     email: "usuario@ejemplo.com",
     phone: "+34 612 345 678",
-  })
+  });
 
   const {
     register,
@@ -26,27 +26,27 @@ export default function ProfilePage() {
     formState: { errors },
   } = useForm<UserProfileData>({
     defaultValues: userData,
-  })
+  });
 
   const onSubmit = async (data: UserProfileData) => {
     try {
       // In a real app, this would call your API
-      const response = await updateUserProfile(data)
+      const response = await updateUserProfile(data);
       if (response.success) {
-        setUserData(data)
-        setSuccess(true)
-        setError("")
+        setUserData(data);
+        setSuccess(true);
+        setError("");
         setTimeout(() => {
-          setSuccess(false)
-          setIsEditing(false)
-        }, 2000)
+          setSuccess(false);
+          setIsEditing(false);
+        }, 2000);
       } else {
-        setError(response.message || "Ocurrió un error")
+        setError(response.message || "Ocurrió un error");
       }
     } catch (_err) {
-      setError("Ocurrió un error al actualizar el perfil")
+      setError("Ocurrió un error al actualizar el perfil");
     }
-  }
+  };
 
   return (
     <motion.div
@@ -285,5 +285,5 @@ export default function ProfilePage() {
         </AnimatePresence>
       </motion.div>
     </motion.div>
-  )
+  );
 }

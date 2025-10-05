@@ -1,11 +1,11 @@
-import { motion } from "framer-motion"
-import type { Product } from "../types/product"
-import { FloatingArrowUp } from "./FloatingArrowUp"
-import { ProductCard } from "./ProductCard"
+import { motion } from "framer-motion";
+import type { Product } from "../types/product";
+import { FloatingArrowUp } from "./FloatingArrowUp";
+import { ProductCard } from "./ProductCard";
 
 interface ProductGridProps {
-  products: Product[] | null
-  onAddToCart: (product: Product, quantity: number) => void
+  products: Product[] | null;
+  onAddToCart: (product: Product, quantity: number) => void;
 }
 
 export function ProductGrid({ products, onAddToCart }: ProductGridProps) {
@@ -33,5 +33,5 @@ export function ProductGrid({ products, onAddToCart }: ProductGridProps) {
       </motion.div>
       <FloatingArrowUp />
     </>
-  )
+  );
 }

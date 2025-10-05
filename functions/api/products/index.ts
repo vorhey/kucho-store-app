@@ -111,5 +111,5 @@ export function onRequest(_context) {
         "Access-Control-Max-Age": "86400",
       },
     }
-  )
+  );
 }

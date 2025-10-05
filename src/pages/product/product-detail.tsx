@@ -1,4 +1,4 @@
-import { AnimatePresence, motion } from "framer-motion"
+import { AnimatePresence, motion } from "framer-motion";
 import {
   ArrowLeft,
   Cat,
@@ -7,83 +7,83 @@ import {
   RotateCcw,
   ShoppingCart,
   Trash2,
-} from "lucide-react"
-import { useEffect, useRef, useState } from "react"
-import { Link, useParams } from "wouter"
-import notFoundImage from "@/assets/images/not-found.png"
-import { Breadcrumbs } from "@/components/Breadcrumbs"
-import { Button } from "@/components/ui/button"
-import { useCart } from "@/context/CartContext"
-import { products } from "@/data/products"
-import { useScrollTop } from "@/hooks/useScrollTop"
-import { getProductBreadcrumbs } from "@/lib/breadcrumbs"
+} from "lucide-react";
+import { useEffect, useRef, useState } from "react";
+import { Link, useParams } from "wouter";
+import notFoundImage from "@/assets/images/not-found.png";
+import { Breadcrumbs } from "@/components/Breadcrumbs";
+import { Button } from "@/components/ui/button";
+import { useCart } from "@/context/CartContext";
+import { products } from "@/data/products";
+import { useScrollTop } from "@/hooks/useScrollTop";
+import { getProductBreadcrumbs } from "@/lib/breadcrumbs";
 
 export default function ProductDetailPage() {
-  useScrollTop()
-  const { id } = useParams<{ id: string }>()
-  const { addToCart, removeFromCart, cart } = useCart()
-  const product = products.find((p) => p.id === id)
-  const [imgSrc, setImgSrc] = useState(product?.imageUrl)
-  const cartItem = cart.find((item) => item.product.id === id)
-  const quantityInCart = cartItem ? cartItem.quantity : 0
+  useScrollTop();
+  const { id } = useParams<{ id: string }>();
+  const { addToCart, removeFromCart, cart } = useCart();
+  const product = products.find((p) => p.id === id);
+  const [imgSrc, setImgSrc] = useState(product?.imageUrl);
+  const cartItem = cart.find((item) => item.product.id === id);
+  const quantityInCart = cartItem ? cartItem.quantity : 0;
   const [quantity, setQuantity] = useState<number | string>(
     quantityInCart > 0 ? quantityInCart : 1
-  )
-  const [showCatAnimation, setShowCatAnimation] = useState(false)
+  );
+  const [showCatAnimation, setShowCatAnimation] = useState(false);
   const catAnimationTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(
     null
-  )
+  );
 
   // Sync input value with cart changes
   useEffect(() => {
-    setQuantity(quantityInCart > 0 ? quantityInCart : 1)
-  }, [quantityInCart])
+    setQuantity(quantityInCart > 0 ? quantityInCart : 1);
+  }, [quantityInCart]);
 
   const handleAddToCartClick = (e?: React.MouseEvent | React.KeyboardEvent) => {
-    e.stopPropagation()
+    e?.stopPropagation();
 
-    const q = typeof quantity === "number" ? quantity : Number(quantity) || 0
+    const q = typeof quantity === "number" ? quantity : Number(quantity) || 0;
     if (q === 0) {
-      removeFromCart(product.id)
-      return
+      removeFromCart(product.id);
+      return;
     }
 
-    addToCart(product, q)
-    setShowCatAnimation(true)
+    addToCart(product, q);
+    setShowCatAnimation(true);
 
     if (catAnimationTimeoutRef.current) {
-      clearTimeout(catAnimationTimeoutRef.current)
+      clearTimeout(catAnimationTimeoutRef.current);
     }
 
     catAnimationTimeoutRef.current = setTimeout(() => {
-      setShowCatAnimation(false)
-    }, 1200)
-  }
+      setShowCatAnimation(false);
+    }, 1200);
+  };
 
   useEffect(() => {
     return () => {
       if (catAnimationTimeoutRef.current) {
-        clearTimeout(catAnimationTimeoutRef.current)
+        clearTimeout(catAnimationTimeoutRef.current);
       }
-    }
-  }, [])
+    };
+  }, []);
 
   if (!product) {
     return (
       <div className="container mx-auto px-4 py-8">
         <h1>Product not found</h1>
       </div>
-    )
+    );
   }
 
   const handleImageError = () => {
-    setImgSrc(notFoundImage)
-  }
+    setImgSrc(notFoundImage);
+  };
 
   const handleGoBack = (e: React.MouseEvent) => {
-    e.preventDefault()
-    window.history.back()
-  }
+    e.preventDefault();
+    window.history.back();
+  };
 
   return (
     <div className="container mx-auto px-4 py-8 space-y-6">
@@ -147,23 +147,23 @@ export default function ProductDetailPage() {
                     value={quantity}
                     onClick={(e) => e.stopPropagation()}
                     onChange={(e) => {
-                      const val = e.target.value
+                      const val = e.target.value;
                       if (val === "") {
-                        setQuantity("")
+                        setQuantity("");
                       } else {
-                        const num = Number(val)
-                        if (!Number.isNaN(num)) setQuantity(num)
+                        const num = Number(val);
+                        if (!Number.isNaN(num)) setQuantity(num);
                       }
                     }}
                     onBlur={() => {
                       if (quantity === "" || Number(quantity) < 1) {
-                        setQuantity(1)
+                        setQuantity(1);
                       }
                     }}
                     onKeyDown={(e) => {
                       if (e.key === "Enter") {
-                        e.preventDefault()
-                        handleAddToCartClick()
+                        e.preventDefault();
+                        handleAddToCartClick();
                       }
                     }}
                     className="file:text-foreground placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground dark:bg-input/30 border-input  min-w-0 rounded-md border bg-transparent px-3 py-1 text-base shadow-xs transition-[color,box-shadow] outline-none file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive h-8 !w-14 font-mono text-center"
@@ -176,10 +176,10 @@ export default function ProductDetailPage() {
                     type="button"
                     aria-label="Decrement"
                     onClick={(e) => {
-                      e.stopPropagation()
+                      e.stopPropagation();
                       setQuantity((prev) =>
                         typeof prev === "number" ? Math.max(0, prev - 1) : 0
-                      )
+                      );
                     }}
                     tabIndex={-1}
                   >
@@ -191,10 +191,10 @@ export default function ProductDetailPage() {
                     type="button"
                     aria-label="Increment"
                     onClick={(e) => {
-                      e.stopPropagation()
+                      e.stopPropagation();
                       setQuantity((prev) =>
                         typeof prev === "number" ? prev + 1 : 1
-                      )
+                      );
                     }}
                     tabIndex={-1}
                   >
@@ -261,5 +261,5 @@ export default function ProductDetailPage() {
         </motion.div>
       </div>
     </div>
-  )
+  );
 }

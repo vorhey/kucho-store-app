@@ -223,5 +223,5 @@ export function CatAnimation() {
         </g>
       </svg>
     </div>
-  )
+  );
 }

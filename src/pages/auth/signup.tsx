@@ -1,43 +1,43 @@
-import { motion } from "framer-motion"
-import { useState } from "react"
-import { useForm } from "react-hook-form"
-import { useLocation } from "wouter"
-import { Breadcrumbs } from "@/components/Breadcrumbs"
-import { Input } from "@/components/ui/input"
-import { useAuth } from "@/context/AuthContext"
-import { useScrollTop } from "@/hooks/useScrollTop"
-import { getSignUpBreadcrumbs } from "@/lib/breadcrumbs"
-import { signIn, signUp } from "@/services/auth"
-import type { SignUpData } from "@/types/auth"
+import { motion } from "framer-motion";
+import { useState } from "react";
+import { useForm } from "react-hook-form";
+import { useLocation } from "wouter";
+import { Breadcrumbs } from "@/components/Breadcrumbs";
+import { Input } from "@/components/ui/input";
+import { useAuth } from "@/context/AuthContext";
+import { useScrollTop } from "@/hooks/useScrollTop";
+import { getSignUpBreadcrumbs } from "@/lib/breadcrumbs";
+import { signIn, signUp } from "@/services/auth";
+import type { SignUpData } from "@/types/auth";
 
 export default function SignUpPage() {
-  const [error, setError] = useState("")
-  const { setUser } = useAuth()
-  const [, setLocation] = useLocation()
+  const [error, setError] = useState("");
+  const { setUser } = useAuth();
+  const [, setLocation] = useLocation();
   const {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<SignUpData>()
+  } = useForm<SignUpData>();
 
-  useScrollTop()
+  useScrollTop();
 
   const onSubmit = async (data: SignUpData) => {
     try {
-      const response = await signUp(data)
+      const response = await signUp(data);
       if (response.success) {
-        const signInResponse = await signIn(data)
+        const signInResponse = await signIn(data);
         if (signInResponse.success && signInResponse.user) {
-          setUser(signInResponse.user)
-          setLocation("/")
+          setUser(signInResponse.user);
+          setLocation("/");
         }
       } else {
-        setError(response.message || "Ocurrió un error")
+        setError(response.message || "Ocurrió un error");
       }
     } catch (_err) {
-      setError("Ocurrió un error durante el registro")
+      setError("Ocurrió un error durante el registro");
     }
-  }
+  };
 
   const containerVariants = {
     hidden: { opacity: 0, y: 50 },
@@ -50,12 +50,12 @@ export default function SignUpPage() {
         staggerChildren: 0.1,
       },
     },
-  }
+  };
 
   const itemVariants = {
     hidden: { opacity: 0, y: 20 },
     visible: { opacity: 1, y: 0 },
-  }
+  };
 
   return (
     <div className="container mx-auto px-4 py-6 sm:py-8 max-w-md space-y-6">
@@ -168,5 +168,5 @@ export default function SignUpPage() {
         </motion.div>
       </motion.div>
     </div>
-  )
+  );
 }

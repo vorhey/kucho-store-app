@@ -1,38 +1,38 @@
 export interface User {
-  id: string
-  email: string
-  name: string | null
+  id: string;
+  email: string;
+  name: string | null;
 }
 
 export interface SignUpData {
-  email: string
-  password: string
-  name?: string
+  email: string;
+  password: string;
+  name?: string;
 }
 
 export interface SignInData {
-  email: string
-  password: string
+  email: string;
+  password: string;
 }
 
 export interface AuthResponse {
-  success: boolean
-  message?: string
-  user?: User
-  token?: string
+  success: boolean;
+  message?: string;
+  user?: User;
+  token?: string;
 }
 
 export interface ResetPasswordData {
-  token: string
-  password: string
+  token: string;
+  password: string;
 }
 
 export interface RequestPasswordResetData {
-  email: string
+  email: string;
 }
 
 export interface UserProfileData {
-  name: string
-  email: string
-  phone: string
+  name: string;
+  email: string;
+  phone: string;
 }
