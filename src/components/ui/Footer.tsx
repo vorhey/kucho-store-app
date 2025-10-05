@@ -47,27 +47,27 @@ export function Footer() {
           <div className="flex flex-col items-center md:items-start">
             <h3 className="text-lg font-semibold mb-4">Síguenos</h3>
             <div className="flex space-x-4">
-              <a
-                href="#"
+              <button
+                type="button"
                 aria-label="Instagram"
                 className="text-gray-600 hover:text-primary transition"
               >
                 <SiInstagram size={20} color="default" title="Instagram" />
-              </a>
-              <a
-                href="#"
+              </button>
+              <button
+                type="button"
                 aria-label="Facebook"
                 className="text-gray-600 hover:text-primary transition"
               >
                 <SiFacebook size={20} color="default" title="Facebook" />
-              </a>
-              <a
-                href="#"
+              </button>
+              <button
+                type="button"
                 aria-label="X (Twitter)"
                 className="text-gray-600 hover:text-primary transition"
               >
                 <SiX size={20} color="default" title="X (Twitter)" />
-              </a>
+              </button>
             </div>
           </div>
         </div>

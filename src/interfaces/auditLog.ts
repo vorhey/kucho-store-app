@@ -18,14 +18,14 @@ export interface AuditLogUserActionRequest {
   type: "USER_ACTION"
   userId: string
   action: string
-  details: any
+  details: Record<string, unknown>
   timestamp: Date
 }
 
 export interface AuditLogSystemEventRequest {
   type: "SYSTEM_EVENT"
   event: string
-  details: any
+  details: Record<string, unknown>
   timestamp: Date
 }
 

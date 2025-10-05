@@ -12,7 +12,7 @@ const useAuditLogMutation = () => {
 }
 export const useLogUserAction = () => {
   const mutation = useAuditLogMutation()
-  return (userId: string, action: string, details: any) => {
+  return (userId: string, action: string, details: Record<string, unknown>) => {
     return mutation.mutate({
       type: "USER_ACTION",
       userId,

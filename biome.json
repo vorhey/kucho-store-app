@@ -45,7 +45,8 @@
         "recommended": true
       },
       "correctness": {
-        "recommended": true
+        "recommended": true,
+        "useUniqueElementIds": "off"
       }
     }
   },

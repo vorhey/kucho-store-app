@@ -146,7 +146,7 @@ export function ProductCard({ product, onAddToCart }: ProductCardProps) {
                       setQuantity("")
                     } else {
                       const num = Number(val)
-                      if (!isNaN(num)) setQuantity(num)
+                      if (!Number.isNaN(num)) setQuantity(num)
                     }
                   }}
                   onBlur={() => {

@@ -28,7 +28,7 @@ export default function RequestResetPage() {
       } else {
         setError(response.message || "Ocurrió un error")
       }
-    } catch (err) {
+    } catch (_err) {
       setError(
         "Ocurrió un error al solicitar el restablecimiento de contraseña"
       )
@@ -102,10 +102,14 @@ export default function RequestResetPage() {
                 animate={{ y: 0, opacity: 1 }}
                 transition={{ delay: 0.1 }}
               >
-                <label className="block text-sm font-medium mb-1">
+                <label
+                  htmlFor="email"
+                  className="block text-sm font-medium mb-1"
+                >
                   Correo Electrónico
                 </label>
                 <Input
+                  id="email"
                   type="email"
                   {...register("email", {
                     required: "El correo electrónico es obligatorio",
