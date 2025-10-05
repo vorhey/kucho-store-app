@@ -4,11 +4,12 @@ export function CatAnimation() {
       <svg
         version="1.1"
         xmlns="http://www.w3.org/2000/svg"
+        xmlnsXlink="http://www.w3.org/1999/xlink"
         viewBox="0 0 1000 1000"
-        preserveAspectRatio="xMidYMid meet"
         width="100%"
         height="100%"
       >
+        <title>Cat Animation</title>
         <circle
           id="Background"
           cx="500"

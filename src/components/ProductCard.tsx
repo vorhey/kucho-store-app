@@ -42,7 +42,7 @@ export function ProductCard({ product, onAddToCart }: ProductCardProps) {
     setQuantity(quantityInCart > 0 ? quantityInCart : 1)
   }, [quantityInCart])
 
-  const handleImageError = () => {
+  const _handleImageError = () => {
     setImgSrc(notFoundImage)
   }
 
@@ -96,13 +96,21 @@ export function ProductCard({ product, onAddToCart }: ProductCardProps) {
       className="flex flex-col h-full rounded-lg border bg-card text-card-foreground shadow-sm"
     >
       <CardHeader className="p-4">
-        <img
-          src={imgSrc}
-          alt={product.name}
-          onError={handleImageError}
-          className="w-full h-48 object-cover rounded-md cursor-pointer"
+        <button
+          type="button"
           onClick={handleClick}
-        />
+          onKeyDown={(e) => {
+            if (e.key === "Enter") {
+              handleClick()
+            }
+          }}
+        >
+          <img
+            src={imgSrc}
+            alt={name}
+            className="w-full h-48 object-cover cursor-pointer"
+          />
+        </button>
         <div className="w-full text-center mt-1">
           <button
             type="button"

@@ -43,7 +43,7 @@ export default function ProfilePage() {
       } else {
         setError(response.message || "Ocurrió un error")
       }
-    } catch (err) {
+    } catch (_err) {
       setError("Ocurrió un error al actualizar el perfil")
     }
   }
@@ -100,9 +100,15 @@ export default function ProfilePage() {
                 animate={{ y: 0, opacity: 1 }}
                 transition={{ delay: 0.1 }}
               >
-                <label className="block text-sm font-medium mb-1">Nombre</label>
+                <label
+                  htmlFor="name"
+                  className="block text-sm font-medium mb-1"
+                >
+                  Nombre
+                </label>
                 <Input
                   type="text"
+                  id="name"
                   {...register("name", {
                     required: "El nombre es obligatorio",
                   })}
@@ -127,11 +133,15 @@ export default function ProfilePage() {
                 animate={{ y: 0, opacity: 1 }}
                 transition={{ delay: 0.2 }}
               >
-                <label className="block text-sm font-medium mb-1">
+                <label
+                  htmlFor="email"
+                  className="block text-sm font-medium mb-1"
+                >
                   Correo Electrónico
                 </label>
                 <Input
                   type="email"
+                  id="email"
                   {...register("email", {
                     required: "El correo electrónico es obligatorio",
                     pattern: {
@@ -160,10 +170,18 @@ export default function ProfilePage() {
                 animate={{ y: 0, opacity: 1 }}
                 transition={{ delay: 0.3 }}
               >
-                <label className="block text-sm font-medium mb-1">
+                <label
+                  htmlFor="phone"
+                  className="block text-sm font-medium mb-1"
+                >
                   Teléfono
                 </label>
-                <Input type="tel" {...register("phone")} className="w-full" />
+                <Input
+                  id="phone"
+                  type="tel"
+                  {...register("phone")}
+                  className="w-full"
+                />
               </motion.div>
 
               <AnimatePresence>

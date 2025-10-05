@@ -34,7 +34,7 @@ export default function SignUpPage() {
       } else {
         setError(response.message || "Ocurrió un error")
       }
-    } catch (err) {
+    } catch (_err) {
       setError("Ocurrió un error durante el registro")
     }
   }
@@ -72,9 +72,12 @@ export default function SignUpPage() {
 
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
           <motion.div variants={itemVariants}>
-            <label className="block text-sm font-medium mb-1">Nombre</label>
+            <label htmlFor="name" className="block text-sm font-medium mb-1">
+              Nombre
+            </label>
             <Input
               type="text"
+              id="name"
               {...register("name")}
               className="w-full"
               placeholder="Tu nombre"
@@ -82,11 +85,12 @@ export default function SignUpPage() {
           </motion.div>
 
           <motion.div variants={itemVariants}>
-            <label className="block text-sm font-medium mb-1">
+            <label htmlFor="email" className="block text-sm font-medium mb-1">
               Correo electrónico
             </label>
             <Input
               type="email"
+              id="email"
               {...register("email", {
                 required: "El correo electrónico es obligatorio",
                 pattern: {
@@ -104,9 +108,15 @@ export default function SignUpPage() {
           </motion.div>
 
           <motion.div variants={itemVariants}>
-            <label className="block text-sm font-medium mb-1">Contraseña</label>
+            <label
+              htmlFor="password"
+              className="block text-sm font-medium mb-1"
+            >
+              Contraseña
+            </label>
             <Input
               type="password"
+              id="password"
               {...register("password", {
                 required: "La contraseña es obligatoria",
                 minLength: {

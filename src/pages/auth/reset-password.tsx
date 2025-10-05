@@ -50,7 +50,7 @@ export default function ResetPasswordPage() {
       } else {
         setError(response.message || "Ocurrió un error")
       }
-    } catch (err) {
+    } catch (_err) {
       setError("Ocurrió un error al restablecer la contraseña")
     }
   }
@@ -75,11 +75,15 @@ export default function ResetPasswordPage() {
         ) : (
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
             <div>
-              <label className="block text-sm font-medium mb-1">
+              <label
+                htmlFor="password"
+                className="block text-sm font-medium mb-1"
+              >
                 Nueva Contraseña
               </label>
               <Input
                 type="password"
+                id="password"
                 {...register("password", {
                   required: "La contraseña es requerida",
                   minLength: {
@@ -97,11 +101,15 @@ export default function ResetPasswordPage() {
             </div>
 
             <div>
-              <label className="block text-sm font-medium mb-1">
+              <label
+                htmlFor="confirmPassword"
+                className="block text-sm font-medium mb-1"
+              >
                 Confirmar Contraseña
               </label>
               <Input
                 type="password"
+                id="confirmPassword"
                 {...register("confirmPassword", {
                   required: "Por favor confirma tu contraseña",
                   validate: (value) =>

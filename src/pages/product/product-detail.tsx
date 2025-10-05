@@ -19,6 +19,7 @@ import { useScrollTop } from "@/hooks/useScrollTop"
 import { getProductBreadcrumbs } from "@/lib/breadcrumbs"
 
 export default function ProductDetailPage() {
+  useScrollTop()
   const { id } = useParams<{ id: string }>()
   const { addToCart, removeFromCart, cart } = useCart()
   const product = products.find((p) => p.id === id)
@@ -39,9 +40,7 @@ export default function ProductDetailPage() {
   }, [quantityInCart])
 
   const handleAddToCartClick = (e?: React.MouseEvent | React.KeyboardEvent) => {
-    if (e && typeof (e as any).stopPropagation === "function") {
-      ;(e as any).stopPropagation()
-    }
+    e.stopPropagation()
 
     const q = typeof quantity === "number" ? quantity : Number(quantity) || 0
     if (q === 0) {
@@ -76,8 +75,6 @@ export default function ProductDetailPage() {
       </div>
     )
   }
-
-  useScrollTop()
 
   const handleImageError = () => {
     setImgSrc(notFoundImage)
@@ -155,7 +152,7 @@ export default function ProductDetailPage() {
                         setQuantity("")
                       } else {
                         const num = Number(val)
-                        if (!isNaN(num)) setQuantity(num)
+                        if (!Number.isNaN(num)) setQuantity(num)
                       }
                     }}
                     onBlur={() => {

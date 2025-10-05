@@ -1,7 +1,7 @@
 import { AnimatePresence, motion } from "framer-motion"
 import { Minus, Plus, ShoppingCart, Trash } from "lucide-react"
 import { useState } from "react"
-import { Link, useLocation } from "wouter"
+import { Link } from "wouter"
 import notFoundImage from "@/assets/images/not-found.png"
 import { Breadcrumbs } from "@/components/Breadcrumbs"
 import { CONFIRM_ORDER_ACTION } from "@/constants"
@@ -18,7 +18,7 @@ import {
   CardHeader,
 } from "../components/ui/card"
 import { Input } from "../components/ui/input"
-import { Label } from "../components/ui/label"
+
 import { useCart } from "../context/CartContext"
 
 const containerVariants = {
