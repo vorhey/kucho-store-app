@@ -1,15 +1,6 @@
-import { Link } from "wouter";
+import { Link, useLocation } from "wouter";
 import { useState, useRef } from "react";
-import {
-  Menu,
-  X,
-  ShoppingBag,
-  PawPrint,
-  Cat,
-  Volleyball,
-  User,
-  ShoppingCart,
-} from "lucide-react";
+import { Menu, X, ShoppingBag, Cat, User, ShoppingCart } from "lucide-react";
 import { useCart } from "@/context/CartContext";
 import { useClickOutside } from "@/hooks/useClickOutside";
 import { useAuth } from "@/context/AuthContext";
@@ -19,7 +10,32 @@ export function NavBar() {
   const { cart } = useCart();
   const { user } = useAuth();
   const navRef = useRef<HTMLElement>(null);
+  const [location] = useLocation();
   const cartCount = cart.reduce((sum, item) => sum + item.quantity, 0);
+
+  const resolveIsActive = (target: string | string[]) => {
+    const paths = Array.isArray(target) ? target : [target];
+    return paths.some((path) =>
+      path === "/" ? location === "/" : location.startsWith(path),
+    );
+  };
+
+  const mobileLinkClasses = (path: string | string[]) => {
+    const baseClasses =
+      "flex items-center gap-3 text-gray-600 hover:text-gray-800 px-2 py-2 rounded-md transition-colors duration-200";
+    return resolveIsActive(path)
+      ? `${baseClasses} bg-pink-100 text-pink-700`
+      : baseClasses;
+  };
+
+  const authPaths = [
+    "/signin",
+    "/signup",
+    "/request-reset",
+    "/reset-password",
+    "/forgot-password",
+  ];
+  const userLinkTarget = user ? "/profile" : authPaths;
 
   useClickOutside(navRef, () => setIsOpen(false));
 
@@ -42,13 +58,17 @@ export function NavBar() {
           <div className="md:hidden flex items-center gap-4">
             <Link
               href="/shop"
-              className="flex items-center gap-2 text-gray-600"
+              className={`flex items-center gap-2 text-gray-600 hover:text-gray-800 p-1 rounded-md transition-colors duration-200 ${
+                resolveIsActive("/shop") ? "bg-pink-100 text-pink-700" : ""
+              }`}
             >
               <ShoppingBag size={24} />
             </Link>
             <Link
               href="/cart"
-              className="relative flex items-center gap-2 text-gray-600"
+              className={`relative flex items-center gap-2 text-gray-600 hover:text-gray-800 p-1 rounded-md transition-colors duration-200 ${
+                resolveIsActive("/cart") ? "bg-pink-100 text-pink-700" : ""
+              }`}
             >
               <ShoppingCart size={24} />
               {cartCount > 0 && (
@@ -57,7 +77,14 @@ export function NavBar() {
                 </span>
               )}
             </Link>
-            <Link href={user ? "/profile" : "/signin"}>
+            <Link
+              href={user ? "/profile" : "/signin"}
+              className={`flex items-center gap-2 text-gray-600 hover:text-gray-800 p-1 rounded-md transition-colors duration-200 ${
+                resolveIsActive(userLinkTarget)
+                  ? "bg-pink-100 text-pink-700"
+                  : ""
+              }`}
+            >
               <User size={18} />
             </Link>
             <button onClick={() => setIsOpen(!isOpen)}>
@@ -119,7 +146,7 @@ export function NavBar() {
         >
           <Link
             href="/"
-            className="flex items-center gap-3 text-gray-600 hover:text-gray-800 px-2 py-2"
+            className={mobileLinkClasses("/")}
             onClick={() => setIsOpen(false)}
           >
             <Cat size={18} />
@@ -127,7 +154,7 @@ export function NavBar() {
           </Link>
           <Link
             href="/shop"
-            className="flex items-center gap-3 text-gray-600 hover:text-gray-800 px-2 py-2"
+            className={mobileLinkClasses("/shop")}
             onClick={() => setIsOpen(false)}
           >
             <ShoppingBag size={18} />
@@ -135,7 +162,7 @@ export function NavBar() {
           </Link>
           <Link
             href="/cart"
-            className="flex items-center gap-3 text-gray-600 hover:text-gray-800 px-2 py-2"
+            className={mobileLinkClasses("/cart")}
             onClick={() => setIsOpen(false)}
           >
             <ShoppingCart size={18} />
@@ -143,7 +170,7 @@ export function NavBar() {
           </Link>
           <Link
             href={user ? "/profile" : "/signin"}
-            className="flex items-center gap-3 text-gray-600 hover:text-gray-800 px-2 py-2"
+            className={mobileLinkClasses(userLinkTarget)}
             onClick={() => setIsOpen(false)}
           >
             <User size={18} />
