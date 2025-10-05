@@ -19,6 +19,7 @@ import { CONFIRM_ORDER_ACTION } from "@/constants";
 import { useLogUserAction } from "@/hooks/useAuditLog";
 import { Breadcrumbs } from "@/components/Breadcrumbs";
 import { getCartBreadcrumbs } from "@/lib/breadcrumbs";
+import type { Product } from "@/types/product";
 
 const containerVariants = {
   hidden: { opacity: 0 },
@@ -54,6 +55,9 @@ export default function CartPage() {
   const [imageErrors, setImageErrors] = useState<{ [key: string]: boolean }>(
     {},
   );
+  const [quantityInputs, setQuantityInputs] = useState<Record<string, string>>(
+    {},
+  );
   const logUserAction = useLogUserAction();
 
   useScrollTop();
@@ -70,6 +74,57 @@ export default function CartPage() {
       })),
     });
     // setLocation("/checkout");
+  };
+
+  const setQuantityInput = (productId: string, value: string) => {
+    setQuantityInputs((prev) => {
+      if (prev[productId] === value) {
+        return prev;
+      }
+      return { ...prev, [productId]: value };
+    });
+  };
+
+  const clearQuantityInput = (productId: string) => {
+    setQuantityInputs((prev) => {
+      if (!(productId in prev)) {
+        return prev;
+      }
+      const { [productId]: _, ...rest } = prev;
+      return rest;
+    });
+  };
+
+  const handleQuantityInputChange = (product: Product, value: string) => {
+    if (value === "") {
+      setQuantityInput(product.id, value);
+      return;
+    }
+
+    const numericValue = Number(value);
+
+    if (!Number.isFinite(numericValue)) {
+      return;
+    }
+
+    if (numericValue <= 0) {
+      clearQuantityInput(product.id);
+      removeFromCart(product.id);
+      return;
+    }
+
+    addToCart(product, numericValue);
+    clearQuantityInput(product.id);
+  };
+
+  const handleQuantityInputBlur = (productId: string) => {
+    setQuantityInputs((prev) => {
+      if (prev[productId] !== "") {
+        return prev;
+      }
+      const { [productId]: _, ...rest } = prev;
+      return rest;
+    });
   };
 
   return (
@@ -92,23 +147,27 @@ export default function CartPage() {
                     layout
                     style={{ position: "relative" }}
                   >
-                    <Card
-                      className="overflow-hidden hover:shadow-lg transition-shadow cursor-pointer"
-                      onClick={() => setLocation(`/product/${item.product.id}`)}
-                    >
+                    <Card className="overflow-hidden hover:shadow-lg transition-shadow">
                       <div className="flex flex-col sm:flex-row">
                         <div className="w-full sm:w-48 h-56">
-                          <img
-                            src={
-                              imageErrors[item.product.id]
-                                ? notFoundImage
-                                : item.product.imageUrl
-                            }
-                            alt={item.product.name}
-                            onError={() => handleImageError(item.product.id)}
-                            className="w-full h-full object-cover"
-                            loading="lazy"
-                          />
+                          <Link
+                            href={`/product/${item.product.id}`}
+                            onClick={(e) => e.stopPropagation()} // Prevent bubbling to Card
+                            className="block w-full h-full"
+                          >
+                            <img
+                              src={
+                                imageErrors[item.product.id]
+                                  ? notFoundImage
+                                  : item.product.imageUrl
+                              }
+                              alt={item.product.name}
+                              onError={() => handleImageError(item.product.id)}
+                              className="w-full h-full object-cover"
+                              loading="lazy"
+                              style={{ display: "block" }}
+                            />
+                          </Link>
                         </div>
                         <div className="flex-1 flex flex-col">
                           <CardHeader className="p-4 flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2">
@@ -158,19 +217,20 @@ export default function CartPage() {
                                     id={`cart-qty-${item.product.id}`}
                                     type="number"
                                     min={0}
-                                    value={item.quantity}
+                                    value={
+                                      quantityInputs[item.product.id] ??
+                                      item.quantity.toString()
+                                    }
                                     onClick={(e) => e.stopPropagation()}
                                     onChange={(e) => {
-                                      const val = Math.max(
-                                        0,
-                                        Number(e.target.value),
+                                      handleQuantityInputChange(
+                                        item.product,
+                                        e.target.value,
                                       );
-                                      if (val === 0) {
-                                        removeFromCart(item.product.id);
-                                      } else {
-                                        addToCart(item.product, val);
-                                      }
                                     }}
+                                    onBlur={() =>
+                                      handleQuantityInputBlur(item.product.id)
+                                    }
                                     className="file:text-foreground placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground dark:bg-input/30 border-input w-full min-w-0 rounded-md border bg-transparent px-3 py-1 text-base shadow-xs transition-[color,box-shadow] outline-none file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive h-8 font-mono text-center"
                                     style={{ appearance: "textfield" }}
                                     data-slot="input"
@@ -187,7 +247,9 @@ export default function CartPage() {
                                           item.product,
                                           item.quantity - 1,
                                         );
+                                        clearQuantityInput(item.product.id);
                                       } else if (item.quantity === 1) {
+                                        clearQuantityInput(item.product.id);
                                         removeFromCart(item.product.id);
                                       }
                                     }}
@@ -219,6 +281,7 @@ export default function CartPage() {
                                         item.product,
                                         item.quantity + 1,
                                       );
+                                      clearQuantityInput(item.product.id);
                                     }}
                                     tabIndex={-1}
                                   >
@@ -255,6 +318,7 @@ export default function CartPage() {
                               className="hover:bg-pink-50"
                               onClick={(e) => {
                                 e.stopPropagation();
+                                clearQuantityInput(item.product.id);
                                 removeFromCart(item.product.id);
                               }}
                             >
