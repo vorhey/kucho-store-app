@@ -1,5 +1,5 @@
 import { Link, useLocation } from "wouter";
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { Menu, X, ShoppingBag, Cat, User, ShoppingCart } from "lucide-react";
 import { useCart } from "@/context/CartContext";
 import { useClickOutside } from "@/hooks/useClickOutside";
@@ -12,6 +12,16 @@ export function NavBar() {
   const navRef = useRef<HTMLElement>(null);
   const [location] = useLocation();
   const cartCount = cart.reduce((sum, item) => sum + item.quantity, 0);
+  const [prevCount, setPrevCount] = useState(cartCount);
+  const [bounce, setBounce] = useState(false);
+
+  useEffect(() => {
+    if (cartCount > prevCount) {
+      setBounce(true);
+      setTimeout(() => setBounce(false), 800);
+    }
+    setPrevCount(cartCount);
+  }, [cartCount, prevCount]);
 
   const resolveIsActive = (target: string | string[]) => {
     const paths = Array.isArray(target) ? target : [target];
@@ -72,7 +82,9 @@ export function NavBar() {
             >
               <ShoppingCart size={24} />
               {cartCount > 0 && (
-                <span className="absolute -top-2 -right-2 flex items-center justify-center min-w-[18px] h-[18px] px-1 text-xs font-semibold text-white bg-pink-500 rounded-full">
+                <span
+                  className={`absolute -top-2 -right-2 flex items-center justify-center min-w-[18px] h-[18px] px-1 text-xs font-semibold text-white bg-pink-500 rounded-full ${bounce ? "smooth-bounce" : ""}`}
+                >
                   {cartCount}
                 </span>
               )}
@@ -87,7 +99,12 @@ export function NavBar() {
             >
               <User size={18} />
             </Link>
-            <button onClick={() => setIsOpen(!isOpen)}>
+            <button
+              onClick={() => setIsOpen(!isOpen)}
+              className={`transition-transform duration-300 ease-in-out hover:scale-110 ${
+                isOpen ? "rotate-180" : ""
+              }`}
+            >
               {isOpen ? <X /> : <Menu />}
             </button>
           </div>
@@ -119,7 +136,9 @@ export function NavBar() {
               <div className="relative">
                 <ShoppingCart size={18} />
                 {cartCount > 0 && (
-                  <span className="absolute -top-2 -right-2 flex items-center justify-center min-w-[16px] h-[16px] px-1 text-[10px] font-semibold text-white bg-pink-500 rounded-full">
+                  <span
+                    className={`absolute -top-2 -right-2 flex items-center justify-center min-w-[16px] h-[16px] px-1 text-[10px] font-semibold text-white bg-pink-500 rounded-full ${bounce ? "smooth-bounce" : ""}`}
+                  >
                     {cartCount}
                   </span>
                 )}

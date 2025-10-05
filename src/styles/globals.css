@@ -118,6 +118,7 @@
   --color-sidebar: var(--sidebar-background);
   --animate-accordion-down: accordion-down 0.2s ease-out;
   --animate-accordion-up: accordion-up 0.2s ease-out;
+  --animate-smooth-bounce: smooth-bounce 0.8s ease-out;
 
   @keyframes accordion-down {
     from {
@@ -138,6 +139,28 @@
       height: 0;
     }
   }
+}
+
+@keyframes smooth-bounce {
+  0% {
+    transform: translateY(0);
+  }
+  25% {
+    transform: translateY(-8px);
+  }
+  50% {
+    transform: translateY(0);
+  }
+  75% {
+    transform: translateY(-4px);
+  }
+  100% {
+    transform: translateY(0);
+  }
+}
+
+.smooth-bounce {
+  animation: smooth-bounce 0.8s ease-out;
 }
 
 .rainbow-border-animated {
