@@ -7,56 +7,55 @@ import { useClickOutside } from "@/hooks/useClickOutside";
 
 export function NavBar() {
   const [isOpen, setIsOpen] = useState(false);
+  const [bounce, setBounce] = useState(false);
   const { cart } = useCart();
   const { user } = useAuth();
   const navRef = useRef<HTMLElement>(null);
   const [location] = useLocation();
+
   const cartCount = cart.reduce((sum, item) => sum + item.quantity, 0);
-  const [prevCount, setPrevCount] = useState(cartCount);
-  const [bounce, setBounce] = useState(false);
 
   useEffect(() => {
-    if (cartCount > prevCount) {
+    if (cartCount > 0) {
       setBounce(true);
-      setTimeout(() => setBounce(false), 800);
+      const timer = setTimeout(() => setBounce(false), 800);
+      return () => clearTimeout(timer);
     }
-    setPrevCount(cartCount);
-  }, [cartCount, prevCount]);
+  }, [cartCount]);
 
-  const resolveIsActive = (target: string | string[]) => {
-    const paths = Array.isArray(target) ? target : [target];
-    return paths.some((path) =>
-      path === "/" ? location === "/" : location.startsWith(path)
-    );
+  const isActive = (path: string) => {
+    return path === "/" ? location === "/" : location.startsWith(path);
   };
 
-  const mobileLinkClasses = (path: string | string[]) => {
-    const baseClasses =
-      "flex items-center gap-3 text-gray-600 hover:text-gray-800 px-2 py-2 rounded-md transition-colors duration-200";
-    return resolveIsActive(path)
-      ? `${baseClasses} bg-pink-100 text-pink-700`
-      : baseClasses;
+  const isAuthPage = () => {
+    return [
+      "/signin",
+      "/signup",
+      "/request-reset",
+      "/reset-password",
+      "/forgot-password",
+    ].some((path) => location.startsWith(path));
   };
 
-  // Desktop nav link classes
-  const desktopLinkClasses = (path: string | string[]) => {
-    const baseClasses =
-      "flex items-center gap-2 text-gray-600 hover:text-gray-800 hover:bg-pink-50 px-3 py-2 rounded-md transition-colors duration-200 relative";
-    return resolveIsActive(path)
-      ? `${baseClasses} bg-pink-100 text-pink-700`
-      : baseClasses;
-  };
-
-  const authPaths = [
-    "/signin",
-    "/signup",
-    "/request-reset",
-    "/reset-password",
-    "/forgot-password",
-  ];
-  const userLinkTarget = user ? "/profile" : authPaths;
+  const userPath = user ? "/profile" : "/signin";
+  const showUserActive = user ? isActive("/profile") : isAuthPage();
 
   useClickOutside(navRef, () => setIsOpen(false));
+
+  const CartBadge = ({ size = "default" }: { size?: "default" | "small" }) => {
+    if (cartCount === 0) return null;
+    const sizeClasses =
+      size === "small"
+        ? "min-w-[16px] h-[16px] text-[10px]"
+        : "min-w-[18px] h-[18px] text-xs";
+    return (
+      <span
+        className={`absolute -top-2 -right-2 flex items-center justify-center px-1 font-semibold text-white bg-pink-500 rounded-full ${sizeClasses} ${bounce ? "smooth-bounce" : ""}`}
+      >
+        {cartCount}
+      </span>
+    );
+  };
 
   return (
     <nav
@@ -77,43 +76,27 @@ export function NavBar() {
           <div className="md:hidden flex items-center gap-4">
             <Link
               href="/shop"
-              className={`flex items-center gap-2 text-gray-600 hover:text-gray-800 p-1 rounded-md transition-colors duration-200 ${
-                resolveIsActive("/shop") ? "bg-pink-100 text-pink-700" : ""
-              }`}
+              className={`p-1 ${isActive("/shop") ? "bg-pink-100 text-pink-700" : "text-gray-600"} rounded-md`}
             >
               <ShoppingBag size={24} />
             </Link>
             <Link
               href="/cart"
-              className={`relative flex items-center gap-2 text-gray-600 hover:text-gray-800 p-1 rounded-md transition-colors duration-200 ${
-                resolveIsActive("/cart") ? "bg-pink-100 text-pink-700" : ""
-              }`}
+              className={`relative p-1 ${isActive("/cart") ? "bg-pink-100 text-pink-700" : "text-gray-600"} rounded-md`}
             >
               <ShoppingCart size={24} />
-              {cartCount > 0 && (
-                <span
-                  className={`absolute -top-2 -right-2 flex items-center justify-center min-w-[18px] h-[18px] px-1 text-xs font-semibold text-white bg-pink-500 rounded-full ${bounce ? "smooth-bounce" : ""}`}
-                >
-                  {cartCount}
-                </span>
-              )}
+              <CartBadge />
             </Link>
             <Link
-              href={user ? "/profile" : "/signin"}
-              className={`flex items-center gap-2 text-gray-600 hover:text-gray-800 p-1 rounded-md transition-colors duration-200 ${
-                resolveIsActive(userLinkTarget)
-                  ? "bg-pink-100 text-pink-700"
-                  : ""
-              }`}
+              href={userPath}
+              className={`p-1 ${showUserActive ? "bg-pink-100 text-pink-700" : "text-gray-600"} rounded-md`}
             >
               <User size={18} />
             </Link>
             <button
               type="button"
               onClick={() => setIsOpen(!isOpen)}
-              className={`transition-transform duration-300 ease-in-out hover:scale-110 ${
-                isOpen ? "rotate-180" : ""
-              }`}
+              className={`transition-transform duration-300 hover:scale-110 ${isOpen ? "rotate-180" : ""}`}
             >
               {isOpen ? <X /> : <Menu />}
             </button>
@@ -121,30 +104,31 @@ export function NavBar() {
 
           {/* Desktop menu */}
           <div className="hidden md:flex space-x-8">
-            <Link href="/" className={desktopLinkClasses("/")}>
+            <Link
+              href="/"
+              className={`flex items-center gap-2 px-3 py-2 text-gray-600 hover:text-gray-800 hover:bg-pink-50 rounded-md transition-colors ${isActive("/") ? "bg-pink-100 text-pink-700" : ""}`.trim()}
+            >
               <Cat size={18} />
               <span>Inicio</span>
             </Link>
-            <Link href="/shop" className={desktopLinkClasses("/shop")}>
+            <Link
+              href="/shop"
+              className={`flex items-center gap-2 px-3 py-2 text-gray-600 hover:text-gray-800 hover:bg-pink-50 rounded-md transition-colors ${isActive("/shop") ? "bg-pink-100 text-pink-700" : ""}`.trim()}
+            >
               <ShoppingBag size={18} />
               <span>Tienda</span>
             </Link>
-            <Link href="/cart" className={desktopLinkClasses("/cart")}>
-              <div className="relative">
-                <ShoppingCart size={18} />
-                {cartCount > 0 && (
-                  <span
-                    className={`absolute -top-2 -right-2 flex items-center justify-center min-w-[16px] h-[16px] px-1 text-[10px] font-semibold text-white bg-pink-500 rounded-full ${bounce ? "smooth-bounce" : ""}`}
-                  >
-                    {cartCount}
-                  </span>
-                )}
-              </div>
+            <Link
+              href="/cart"
+              className={`flex items-center gap-2 px-3 py-2 text-gray-600 hover:text-gray-800 hover:bg-pink-50 rounded-md transition-colors ${isActive("/cart") ? "bg-pink-100 text-pink-700" : ""} relative`.trim()}
+            >
+              <ShoppingCart size={18} />
+              <CartBadge size="small" />
               <span>Carrito</span>
             </Link>
             <Link
-              href={user ? "/profile" : "/signin"}
-              className={desktopLinkClasses(userLinkTarget)}
+              href={userPath}
+              className={`flex items-center gap-2 px-3 py-2 text-gray-600 hover:text-gray-800 hover:bg-pink-50 rounded-md transition-colors ${isActive(user ? "/profile" : "/signin") ? "bg-pink-100 text-pink-700" : ""} ${showUserActive ? "bg-pink-100 text-pink-700" : ""}`.trim()}
             >
               <User size={18} />
               <span>{user ? "Perfil" : "Iniciar sesión"}</span>
@@ -153,44 +137,42 @@ export function NavBar() {
         </div>
 
         {/* Mobile menu */}
-        <div
-          className={`md:hidden transition-all duration-300 ease-in-out transform origin-top ${
-            isOpen ? "opacity-100 scale-y-100" : "opacity-0 scale-y-0 h-0"
-          }`}
-        >
-          <Link
-            href="/"
-            className={mobileLinkClasses("/")}
-            onClick={() => setIsOpen(false)}
-          >
-            <Cat size={18} />
-            <span>Inicio</span>
-          </Link>
-          <Link
-            href="/shop"
-            className={mobileLinkClasses("/shop")}
-            onClick={() => setIsOpen(false)}
-          >
-            <ShoppingBag size={18} />
-            <span>Tienda</span>
-          </Link>
-          <Link
-            href="/cart"
-            className={mobileLinkClasses("/cart")}
-            onClick={() => setIsOpen(false)}
-          >
-            <ShoppingCart size={18} />
-            <span>Carrito{cartCount > 0 ? ` (${cartCount})` : ""}</span>
-          </Link>
-          <Link
-            href={user ? "/profile" : "/signin"}
-            className={mobileLinkClasses(userLinkTarget)}
-            onClick={() => setIsOpen(false)}
-          >
-            <User size={18} />
-            {user ? <span>Perfil</span> : <span>Iniciar sesión</span>}
-          </Link>
-        </div>
+        {isOpen && (
+          <div className="md:hidden mt-4 space-y-2">
+            <Link
+              href="/"
+              className={`flex items-center gap-2 px-3 py-2 text-gray-600 hover:text-gray-800 hover:bg-pink-50 rounded-md transition-colors ${isActive("/") ? "bg-pink-100 text-pink-700" : ""}`.trim()}
+              onClick={() => setIsOpen(false)}
+            >
+              <Cat size={18} />
+              <span>Inicio</span>
+            </Link>
+            <Link
+              href="/shop"
+              className={`flex items-center gap-2 px-3 py-2 text-gray-600 hover:text-gray-800 hover:bg-pink-50 rounded-md transition-colors ${isActive("/shop") ? "bg-pink-100 text-pink-700" : ""}`.trim()}
+              onClick={() => setIsOpen(false)}
+            >
+              <ShoppingBag size={18} />
+              <span>Tienda</span>
+            </Link>
+            <Link
+              href="/cart"
+              className={`flex items-center gap-2 px-3 py-2 text-gray-600 hover:text-gray-800 hover:bg-pink-50 rounded-md transition-colors ${isActive("/cart") ? "bg-pink-100 text-pink-700" : ""}`.trim()}
+              onClick={() => setIsOpen(false)}
+            >
+              <ShoppingCart size={18} />
+              <span>Carrito{cartCount > 0 ? ` (${cartCount})` : ""}</span>
+            </Link>
+            <Link
+              href={userPath}
+              className={`flex items-center gap-2 px-3 py-2 text-gray-600 hover:text-gray-800 hover:bg-pink-50 rounded-md transition-colors ${isActive(user ? "/profile" : "/signin") ? "bg-pink-100 text-pink-700" : ""} ${showUserActive ? "bg-pink-100 text-pink-700" : ""}`.trim()}
+              onClick={() => setIsOpen(false)}
+            >
+              <User size={18} />
+              <span>{user ? "Perfil" : "Iniciar sesión"}</span>
+            </Link>
+          </div>
+        )}
       </div>
     </nav>
   );
