@@ -1,14 +1,20 @@
 import { motion } from "framer-motion";
+import type { ComponentType } from "react";
+import type { QuantityInputProps } from "./QuantityInput";
 import type { Product } from "../types/product";
-import { FloatingArrowUp } from "./FloatingArrowUp";
 import { ProductCard } from "./ProductCard";
 
 interface ProductGridProps {
   products: Product[] | null;
   onAddToCart: (product: Product, quantity: number) => void;
+  QuantityInputComponent?: ComponentType<QuantityInputProps>;
 }
 
-export function ProductGrid({ products, onAddToCart }: ProductGridProps) {
+export function ProductGrid({
+  products,
+  onAddToCart,
+  QuantityInputComponent,
+}: ProductGridProps) {
   return (
     <>
       <motion.div
@@ -28,10 +34,10 @@ export function ProductGrid({ products, onAddToCart }: ProductGridProps) {
             key={product.id}
             product={product}
             onAddToCart={onAddToCart}
+            QuantityInputComponent={QuantityInputComponent}
           />
         ))}
       </motion.div>
-      <FloatingArrowUp />
     </>
   );
 }

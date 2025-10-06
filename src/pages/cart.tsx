@@ -1,5 +1,5 @@
 import { AnimatePresence, motion } from "framer-motion";
-import { Minus, Plus, ShoppingCart, Trash } from "lucide-react";
+import { ShoppingCart, Trash } from "lucide-react";
 import { useState } from "react";
 import { Link } from "wouter";
 import notFoundImage from "@/assets/images/not-found.png";
@@ -8,7 +8,6 @@ import { CONFIRM_ORDER_ACTION } from "@/constants";
 import { useLogUserAction } from "@/hooks/useAuditLog";
 import { useScrollTop } from "@/hooks/useScrollTop";
 import { getCartBreadcrumbs } from "@/lib/breadcrumbs";
-import type { Product } from "@/types/product";
 import { CatAnimation } from "../components/CatAnimation";
 import { Button } from "../components/ui/button";
 import {
@@ -17,7 +16,7 @@ import {
   CardFooter,
   CardHeader,
 } from "../components/ui/card";
-import { Input } from "../components/ui/input";
+import { QuantityInput } from "../components/QuantityInput";
 
 import { useCart } from "../context/CartContext";
 
@@ -52,10 +51,10 @@ const itemVariants = {
 export default function CartPage() {
   const { cart, removeFromCart, addToCart } = useCart();
   const [imageErrors, setImageErrors] = useState<{ [key: string]: boolean }>(
-    {}
+    {},
   );
   const [quantityInputs, setQuantityInputs] = useState<Record<string, string>>(
-    {}
+    {},
   );
   const logUserAction = useLogUserAction();
 
@@ -72,7 +71,6 @@ export default function CartPage() {
         quantity: item.quantity,
       })),
     });
-    // setLocation("/checkout");
   };
 
   const setQuantityInput = (productId: string, value: string) => {
@@ -92,28 +90,6 @@ export default function CartPage() {
       const { [productId]: _, ...rest } = prev;
       return rest;
     });
-  };
-
-  const handleQuantityInputChange = (product: Product, value: string) => {
-    if (value === "") {
-      setQuantityInput(product.id, value);
-      return;
-    }
-
-    const numericValue = Number(value);
-
-    if (!Number.isFinite(numericValue)) {
-      return;
-    }
-
-    if (numericValue <= 0) {
-      clearQuantityInput(product.id);
-      removeFromCart(product.id);
-      return;
-    }
-
-    addToCart(product, numericValue);
-    clearQuantityInput(product.id);
   };
 
   const handleQuantityInputBlur = (productId: string) => {
@@ -193,7 +169,7 @@ export default function CartPage() {
                                 >
                                   $
                                   {(item.product.price * item.quantity).toFixed(
-                                    2
+                                    2,
                                   )}
                                 </motion.span>
                               </span>
@@ -202,61 +178,31 @@ export default function CartPage() {
 
                           <div className="flex items-center gap-2 justify-self-center">
                             <div className="flex w-fit items-stretch [&>input]:flex-1 [&>button]:focus-visible:z-10 [&>button]:focus-visible:relative [&>input]:w-14 has-[select[aria-hidden=true]:last-child]:[&>[data-slot=select-trigger]:last-of-type]:rounded-r-md has-[>[data-slot=button-group]]:gap-2 [&>*:not(:first-child)]:rounded-l-none [&>*:not(:first-child)]:border-l-0 [&>*:not(:last-child)]:rounded-r-none">
-                              <button
-                                data-slot="button"
-                                className="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 size-8"
-                                type="button"
-                                aria-label="Decrement"
-                                onClick={(e) => {
-                                  e.stopPropagation();
-                                  if (item.quantity > 1) {
-                                    addToCart(item.product, item.quantity - 1);
-                                    clearQuantityInput(item.product.id);
-                                  } else if (item.quantity === 1) {
-                                    clearQuantityInput(item.product.id);
-                                    removeFromCart(item.product.id);
-                                  }
-                                }}
-                                tabIndex={-1}
-                              >
-                                <Minus className="size-4" />
-                              </button>
-                              <Input
-                                id={`cart-qty-${item.product.id}`}
-                                type="number"
-                                min={0}
+                              <QuantityInput
                                 value={
                                   quantityInputs[item.product.id] ??
-                                  item.quantity.toString()
+                                  item.quantity
                                 }
-                                onClick={(e) => e.stopPropagation()}
-                                onChange={(e) => {
-                                  handleQuantityInputChange(
-                                    item.product,
-                                    e.target.value
-                                  );
+                                onChange={(val) => {
+                                  if (val === "") {
+                                    setQuantityInput(item.product.id, "");
+                                  } else {
+                                    const num = Number(val);
+                                    if (!Number.isNaN(num)) {
+                                      addToCart(item.product, num);
+                                      clearQuantityInput(item.product.id);
+                                    }
+                                  }
                                 }}
+                                min={0}
+                                max={item.product.stock}
                                 onBlur={() =>
                                   handleQuantityInputBlur(item.product.id)
                                 }
-                                className="file:text-foreground placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground dark:bg-input/30 border-input w-full min-w-0 rounded-md border bg-transparent px-3 py-1 text-base shadow-xs transition-[color,box-shadow] outline-none file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive h-8 font-mono text-center"
-                                style={{ appearance: "textfield" }}
-                                data-slot="input"
-                              />
-                              <button
-                                data-slot="button"
-                                className="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 size-8"
-                                type="button"
-                                aria-label="Increment"
-                                onClick={(e) => {
-                                  e.stopPropagation();
-                                  addToCart(item.product, item.quantity + 1);
-                                  clearQuantityInput(item.product.id);
+                                onEnter={() => {
+                                  // No-op or could trigger checkout, as desired
                                 }}
-                                tabIndex={-1}
-                              >
-                                <Plus className="size-4" />
-                              </button>
+                              />
                             </div>
                           </div>
 
@@ -340,7 +286,7 @@ export default function CartPage() {
                         key={cart.reduce(
                           (acc, item) =>
                             acc + item.product.price * item.quantity,
-                          0
+                          0,
                         )}
                         initial={{ scale: 1, color: "#6b7280" }}
                         animate={{
@@ -354,7 +300,7 @@ export default function CartPage() {
                           .reduce(
                             (acc, item) =>
                               acc + item.product.price * item.quantity,
-                            0
+                            0,
                           )
                           .toFixed(2)}
                       </motion.span>
@@ -374,7 +320,7 @@ export default function CartPage() {
                           .reduce(
                             (acc, item) =>
                               acc + item.product.price * item.quantity,
-                            0
+                            0,
                           )
                           .toFixed(2)}
                       </motion.span>

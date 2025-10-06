@@ -8,11 +8,13 @@ import {
   ShoppingCart,
   Trash2,
 } from "lucide-react";
+import type { ComponentType } from "react";
 import { useEffect, useRef, useState } from "react";
 import { useLocation } from "wouter";
 import notFoundImage from "@/assets/images/not-found.png";
 import { useCart } from "@/context/CartContext";
 import type { Product } from "../types/product";
+import type { QuantityInputProps } from "./QuantityInput";
 import { CardContent, CardFooter, CardHeader } from "./ui/card";
 import { Input } from "./ui/input";
 import { Label } from "./ui/label";
@@ -20,18 +22,36 @@ import { Label } from "./ui/label";
 interface ProductCardProps {
   product: Product;
   onAddToCart: (product: Product, quantity: number) => void;
+  QuantityInputComponent?: ComponentType<QuantityInputProps>;
 }
 
-export function ProductCard({ product, onAddToCart }: ProductCardProps) {
+export function ProductCard({
+  product,
+  onAddToCart,
+  QuantityInputComponent,
+}: ProductCardProps) {
   const [imgSrc, setImgSrc] = useState(product.imageUrl);
   const [, setLocation] = useLocation();
   const { cart } = useCart();
   const { removeFromCart } = useCart();
   const cartItem = cart.find((item) => item.product.id === product.id);
   const quantityInCart = cartItem ? cartItem.quantity : 0;
-  const [quantity, setQuantity] = useState(
+  const quantityInputClasses =
+    "flex w-fit items-stretch [&>input]:flex-1 [&>button]:focus-visible:z-10 [&>button]:focus-visible:relative [&>input]:w-14 has-[select[aria-hidden=true]:last-child]:[&>[data-slot=select-trigger]:last-of-type]:rounded-r-md has-[>[data-slot=button-group]]:gap-2 [&>*:not(:first-child)]:rounded-l-none [&>*:not(:first-child)]:border-l-0 [&>*:not(:last-child)]:rounded-r-none";
+
+  const toNumber = (value: number | string) => {
+    const num = typeof value === "number" ? value : Number(value);
+    return Number.isNaN(num) ? 0 : num;
+  };
+
+  const [quantity, setQuantity] = useState<number | string>(
     quantityInCart > 0 ? quantityInCart : 1
   );
+  const numericQuantity = toNumber(quantity);
+  const clampedQuantity = Math.max(0, numericQuantity);
+  const displayQuantity = quantity === "" ? 0 : clampedQuantity;
+  const isUpdatingCart =
+    quantityInCart > 0 && displayQuantity > 0 && displayQuantity < quantityInCart;
   const [showCatAnimation, setShowCatAnimation] = useState(false);
   const catAnimationTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(
     null
@@ -52,23 +72,37 @@ export function ProductCard({ product, onAddToCart }: ProductCardProps) {
 
   const increaseQuantity = (e: React.MouseEvent) => {
     e.stopPropagation();
-    setQuantity((prev) => prev + 1);
+    setQuantity((prev) => toNumber(prev) + 1);
   };
 
   const decreaseQuantity = (e: React.MouseEvent) => {
     e.stopPropagation();
-    setQuantity((prev) => (prev > 0 ? prev - 1 : 0));
+    setQuantity((prev) => {
+      const current = toNumber(prev);
+      return current > 0 ? current - 1 : 0;
+    });
+  };
+
+  const handleQuantityBlur = () => {
+    if (quantity === "" || numericQuantity < 1) {
+      setQuantity(1);
+    }
   };
 
   const handleAddToCartClick = (e?: React.MouseEvent | React.KeyboardEvent) => {
     if (e && typeof e.stopPropagation === "function") {
       e.stopPropagation();
     }
-    if (quantity === 0) {
+    const rawQuantity = quantity === "" ? 1 : toNumber(quantity);
+    const quantityToAdd = Math.max(0, rawQuantity);
+
+    if (quantityToAdd === 0) {
       removeFromCart(product.id);
+      setQuantity(0);
       return;
     }
-    onAddToCart(product, quantity);
+    onAddToCart(product, quantityToAdd);
+    setQuantity(quantityToAdd);
     setShowCatAnimation(true);
 
     if (catAnimationTimeoutRef.current) {
@@ -140,60 +174,67 @@ export function ProductCard({ product, onAddToCart }: ProductCardProps) {
               Cantidad
             </Label>
             <div className="flex items-center gap-2">
-              <div className="flex w-fit items-stretch [&>input]:flex-1 [&>button]:focus-visible:z-10 [&>button]:focus-visible:relative [&>input]:w-14 has-[select[aria-hidden=true]:last-child]:[&>[data-slot=select-trigger]:last-of-type]:rounded-r-md has-[>[data-slot=button-group]]:gap-2 [&>*:not(:first-child)]:rounded-l-none [&>*:not(:first-child)]:border-l-0 [&>*:not(:last-child)]:rounded-r-none">
-                <Input
+              {QuantityInputComponent ? (
+                <QuantityInputComponent
                   id={`quantity-${product.id}`}
-                  type="number"
-                  min={0}
                   value={quantity}
-                  onClick={(e) => e.stopPropagation()}
-                  onChange={(e) => {
-                    const val = e.target.value;
-                    // Allow empty string for editing
-                    if (val === "") {
-                      setQuantity("");
-                    } else {
-                      const num = Number(val);
-                      if (!Number.isNaN(num)) setQuantity(num);
-                    }
-                  }}
-                  onBlur={() => {
-                    // On blur, enforce minimum value of 1
-                    if (quantity === "" || Number(quantity) < 1) {
-                      setQuantity(1);
-                    }
-                  }}
-                  onKeyDown={(e) => {
-                    if (e.key === "Enter") {
-                      e.preventDefault();
-                      handleAddToCartClick();
-                    }
-                  }}
-                  className="file:text-foreground placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground dark:bg-input/30 border-input  min-w-0 rounded-md border bg-transparent px-3 py-1 text-base shadow-xs transition-[color,box-shadow] outline-none file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive h-8 !w-14 font-mono text-center"
-                  style={{ appearance: "textfield" }}
-                  data-slot="input"
+                  onChange={setQuantity}
+                  min={0}
+                  max={product.stock}
+                  onBlur={handleQuantityBlur}
+                  onEnter={() => handleAddToCartClick()}
+                  className={quantityInputClasses}
                 />
-                <button
-                  data-slot="button"
-                  className="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 size-8"
-                  type="button"
-                  aria-label="Decrement"
-                  onClick={decreaseQuantity}
-                  tabIndex={-1}
-                >
-                  <Minus className="size-4" />
-                </button>
-                <button
-                  data-slot="button"
-                  className="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 size-8"
-                  type="button"
-                  aria-label="Increment"
-                  onClick={increaseQuantity}
-                  tabIndex={-1}
-                >
-                  <Plus className="size-4" />
-                </button>
-              </div>
+              ) : (
+                <div className={quantityInputClasses}>
+                  <Input
+                    id={`quantity-${product.id}`}
+                    type="number"
+                    min={0}
+                    value={quantity}
+                    onClick={(e) => e.stopPropagation()}
+                    onChange={(e) => {
+                      const val = e.target.value;
+                      if (val === "") {
+                        setQuantity("");
+                      } else {
+                        const num = Number(val);
+                        if (!Number.isNaN(num)) setQuantity(num);
+                      }
+                    }}
+                    onBlur={handleQuantityBlur}
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter") {
+                        e.preventDefault();
+                        handleAddToCartClick();
+                      }
+                    }}
+                    className="file:text-foreground placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground dark:bg-input/30 border-input  min-w-0 rounded-md border bg-transparent px-3 py-1 text-base shadow-xs transition-[color,box-shadow] outline-none file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive h-8 !w-14 font-mono text-center"
+                    style={{ appearance: "textfield" }}
+                    data-slot="input"
+                  />
+                  <button
+                    data-slot="button"
+                    className="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 size-8"
+                    type="button"
+                    aria-label="Decrement"
+                    onClick={decreaseQuantity}
+                    tabIndex={-1}
+                  >
+                    <Minus className="size-4" />
+                  </button>
+                  <button
+                    data-slot="button"
+                    className="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 size-8"
+                    type="button"
+                    aria-label="Increment"
+                    onClick={increaseQuantity}
+                    tabIndex={-1}
+                  >
+                    <Plus className="size-4" />
+                  </button>
+                </div>
+              )}
               {quantityInCart > 0 && (
                 <span className="ml-2 px-2 py-1 rounded bg-pink-50 text-pink-600 text-xs font-semibold border border-pink-200">
                   En carrito: {quantityInCart}
@@ -213,11 +254,11 @@ export function ProductCard({ product, onAddToCart }: ProductCardProps) {
               }}
               transition={{ duration: 0.2 }}
             >
-              {quantity === 0 ? (
+              {displayQuantity === 0 ? (
                 <span className="inline-flex items-center">
                   <Trash2 className="w-4 h-4 mr-2" aria-hidden /> Vaciar carrito
                 </span>
-              ) : quantityInCart > 0 && quantity < quantityInCart ? (
+              ) : isUpdatingCart ? (
                 <span className="inline-flex items-center">
                   <RotateCcw className="w-4 h-4 mr-2" aria-hidden /> Actualizar
                   carrito

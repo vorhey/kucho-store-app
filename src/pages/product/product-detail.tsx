@@ -1,13 +1,5 @@
 import { AnimatePresence, motion } from "framer-motion";
-import {
-  ArrowLeft,
-  Cat,
-  Minus,
-  Plus,
-  RotateCcw,
-  ShoppingCart,
-  Trash2,
-} from "lucide-react";
+import { ArrowLeft, Cat, RotateCcw, ShoppingCart, Trash2 } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { Link, useParams } from "wouter";
 import notFoundImage from "@/assets/images/not-found.png";
@@ -17,6 +9,7 @@ import { useCart } from "@/context/CartContext";
 import { products } from "@/data/products";
 import { useScrollTop } from "@/hooks/useScrollTop";
 import { getProductBreadcrumbs } from "@/lib/breadcrumbs";
+import { QuantityInput } from "@/components/QuantityInput";
 
 export default function ProductDetailPage() {
   useScrollTop();
@@ -132,64 +125,17 @@ export default function ProductDetailPage() {
               </label>
               <div className="flex items-center gap-2">
                 <div className="flex w-fit items-stretch [&>input]:flex-1 [&>button]:focus-visible:z-10 [&>button]:focus-visible:relative [&>input]:w-14 has-[select[aria-hidden=true]:last-child]:[&>[data-slot=select-trigger]:last-of-type]:rounded-r-md has-[>[data-slot=button-group]]:gap-2 [&>*:not(:first-child)]:rounded-l-none [&>*:not(:first-child)]:border-l-0 [&>*:not(:last-child)]:rounded-r-none">
-                  <input
-                    id={`quantity-${product.id}`}
-                    type="number"
-                    min={0}
+                  <QuantityInput
                     value={quantity}
-                    onClick={(e) => e.stopPropagation()}
-                    onChange={(e) => {
-                      const val = e.target.value;
-                      if (val === "") setQuantity("");
-                      else {
-                        const num = Number(val);
-                        if (!Number.isNaN(num)) setQuantity(num);
-                      }
-                    }}
+                    onChange={setQuantity}
+                    min={0}
+                    max={product.stock}
                     onBlur={() => {
                       if (quantity === "" || Number(quantity) < 1)
                         setQuantity(1);
                     }}
-                    onKeyDown={(e) => {
-                      if (e.key === "Enter") {
-                        e.preventDefault();
-                        handleAddToCartClick();
-                      }
-                    }}
-                    className="file:text-foreground placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground dark:bg-input/30 border-input  min-w-0 rounded-md border bg-transparent px-3 py-1 text-base shadow-xs transition-[color,box-shadow] outline-none file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive h-8 !w-14 font-mono text-center"
-                    style={{ appearance: "textfield" }}
-                    data-slot="input"
+                    onEnter={handleAddToCartClick}
                   />
-                  <button
-                    data-slot="button"
-                    className="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 size-8"
-                    type="button"
-                    aria-label="Decrement"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      setQuantity((prev) =>
-                        typeof prev === "number" ? Math.max(0, prev - 1) : 0,
-                      );
-                    }}
-                    tabIndex={-1}
-                  >
-                    <Minus className="size-4" />
-                  </button>
-                  <button
-                    data-slot="button"
-                    className="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 size-8"
-                    type="button"
-                    aria-label="Increment"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      setQuantity((prev) =>
-                        typeof prev === "number" ? prev + 1 : 1,
-                      );
-                    }}
-                    tabIndex={-1}
-                  >
-                    <Plus className="size-4" />
-                  </button>
                 </div>
                 {quantityInCart > 0 && (
                   <span className="ml-2 px-2 py-1 rounded bg-pink-50 text-pink-600 text-xs font-semibold border border-pink-200">
