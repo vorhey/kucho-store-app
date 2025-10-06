@@ -12,7 +12,8 @@
     "build": "vite build",
     "preview": "vite preview",
     "serve": "wrangler pages dev dist",
-    "format": "biome format --write && biome check --fix"
+    "format": "biome format --write && biome check --fix",
+    "db:local": "bunx wrangler d1 execute kucho-store-db --local --file=./schema.sql"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.2.2",
