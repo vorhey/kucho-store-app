@@ -38,6 +38,15 @@ export function NavBar() {
       : baseClasses;
   };
 
+  // Desktop nav link classes
+  const desktopLinkClasses = (path: string | string[]) => {
+    const baseClasses =
+      "flex items-center gap-2 text-gray-600 hover:text-gray-800 hover:bg-pink-50 px-3 py-2 rounded-md transition-colors duration-200 relative";
+    return resolveIsActive(path)
+      ? `${baseClasses} bg-pink-100 text-pink-700`
+      : baseClasses;
+  };
+
   const authPaths = [
     "/signin",
     "/signup",
@@ -112,28 +121,15 @@ export function NavBar() {
 
           {/* Desktop menu */}
           <div className="hidden md:flex space-x-8">
-            <Link
-              href="/"
-              className="flex items-center gap-2 text-gray-600 hover:text-gray-800 transition duration-200 ease-in-out relative group"
-            >
+            <Link href="/" className={desktopLinkClasses("/")}>
               <Cat size={18} />
-              <span className="after:content-[''] after:absolute after:w-full after:scale-x-0 after:h-0.5 after:-bottom-1.5 after:left-0 after:bg-stone-500 after:transition-transform after:duration-300 group-hover:after:scale-x-100">
-                Inicio
-              </span>
+              <span>Inicio</span>
             </Link>
-            <Link
-              href="/shop"
-              className="flex items-center gap-2 text-gray-600 hover:text-gray-800 transition duration-200 ease-in-out relative group"
-            >
+            <Link href="/shop" className={desktopLinkClasses("/shop")}>
               <ShoppingBag size={18} />
-              <span className="after:content-[''] after:absolute after:w-full after:scale-x-0 after:h-0.5 after:-bottom-1.5 after:left-0 after:bg-stone-500 after:transition-transform after:duration-300 group-hover:after:scale-x-100">
-                Tienda
-              </span>
+              <span>Tienda</span>
             </Link>
-            <Link
-              href="/cart"
-              className="flex items-center gap-2 text-gray-600 hover:text-gray-800 transition duration-200 ease-in-out relative group"
-            >
+            <Link href="/cart" className={desktopLinkClasses("/cart")}>
               <div className="relative">
                 <ShoppingCart size={18} />
                 {cartCount > 0 && (
@@ -144,16 +140,14 @@ export function NavBar() {
                   </span>
                 )}
               </div>
-              <span className="after:content-[''] after:absolute after:w-full after:scale-x-0 after:h-0.5 after:-bottom-1.5 after:left-0 after:bg-stone-500 after:transition-transform after:duration-300 group-hover:after:scale-x-100">
-                Carrito
-              </span>
+              <span>Carrito</span>
             </Link>
             <Link
               href={user ? "/profile" : "/signin"}
-              className="flex items-center gap-2 text-gray-600 hover:text-gray-800 transition duration-200 ease-in-out relative group"
+              className={desktopLinkClasses(userLinkTarget)}
             >
               <User size={18} />
-              <span className="after:content-[''] after:absolute after:w-full after:scale-x-0 after:h-0.5 after:-bottom-1.5 after:right-1 after:bg-stone-500 after:transition-transform after:duration-300 group-hover:after:scale-x-100"></span>
+              <span>{user ? "Perfil" : "Iniciar sesión"}</span>
             </Link>
           </div>
         </div>
