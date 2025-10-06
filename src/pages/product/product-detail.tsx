@@ -27,11 +27,11 @@ export default function ProductDetailPage() {
   const cartItem = cart.find((item) => item.product.id === id);
   const quantityInCart = cartItem ? cartItem.quantity : 0;
   const [quantity, setQuantity] = useState<number | string>(
-    quantityInCart > 0 ? quantityInCart : 1
+    quantityInCart > 0 ? quantityInCart : 1,
   );
   const [showCatAnimation, setShowCatAnimation] = useState(false);
   const catAnimationTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(
-    null
+    null,
   );
 
   // Sync input value with cart changes
@@ -41,30 +41,22 @@ export default function ProductDetailPage() {
 
   const handleAddToCartClick = (e?: React.MouseEvent | React.KeyboardEvent) => {
     e?.stopPropagation();
-
     const q = typeof quantity === "number" ? quantity : Number(quantity) || 0;
-    if (q === 0) {
-      removeFromCart(product.id);
-      return;
-    }
-
+    if (q === 0) return void removeFromCart(product.id);
     addToCart(product, q);
     setShowCatAnimation(true);
-
-    if (catAnimationTimeoutRef.current) {
+    if (catAnimationTimeoutRef.current)
       clearTimeout(catAnimationTimeoutRef.current);
-    }
-
-    catAnimationTimeoutRef.current = setTimeout(() => {
-      setShowCatAnimation(false);
-    }, 1200);
+    catAnimationTimeoutRef.current = setTimeout(
+      () => setShowCatAnimation(false),
+      1200,
+    );
   };
 
   useEffect(() => {
     return () => {
-      if (catAnimationTimeoutRef.current) {
+      if (catAnimationTimeoutRef.current)
         clearTimeout(catAnimationTimeoutRef.current);
-      }
     };
   }, []);
 
@@ -148,17 +140,15 @@ export default function ProductDetailPage() {
                     onClick={(e) => e.stopPropagation()}
                     onChange={(e) => {
                       const val = e.target.value;
-                      if (val === "") {
-                        setQuantity("");
-                      } else {
+                      if (val === "") setQuantity("");
+                      else {
                         const num = Number(val);
                         if (!Number.isNaN(num)) setQuantity(num);
                       }
                     }}
                     onBlur={() => {
-                      if (quantity === "" || Number(quantity) < 1) {
+                      if (quantity === "" || Number(quantity) < 1)
                         setQuantity(1);
-                      }
                     }}
                     onKeyDown={(e) => {
                       if (e.key === "Enter") {
@@ -178,7 +168,7 @@ export default function ProductDetailPage() {
                     onClick={(e) => {
                       e.stopPropagation();
                       setQuantity((prev) =>
-                        typeof prev === "number" ? Math.max(0, prev - 1) : 0
+                        typeof prev === "number" ? Math.max(0, prev - 1) : 0,
                       );
                     }}
                     tabIndex={-1}
@@ -193,7 +183,7 @@ export default function ProductDetailPage() {
                     onClick={(e) => {
                       e.stopPropagation();
                       setQuantity((prev) =>
-                        typeof prev === "number" ? prev + 1 : 1
+                        typeof prev === "number" ? prev + 1 : 1,
                       );
                     }}
                     tabIndex={-1}
