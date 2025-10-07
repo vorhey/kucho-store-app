@@ -9,7 +9,7 @@ import { Button } from "@/components/ui/button";
 import { useCart } from "@/context/CartContext";
 import { products } from "@/data/products";
 import { useScrollTop } from "@/hooks/useScrollTop";
-import { getProductBreadcrumbs } from "@/lib/breadcrumbs";
+import { BreadcrumbType, getBreadcrumbs } from "@/lib/breadcrumbs";
 
 export default function ProductDetailPage() {
   useScrollTop();
@@ -72,7 +72,11 @@ export default function ProductDetailPage() {
 
   return (
     <div className="container mx-auto px-4 py-8 space-y-6">
-      <Breadcrumbs items={getProductBreadcrumbs(product.name)} />
+      <Breadcrumbs
+        items={getBreadcrumbs(BreadcrumbType.Product, {
+          productName: product.name,
+        })}
+      />
       <Link href="" onClick={handleGoBack}>
         <Button variant="ghost">
           <ArrowLeft className="mr-2 h-4 w-4" />

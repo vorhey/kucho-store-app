@@ -7,7 +7,7 @@ import { Breadcrumbs } from "@/components/Breadcrumbs";
 import { CONFIRM_ORDER_ACTION } from "@/constants";
 import { useLogUserAction } from "@/hooks/useAuditLog";
 import { useScrollTop } from "@/hooks/useScrollTop";
-import { getCartBreadcrumbs } from "@/lib/breadcrumbs";
+import { BreadcrumbType, getBreadcrumbs } from "@/lib/breadcrumbs";
 import { CatAnimation } from "../components/CatAnimation";
 import { QuantityInput } from "../components/QuantityInput";
 import { Button } from "../components/ui/button";
@@ -105,7 +105,7 @@ export default function CartPage() {
   return (
     <div className="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
       <div className="space-y-8">
-        <Breadcrumbs items={getCartBreadcrumbs()} />
+        <Breadcrumbs items={getBreadcrumbs(BreadcrumbType.Cart)} />
         {cart.length === 0 ? (
           <EmptyCart />
         ) : (

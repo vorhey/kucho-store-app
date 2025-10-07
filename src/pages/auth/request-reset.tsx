@@ -5,7 +5,7 @@ import { useLocation } from "wouter";
 import { Breadcrumbs } from "@/components/Breadcrumbs";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { getRequestResetBreadcrumbs } from "@/lib/breadcrumbs";
+import { BreadcrumbType, getBreadcrumbs } from "@/lib/breadcrumbs";
 import { requestPasswordReset } from "@/services/auth";
 import type { RequestPasswordResetData } from "@/types/auth";
 
@@ -42,7 +42,7 @@ export default function RequestResetPage() {
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.4 }}
     >
-      <Breadcrumbs items={getRequestResetBreadcrumbs()} />
+      <Breadcrumbs items={getBreadcrumbs(BreadcrumbType.RequestReset)} />
       <motion.div
         className="bg-white p-8 rounded-lg shadow-md"
         initial={{ scale: 0.95 }}

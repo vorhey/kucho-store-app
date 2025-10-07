@@ -6,7 +6,7 @@ import { Breadcrumbs } from "@/components/Breadcrumbs";
 import { Input } from "@/components/ui/input";
 import { useAuth } from "@/context/AuthContext";
 import { useScrollTop } from "@/hooks/useScrollTop";
-import { getSignUpBreadcrumbs } from "@/lib/breadcrumbs";
+import { BreadcrumbType, getBreadcrumbs } from "@/lib/breadcrumbs";
 import { signIn, signUp } from "@/services/auth";
 import type { SignUpData } from "@/types/auth";
 
@@ -59,7 +59,7 @@ export default function SignUpPage() {
 
   return (
     <div className="container mx-auto px-4 py-6 sm:py-8 max-w-md space-y-6">
-      <Breadcrumbs items={getSignUpBreadcrumbs()} />
+      <Breadcrumbs items={getBreadcrumbs(BreadcrumbType.SignUp)} />
       <motion.div
         className="bg-white p-8 rounded-lg shadow-md"
         variants={containerVariants}

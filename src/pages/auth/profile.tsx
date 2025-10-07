@@ -4,7 +4,7 @@ import { useForm } from "react-hook-form";
 import { Breadcrumbs } from "@/components/Breadcrumbs";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { getProfileBreadcrumbs } from "@/lib/breadcrumbs";
+import { BreadcrumbType, getBreadcrumbs } from "@/lib/breadcrumbs";
 import { updateUserProfile } from "@/services/auth";
 import type { UserProfileData } from "@/types/auth";
 
@@ -55,7 +55,7 @@ export default function ProfilePage() {
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.4 }}
     >
-      <Breadcrumbs items={getProfileBreadcrumbs()} />
+      <Breadcrumbs items={getBreadcrumbs(BreadcrumbType.Profile)} />
       <motion.div
         className="bg-white p-8 rounded-lg shadow-md"
         initial={{ scale: 0.95 }}
