@@ -1,6 +1,6 @@
 import type React from "react";
 import { createContext, useContext, useEffect, useState } from "react";
-import { validateSession } from "@/services/auth";
+import { clearAuthToken, validateSession } from "@/services/auth";
 import type { User } from "@/types/auth";
 
 interface AuthContextType {
@@ -16,13 +16,35 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    validateSession()
-      .then((response) => {
+    let isMounted = true;
+
+    const loadSession = async () => {
+      try {
+        const response = await validateSession();
+        if (!isMounted) return;
+
         if (response.success && response.user) {
           setUser(response.user);
+        } else {
+          clearAuthToken();
+          setUser(null);
         }
-      })
-      .finally(() => setIsLoading(false));
+      } catch {
+        if (!isMounted) return;
+        clearAuthToken();
+        setUser(null);
+      } finally {
+        if (isMounted) {
+          setIsLoading(false);
+        }
+      }
+    };
+
+    loadSession();
+
+    return () => {
+      isMounted = false;
+    };
   }, []);
 
   return (

@@ -7,7 +7,7 @@ import { Input } from "@/components/ui/input";
 import { useAuth } from "@/context/AuthContext";
 import { useScrollTop } from "@/hooks/useScrollTop";
 import { BreadcrumbType, getBreadcrumbs } from "@/lib/breadcrumbs";
-import { signIn } from "@/services/auth";
+import { clearAuthToken, signIn, storeAuthToken } from "@/services/auth";
 import type { SignInData } from "@/types/auth";
 
 export default function SignInPage() {
@@ -21,13 +21,16 @@ export default function SignInPage() {
   const onSubmit = async (data: SignInData) => {
     try {
       const response = await signIn(data);
-      if (response.success && response.user) {
+      if (response.success && response.user && response.token) {
+        storeAuthToken(response.token);
         setUser(response.user);
         setLocation("/");
       } else {
+        clearAuthToken();
         setError(response.message || "Ocurrió un error");
       }
     } catch (_err) {
+      clearAuthToken();
       setError("Ocurrió un error al iniciar sesión");
     }
   };

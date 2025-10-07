@@ -1,39 +1,105 @@
 import { AnimatePresence, motion } from "framer-motion";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { Breadcrumbs } from "@/components/Breadcrumbs";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { BreadcrumbType, getBreadcrumbs } from "@/lib/breadcrumbs";
-import { updateUserProfile } from "@/services/auth";
+import { useAuth } from "@/context/AuthContext";
+import { getUserProfile, updateUserProfile } from "@/services/auth";
 import type { UserProfileData } from "@/types/auth";
 
 export default function ProfilePage() {
   const [error, setError] = useState("");
   const [success, setSuccess] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
+  const [profileLoading, setProfileLoading] = useState(false);
+  const { user, setUser, isLoading } = useAuth();
 
-  // Mock user data - in a real app, this would come from your auth context or API
-  const [userData, setUserData] = useState({
-    name: "Usuario Ejemplo",
-    email: "usuario@ejemplo.com",
-    phone: "+34 612 345 678",
+  const [userData, setUserData] = useState<UserProfileData>({
+    name: "",
+    email: "",
+    phone: "",
   });
 
   const {
     register,
     handleSubmit,
     formState: { errors },
+    reset,
   } = useForm<UserProfileData>({
     defaultValues: userData,
   });
 
+  useEffect(() => {
+    if (!user) return;
+
+    const nextData: UserProfileData = {
+      name: user.name ?? "",
+      email: user.email,
+      phone: "",
+    };
+
+    setUserData(nextData);
+    reset(nextData);
+  }, [user, reset]);
+
+  useEffect(() => {
+    if (user || isLoading) return;
+
+    let isMounted = true;
+
+    const loadProfile = async () => {
+      setProfileLoading(true);
+      try {
+        const response = await getUserProfile();
+        if (!isMounted) return;
+
+        if (response.success && response.user) {
+          setUser(response.user);
+          const nextData: UserProfileData = {
+            name: response.user.name ?? "",
+            email: response.user.email,
+            phone: "",
+          };
+          setUserData(nextData);
+          reset(nextData);
+          setError("");
+        } else if (response.message) {
+          setError(response.message);
+        }
+      } catch (_error) {
+        if (!isMounted) return;
+        setError("Ocurrió un error al cargar el perfil");
+      } finally {
+        if (isMounted) {
+          setProfileLoading(false);
+        }
+      }
+    };
+
+    loadProfile();
+
+    return () => {
+      isMounted = false;
+    };
+  }, [user, isLoading, setUser, reset]);
+
   const onSubmit = async (data: UserProfileData) => {
     try {
+      setError("");
       // In a real app, this would call your API
       const response = await updateUserProfile(data);
       if (response.success) {
         setUserData(data);
+        if (user) {
+          setUser({
+            ...user,
+            name: data.name,
+            email: data.email,
+          });
+        }
+        reset(data);
         setSuccess(true);
         setError("");
         setTimeout(() => {
@@ -71,218 +137,241 @@ export default function ProfilePage() {
           Mi Perfil
         </motion.h1>
 
-        <AnimatePresence mode="wait">
-          {success && (
-            <motion.div
-              className="mb-4 p-2 bg-green-100 text-green-700 rounded"
-              initial={{ opacity: 0, height: 0 }}
-              animate={{ opacity: 1, height: "auto" }}
-              exit={{ opacity: 0, height: 0 }}
-            >
-              Perfil actualizado correctamente
-            </motion.div>
-          )}
-        </AnimatePresence>
-
-        <AnimatePresence mode="wait">
-          {isEditing ? (
-            <motion.form
-              key="edit-form"
-              onSubmit={handleSubmit(onSubmit)}
-              className="space-y-4"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 0.3 }}
-            >
-              <motion.div
-                initial={{ y: 10, opacity: 0 }}
-                animate={{ y: 0, opacity: 1 }}
-                transition={{ delay: 0.1 }}
-              >
-                <label
-                  htmlFor="name"
-                  className="block text-sm font-medium mb-1"
+        {isLoading || profileLoading ? (
+          <motion.p
+            className="text-center text-gray-500"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+          >
+            Cargando perfil...
+          </motion.p>
+        ) : !user ? (
+          <motion.div
+            className="text-center space-y-2"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+          >
+            <p className="text-gray-600">
+              Inicia sesión para ver tu información de perfil.
+            </p>
+            {error && <p className="text-red-500 text-sm">{error}</p>}
+          </motion.div>
+        ) : (
+          <>
+            <AnimatePresence mode="wait">
+              {success && (
+                <motion.div
+                  className="mb-4 p-2 bg-green-100 text-green-700 rounded"
+                  initial={{ opacity: 0, height: 0 }}
+                  animate={{ opacity: 1, height: "auto" }}
+                  exit={{ opacity: 0, height: 0 }}
                 >
-                  Nombre
-                </label>
-                <Input
-                  type="text"
-                  id="name"
-                  {...register("name", {
-                    required: "El nombre es obligatorio",
-                  })}
-                  className="w-full"
-                />
-                <AnimatePresence>
-                  {errors.name && (
-                    <motion.p
-                      className="text-red-500 text-sm mt-1"
-                      initial={{ opacity: 0, y: -10 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      exit={{ opacity: 0, y: -10 }}
-                    >
-                      {errors.name.message}
-                    </motion.p>
-                  )}
-                </AnimatePresence>
-              </motion.div>
+                  Perfil actualizado correctamente
+                </motion.div>
+              )}
+            </AnimatePresence>
 
-              <motion.div
-                initial={{ y: 10, opacity: 0 }}
-                animate={{ y: 0, opacity: 1 }}
-                transition={{ delay: 0.2 }}
-              >
-                <label
-                  htmlFor="email"
-                  className="block text-sm font-medium mb-1"
+            <AnimatePresence mode="wait">
+              {isEditing ? (
+                <motion.form
+                  key="edit-form"
+                  onSubmit={handleSubmit(onSubmit)}
+                  className="space-y-4"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  transition={{ duration: 0.3 }}
                 >
-                  Correo Electrónico
-                </label>
-                <Input
-                  type="email"
-                  id="email"
-                  {...register("email", {
-                    required: "El correo electrónico es obligatorio",
-                    pattern: {
-                      value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
-                      message: "Dirección de correo electrónico inválida",
-                    },
-                  })}
-                  className="w-full"
-                />
-                <AnimatePresence>
-                  {errors.email && (
-                    <motion.p
-                      className="text-red-500 text-sm mt-1"
-                      initial={{ opacity: 0, y: -10 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      exit={{ opacity: 0, y: -10 }}
-                    >
-                      {errors.email.message}
-                    </motion.p>
-                  )}
-                </AnimatePresence>
-              </motion.div>
-
-              <motion.div
-                initial={{ y: 10, opacity: 0 }}
-                animate={{ y: 0, opacity: 1 }}
-                transition={{ delay: 0.3 }}
-              >
-                <label
-                  htmlFor="phone"
-                  className="block text-sm font-medium mb-1"
-                >
-                  Teléfono
-                </label>
-                <Input
-                  id="phone"
-                  type="tel"
-                  {...register("phone")}
-                  className="w-full"
-                />
-              </motion.div>
-
-              <AnimatePresence>
-                {error && (
                   <motion.div
-                    className="text-red-500 text-sm"
-                    initial={{ opacity: 0, y: -10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: -10 }}
-                  >
-                    {error}
+                    initial={{ y: 10, opacity: 0 }}
+                    animate={{ y: 0, opacity: 1 }}
+                    transition={{ delay: 0.1 }}
+                      >
+                    <label
+                      htmlFor="name"
+                      className="block text-sm font-medium mb-1"
+                    >
+                      Nombre
+                    </label>
+                    <Input
+                      type="text"
+                      id="name"
+                      {...register("name", {
+                        required: "El nombre es obligatorio",
+                      })}
+                      className="w-full"
+                    />
+                    <AnimatePresence>
+                      {errors.name && (
+                        <motion.p
+                          className="text-red-500 text-sm mt-1"
+                          initial={{ opacity: 0, y: -10 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          exit={{ opacity: 0, y: -10 }}
+                        >
+                          {errors.name.message}
+                        </motion.p>
+                      )}
+                    </AnimatePresence>
                   </motion.div>
-                )}
-              </AnimatePresence>
 
-              <motion.div
-                className="flex space-x-3"
-                initial={{ y: 10, opacity: 0 }}
-                animate={{ y: 0, opacity: 1 }}
-                transition={{ delay: 0.4 }}
-              >
-                <Button type="submit" className="flex-1">
-                  Guardar Cambios
-                </Button>
-                <Button
-                  type="button"
-                  variant="outline"
-                  onClick={() => setIsEditing(false)}
-                  className="flex-1"
-                >
-                  Cancelar
-                </Button>
-              </motion.div>
-            </motion.form>
-          ) : (
-            <motion.div
-              key="profile-view"
-              className="space-y-4"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 0.3 }}
-            >
-              <motion.div
-                className="border-b pb-3"
-                initial={{ y: 10, opacity: 0 }}
-                animate={{ y: 0, opacity: 1 }}
-                transition={{ delay: 0.1 }}
-              >
-                <p className="text-sm text-gray-500">Nombre</p>
-                <p className="font-medium">{userData.name}</p>
-              </motion.div>
+                  <motion.div
+                    initial={{ y: 10, opacity: 0 }}
+                    animate={{ y: 0, opacity: 1 }}
+                    transition={{ delay: 0.2 }}
+                  >
+                    <label
+                      htmlFor="email"
+                      className="block text-sm font-medium mb-1"
+                    >
+                      Correo Electrónico
+                    </label>
+                    <Input
+                      type="email"
+                      id="email"
+                      {...register("email", {
+                        required: "El correo electrónico es obligatorio",
+                        pattern: {
+                          value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+                          message: "Dirección de correo electrónico inválida",
+                        },
+                      })}
+                      className="w-full"
+                    />
+                    <AnimatePresence>
+                      {errors.email && (
+                        <motion.p
+                          className="text-red-500 text-sm mt-1"
+                          initial={{ opacity: 0, y: -10 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          exit={{ opacity: 0, y: -10 }}
+                        >
+                          {errors.email.message}
+                        </motion.p>
+                      )}
+                    </AnimatePresence>
+                  </motion.div>
 
-              <motion.div
-                className="border-b pb-3"
-                initial={{ y: 10, opacity: 0 }}
-                animate={{ y: 0, opacity: 1 }}
-                transition={{ delay: 0.2 }}
-              >
-                <p className="text-sm text-gray-500">Correo Electrónico</p>
-                <p className="font-medium">{userData.email}</p>
-              </motion.div>
+                  <motion.div
+                    initial={{ y: 10, opacity: 0 }}
+                    animate={{ y: 0, opacity: 1 }}
+                    transition={{ delay: 0.3 }}
+                  >
+                    <label
+                      htmlFor="phone"
+                      className="block text-sm font-medium mb-1"
+                    >
+                      Teléfono
+                    </label>
+                    <Input
+                      id="phone"
+                      type="tel"
+                      {...register("phone")}
+                      className="w-full"
+                    />
+                  </motion.div>
 
-              <motion.div
-                className="border-b pb-3"
-                initial={{ y: 10, opacity: 0 }}
-                animate={{ y: 0, opacity: 1 }}
-                transition={{ delay: 0.3 }}
-              >
-                <p className="text-sm text-gray-500">Teléfono</p>
-                <p className="font-medium">
-                  {userData.phone || "No especificado"}
-                </p>
-              </motion.div>
+                  <AnimatePresence>
+                    {error && (
+                      <motion.div
+                        className="text-red-500 text-sm"
+                        initial={{ opacity: 0, y: -10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: -10 }}
+                      >
+                        {error}
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
 
-              <motion.div
-                initial={{ y: 10, opacity: 0 }}
-                animate={{ y: 0, opacity: 1 }}
-                transition={{ delay: 0.4 }}
-              >
-                <Button onClick={() => setIsEditing(true)} className="w-full">
-                  Editar Perfil
-                </Button>
-              </motion.div>
+                  <motion.div
+                    className="flex space-x-3"
+                    initial={{ y: 10, opacity: 0 }}
+                    animate={{ y: 0, opacity: 1 }}
+                    transition={{ delay: 0.4 }}
+                  >
+                    <Button type="submit" className="flex-1">
+                      Guardar Cambios
+                    </Button>
+                    <Button
+                      type="button"
+                      variant="outline"
+                      onClick={() => setIsEditing(false)}
+                      className="flex-1"
+                    >
+                      Cancelar
+                    </Button>
+                  </motion.div>
+                </motion.form>
+              ) : (
+                <motion.div
+                  key="profile-view"
+                  className="space-y-4"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  transition={{ duration: 0.3 }}
+                    >
+                  <motion.div
+                    className="border-b pb-3"
+                    initial={{ y: 10, opacity: 0 }}
+                    animate={{ y: 0, opacity: 1 }}
+                    transition={{ delay: 0.1 }}
+                  >
+                    <p className="text-sm text-gray-500">Nombre</p>
+                    <p className="font-medium">{userData.name}</p>
+                  </motion.div>
 
-              <motion.div
-                className="mt-4"
-                initial={{ y: 10, opacity: 0 }}
-                animate={{ y: 0, opacity: 1 }}
-                transition={{ delay: 0.5 }}
-              >
-                <a
-                  href="/reset-password"
-                  className="text-blue-500 hover:underline text-sm"
-                >
-                  Cambiar Contraseña
-                </a>
-              </motion.div>
-            </motion.div>
-          )}
-        </AnimatePresence>
+                  <motion.div
+                    className="border-b pb-3"
+                    initial={{ y: 10, opacity: 0 }}
+                    animate={{ y: 0, opacity: 1 }}
+                    transition={{ delay: 0.2 }}
+                  >
+                    <p className="text-sm text-gray-500">Correo Electrónico</p>
+                    <p className="font-medium">{userData.email}</p>
+                  </motion.div>
+
+                  <motion.div
+                    className="border-b pb-3"
+                    initial={{ y: 10, opacity: 0 }}
+                    animate={{ y: 0, opacity: 1 }}
+                    transition={{ delay: 0.3 }}
+                  >
+                    <p className="text-sm text-gray-500">Teléfono</p>
+                    <p className="font-medium">
+                      {userData.phone || "No especificado"}
+                    </p>
+                  </motion.div>
+
+                  <motion.div
+                    initial={{ y: 10, opacity: 0 }}
+                    animate={{ y: 0, opacity: 1 }}
+                    transition={{ delay: 0.4 }}
+                  >
+                    <Button onClick={() => setIsEditing(true)} className="w-full">
+                      Editar Perfil
+                    </Button>
+                  </motion.div>
+
+                  <motion.div
+                    className="mt-4"
+                    initial={{ y: 10, opacity: 0 }}
+                    animate={{ y: 0, opacity: 1 }}
+                    transition={{ delay: 0.5 }}
+                  >
+                    <a
+                      href="/reset-password"
+                      className="text-blue-500 hover:underline text-sm"
+                    >
+                      Cambiar Contraseña
+                    </a>
+                  </motion.div>
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </>
+        )}
       </motion.div>
     </motion.div>
   );
