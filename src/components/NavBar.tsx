@@ -5,6 +5,23 @@ import { useAuth } from "@/context/AuthContext";
 import { useCart } from "@/context/CartContext";
 import { useClickOutside } from "@/hooks/useClickOutside";
 
+function CartBadge({
+  cartCount,
+  bounce,
+}: {
+  cartCount: number;
+  bounce: boolean;
+}) {
+  if (cartCount === 0) return null;
+  return (
+    <span
+      className={`absolute -top-2 -right-2 flex items-center justify-center px-1 font-semibold text-white bg-pink-500 rounded-full min-w-[18px] h-[18px] text-xs ${bounce ? "smooth-bounce" : ""}`}
+    >
+      {cartCount}
+    </span>
+  );
+}
+
 export function NavBar() {
   const [isOpen, setIsOpen] = useState(false);
   const [bounce, setBounce] = useState(false);
@@ -42,21 +59,6 @@ export function NavBar() {
 
   useClickOutside(navRef, () => setIsOpen(false));
 
-  const CartBadge = ({ size = "default" }: { size?: "default" | "small" }) => {
-    if (cartCount === 0) return null;
-    const sizeClasses =
-      size === "small"
-        ? "min-w-[16px] h-[16px] text-[10px]"
-        : "min-w-[18px] h-[18px] text-xs";
-    return (
-      <span
-        className={`absolute -top-2 -right-2 flex items-center justify-center px-1 font-semibold text-white bg-pink-500 rounded-full ${sizeClasses} ${bounce ? "smooth-bounce" : ""}`}
-      >
-        {cartCount}
-      </span>
-    );
-  };
-
   return (
     <nav
       ref={navRef}
@@ -85,13 +87,13 @@ export function NavBar() {
               className={`relative p-1 ${isActive("/cart") ? "bg-pink-100 text-pink-700" : "text-gray-600"} rounded-md`}
             >
               <ShoppingCart size={24} />
-              <CartBadge />
+              <CartBadge cartCount={cartCount} bounce={bounce} />
             </Link>
             <Link
               href={userPath}
               className={`p-1 ${showUserActive ? "bg-pink-100 text-pink-700" : "text-gray-600"} rounded-md`}
             >
-              <User size={18} />
+              <User size={24} />
             </Link>
             <button
               type="button"
@@ -108,29 +110,29 @@ export function NavBar() {
               href="/"
               className={`flex items-center gap-2 px-3 py-2 text-gray-600 hover:text-gray-800 hover:bg-pink-50 rounded-md transition-colors ${isActive("/") ? "bg-pink-100 text-pink-700" : ""}`.trim()}
             >
-              <Cat size={18} />
+              <Cat size={24} />
               <span>Inicio</span>
             </Link>
             <Link
               href="/shop"
               className={`flex items-center gap-2 px-3 py-2 text-gray-600 hover:text-gray-800 hover:bg-pink-50 rounded-md transition-colors ${isActive("/shop") ? "bg-pink-100 text-pink-700" : ""}`.trim()}
             >
-              <ShoppingBag size={18} />
+              <ShoppingBag size={24} />
               <span>Tienda</span>
             </Link>
             <Link
               href="/cart"
               className={`flex items-center gap-2 px-3 py-2 text-gray-600 hover:text-gray-800 hover:bg-pink-50 rounded-md transition-colors ${isActive("/cart") ? "bg-pink-100 text-pink-700" : ""} relative`.trim()}
             >
-              <ShoppingCart size={18} />
-              <CartBadge size="small" />
+              <ShoppingCart size={24} />
+              <CartBadge cartCount={cartCount} bounce={bounce} />
               <span>Carrito</span>
             </Link>
             <Link
               href={userPath}
               className={`flex items-center gap-2 px-3 py-2 text-gray-600 hover:text-gray-800 hover:bg-pink-50 rounded-md transition-colors ${isActive(user ? "/profile" : "/signin") ? "bg-pink-100 text-pink-700" : ""} ${showUserActive ? "bg-pink-100 text-pink-700" : ""}`.trim()}
             >
-              <User size={18} />
+              <User size={24} />
               <span>{user ? "Perfil" : "Iniciar sesión"}</span>
             </Link>
           </div>

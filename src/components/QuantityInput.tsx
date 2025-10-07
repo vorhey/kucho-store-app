@@ -1,5 +1,5 @@
 import { Minus, Plus } from "lucide-react";
-import React from "react";
+import type React from "react";
 
 export type QuantityInputProps = {
   value: number | string;
@@ -25,12 +25,10 @@ export function QuantityInput({
   id,
 }: QuantityInputProps) {
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const val = e.target.value;
-    if (val === "") onChange("");
-    else {
-      const num = Number(val);
-      if (!Number.isNaN(num)) onChange(num);
-    }
+    const { value } = e.target;
+    if (value === "") return onChange("");
+    const num = Number(value);
+    if (!Number.isNaN(num)) onChange(num);
   };
 
   const handleDecrement = (e: React.MouseEvent) => {
@@ -45,7 +43,7 @@ export function QuantityInput({
         ? max
           ? Math.min(max, value + 1)
           : value + 1
-        : min + 1,
+        : min + 1
     );
   };
 

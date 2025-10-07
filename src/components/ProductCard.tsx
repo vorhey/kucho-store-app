@@ -51,7 +51,9 @@ export function ProductCard({
   const clampedQuantity = Math.max(0, numericQuantity);
   const displayQuantity = quantity === "" ? 0 : clampedQuantity;
   const isUpdatingCart =
-    quantityInCart > 0 && displayQuantity > 0 && displayQuantity < quantityInCart;
+    quantityInCart > 0 &&
+    displayQuantity > 0 &&
+    displayQuantity < quantityInCart;
   const [showCatAnimation, setShowCatAnimation] = useState(false);
   const catAnimationTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(
     null

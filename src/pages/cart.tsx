@@ -9,6 +9,7 @@ import { useLogUserAction } from "@/hooks/useAuditLog";
 import { useScrollTop } from "@/hooks/useScrollTop";
 import { getCartBreadcrumbs } from "@/lib/breadcrumbs";
 import { CatAnimation } from "../components/CatAnimation";
+import { QuantityInput } from "../components/QuantityInput";
 import { Button } from "../components/ui/button";
 import {
   Card,
@@ -16,7 +17,6 @@ import {
   CardFooter,
   CardHeader,
 } from "../components/ui/card";
-import { QuantityInput } from "../components/QuantityInput";
 
 import { useCart } from "../context/CartContext";
 
@@ -51,10 +51,10 @@ const itemVariants = {
 export default function CartPage() {
   const { cart, removeFromCart, addToCart } = useCart();
   const [imageErrors, setImageErrors] = useState<{ [key: string]: boolean }>(
-    {},
+    {}
   );
   const [quantityInputs, setQuantityInputs] = useState<Record<string, string>>(
-    {},
+    {}
   );
   const logUserAction = useLogUserAction();
 
@@ -169,7 +169,7 @@ export default function CartPage() {
                                 >
                                   $
                                   {(item.product.price * item.quantity).toFixed(
-                                    2,
+                                    2
                                   )}
                                 </motion.span>
                               </span>
@@ -286,7 +286,7 @@ export default function CartPage() {
                         key={cart.reduce(
                           (acc, item) =>
                             acc + item.product.price * item.quantity,
-                          0,
+                          0
                         )}
                         initial={{ scale: 1, color: "#6b7280" }}
                         animate={{
@@ -300,7 +300,7 @@ export default function CartPage() {
                           .reduce(
                             (acc, item) =>
                               acc + item.product.price * item.quantity,
-                            0,
+                            0
                           )
                           .toFixed(2)}
                       </motion.span>
@@ -320,7 +320,7 @@ export default function CartPage() {
                           .reduce(
                             (acc, item) =>
                               acc + item.product.price * item.quantity,
-                            0,
+                            0
                           )
                           .toFixed(2)}
                       </motion.span>

@@ -1,12 +1,11 @@
 import { useQuery } from "@tanstack/react-query";
 import { Breadcrumbs } from "@/components/Breadcrumbs";
+import { QuantityInput } from "@/components/QuantityInput";
 import { getShopBreadcrumbs } from "@/lib/breadcrumbs";
 import { products } from "@/services/products";
 import { ProductGrid } from "../components/ProductGrid";
 import { useCart } from "../context/CartContext";
 import type { Product } from "../types/product";
-
-import { QuantityInput } from "@/components/QuantityInput";
 
 export default function ShopPage() {
   const { addToCart } = useCart();

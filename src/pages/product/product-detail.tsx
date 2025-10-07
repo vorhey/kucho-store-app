@@ -4,12 +4,12 @@ import { useEffect, useRef, useState } from "react";
 import { Link, useParams } from "wouter";
 import notFoundImage from "@/assets/images/not-found.png";
 import { Breadcrumbs } from "@/components/Breadcrumbs";
+import { QuantityInput } from "@/components/QuantityInput";
 import { Button } from "@/components/ui/button";
 import { useCart } from "@/context/CartContext";
 import { products } from "@/data/products";
 import { useScrollTop } from "@/hooks/useScrollTop";
 import { getProductBreadcrumbs } from "@/lib/breadcrumbs";
-import { QuantityInput } from "@/components/QuantityInput";
 
 export default function ProductDetailPage() {
   useScrollTop();
@@ -20,11 +20,11 @@ export default function ProductDetailPage() {
   const cartItem = cart.find((item) => item.product.id === id);
   const quantityInCart = cartItem ? cartItem.quantity : 0;
   const [quantity, setQuantity] = useState<number | string>(
-    quantityInCart > 0 ? quantityInCart : 1,
+    quantityInCart > 0 ? quantityInCart : 1
   );
   const [showCatAnimation, setShowCatAnimation] = useState(false);
   const catAnimationTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(
-    null,
+    null
   );
 
   // Sync input value with cart changes
@@ -42,7 +42,7 @@ export default function ProductDetailPage() {
       clearTimeout(catAnimationTimeoutRef.current);
     catAnimationTimeoutRef.current = setTimeout(
       () => setShowCatAnimation(false),
-      1200,
+      1200
     );
   };
 
