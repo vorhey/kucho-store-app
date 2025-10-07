@@ -5,6 +5,7 @@ import { useForm } from "react-hook-form";
 import { Breadcrumbs } from "@/components/Breadcrumbs";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Save, X, User, LogOut } from "lucide-react";
 import { useAuth } from "@/context/AuthContext";
 import { BreadcrumbType, getBreadcrumbs } from "@/lib/breadcrumbs";
 import { getUserProfile, updateUserProfile } from "@/services/auth";
@@ -269,9 +270,11 @@ export default function ProfilePage() {
                   >
                     <Button
                       type="submit"
+                      variant="outline"
                       className="flex-1"
                       disabled={isUpdating}
                     >
+                      <Save className="w-4 h-4 mr-2 inline" />
                       {isUpdating ? "Guardando..." : "Guardar Cambios"}
                     </Button>
                     <Button
@@ -280,6 +283,7 @@ export default function ProfilePage() {
                       onClick={() => setIsEditing(false)}
                       className="flex-1"
                     >
+                      <X className="w-4 h-4 mr-2 inline" />
                       Cancelar
                     </Button>
                   </motion.div>
@@ -333,14 +337,18 @@ export default function ProfilePage() {
                   >
                     <Button
                       onClick={() => setIsEditing(true)}
+                      variant="outline"
                       className="w-full"
                     >
+                      <User className="w-4 h-4 mr-2 inline" />
                       Editar Perfil
                     </Button>
                     <Button
                       onClick={signOut}
-                      className="w-full bg-red-500 hover:bg-red-600"
+                      variant="outline"
+                      className="w-full hover:bg-red-600"
                     >
+                      <LogOut className="w-4 h-4 mr-2 inline" />
                       Cerrar Sesión
                     </Button>
                   </motion.div>
