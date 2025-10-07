@@ -1,25 +1,61 @@
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { AnimatePresence, motion } from "framer-motion";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { Breadcrumbs } from "@/components/Breadcrumbs";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { BreadcrumbType, getBreadcrumbs } from "@/lib/breadcrumbs";
 import { useAuth } from "@/context/AuthContext";
+import { BreadcrumbType, getBreadcrumbs } from "@/lib/breadcrumbs";
 import { getUserProfile, updateUserProfile } from "@/services/auth";
 import type { UserProfileData } from "@/types/auth";
 
 export default function ProfilePage() {
-  const [error, setError] = useState("");
-  const [success, setSuccess] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
-  const [profileLoading, setProfileLoading] = useState(false);
-  const { user, setUser, isLoading } = useAuth();
+  const { user, setUser, isLoading: isAuthLoading, signOut } = useAuth();
+  const queryClient = useQueryClient();
 
-  const [userData, setUserData] = useState<UserProfileData>({
-    name: "",
-    email: "",
-    phone: "",
+  const {
+    data: profileData,
+    isLoading: isProfileLoading,
+    error: profileError,
+  } = useQuery({
+    queryKey: ["userProfile"],
+    queryFn: async () => {
+      const response = await getUserProfile();
+      if (response.success && response.user) {
+        setUser(response.user);
+        return response.user;
+      }
+      throw new Error(response.message || "Error fetching profile");
+    },
+    enabled: !user && !isAuthLoading, // Only fetch if no user in context
+  });
+
+  const {
+    mutate,
+    isPending: isUpdating,
+    isSuccess: isUpdateSuccess,
+    error: updateError,
+  } = useMutation({
+    mutationFn: updateUserProfile,
+    onSuccess: (_data, variables) => {
+      queryClient.setQueryData(["userProfile"], (oldData: UserProfileData) => {
+        return { ...oldData, ...variables };
+      });
+
+      if (user) {
+        setUser({
+          ...user,
+          name: variables.name,
+          email: variables.email,
+        });
+      }
+
+      setTimeout(() => {
+        setIsEditing(false);
+      }, 2000);
+    },
   });
 
   const {
@@ -28,91 +64,30 @@ export default function ProfilePage() {
     formState: { errors },
     reset,
   } = useForm<UserProfileData>({
-    defaultValues: userData,
+    defaultValues: {
+      name: "",
+      email: "",
+      phone: "",
+    },
   });
 
-  useEffect(() => {
-    if (!user) return;
-
-    const nextData: UserProfileData = {
-      name: user.name ?? "",
-      email: user.email,
-      phone: "",
-    };
-
-    setUserData(nextData);
-    reset(nextData);
-  }, [user, reset]);
+  const userData = user || profileData;
 
   useEffect(() => {
-    if (user || isLoading) return;
-
-    let isMounted = true;
-
-    const loadProfile = async () => {
-      setProfileLoading(true);
-      try {
-        const response = await getUserProfile();
-        if (!isMounted) return;
-
-        if (response.success && response.user) {
-          setUser(response.user);
-          const nextData: UserProfileData = {
-            name: response.user.name ?? "",
-            email: response.user.email,
-            phone: "",
-          };
-          setUserData(nextData);
-          reset(nextData);
-          setError("");
-        } else if (response.message) {
-          setError(response.message);
-        }
-      } catch (_error) {
-        if (!isMounted) return;
-        setError("Ocurrió un error al cargar el perfil");
-      } finally {
-        if (isMounted) {
-          setProfileLoading(false);
-        }
-      }
-    };
-
-    loadProfile();
-
-    return () => {
-      isMounted = false;
-    };
-  }, [user, isLoading, setUser, reset]);
-
-  const onSubmit = async (data: UserProfileData) => {
-    try {
-      setError("");
-      // In a real app, this would call your API
-      const response = await updateUserProfile(data);
-      if (response.success) {
-        setUserData(data);
-        if (user) {
-          setUser({
-            ...user,
-            name: data.name,
-            email: data.email,
-          });
-        }
-        reset(data);
-        setSuccess(true);
-        setError("");
-        setTimeout(() => {
-          setSuccess(false);
-          setIsEditing(false);
-        }, 2000);
-      } else {
-        setError(response.message || "Ocurrió un error");
-      }
-    } catch (_err) {
-      setError("Ocurrió un error al actualizar el perfil");
+    if (userData) {
+      reset({
+        name: userData.name ?? "",
+        email: userData.email,
+        phone: "",
+      });
     }
+  }, [userData, reset]);
+
+  const onSubmit = (data: UserProfileData) => {
+    mutate(data);
   };
+
+  const isLoading = isAuthLoading || isProfileLoading;
 
   return (
     <motion.div
@@ -137,7 +112,7 @@ export default function ProfilePage() {
           Mi Perfil
         </motion.h1>
 
-        {isLoading || profileLoading ? (
+        {isLoading ? (
           <motion.p
             className="text-center text-gray-500"
             initial={{ opacity: 0 }}
@@ -145,7 +120,7 @@ export default function ProfilePage() {
           >
             Cargando perfil...
           </motion.p>
-        ) : !user ? (
+        ) : !userData ? (
           <motion.div
             className="text-center space-y-2"
             initial={{ opacity: 0 }}
@@ -154,12 +129,14 @@ export default function ProfilePage() {
             <p className="text-gray-600">
               Inicia sesión para ver tu información de perfil.
             </p>
-            {error && <p className="text-red-500 text-sm">{error}</p>}
+            {profileError && (
+              <p className="text-red-500 text-sm">{profileError.message}</p>
+            )}
           </motion.div>
         ) : (
           <>
             <AnimatePresence mode="wait">
-              {success && (
+              {isUpdateSuccess && (
                 <motion.div
                   className="mb-4 p-2 bg-green-100 text-green-700 rounded"
                   initial={{ opacity: 0, height: 0 }}
@@ -186,7 +163,7 @@ export default function ProfilePage() {
                     initial={{ y: 10, opacity: 0 }}
                     animate={{ y: 0, opacity: 1 }}
                     transition={{ delay: 0.1 }}
-                      >
+                  >
                     <label
                       htmlFor="name"
                       className="block text-sm font-medium mb-1"
@@ -272,14 +249,14 @@ export default function ProfilePage() {
                   </motion.div>
 
                   <AnimatePresence>
-                    {error && (
+                    {updateError && (
                       <motion.div
                         className="text-red-500 text-sm"
                         initial={{ opacity: 0, y: -10 }}
                         animate={{ opacity: 1, y: 0 }}
                         exit={{ opacity: 0, y: -10 }}
                       >
-                        {error}
+                        {updateError.message}
                       </motion.div>
                     )}
                   </AnimatePresence>
@@ -290,8 +267,12 @@ export default function ProfilePage() {
                     animate={{ y: 0, opacity: 1 }}
                     transition={{ delay: 0.4 }}
                   >
-                    <Button type="submit" className="flex-1">
-                      Guardar Cambios
+                    <Button
+                      type="submit"
+                      className="flex-1"
+                      disabled={isUpdating}
+                    >
+                      {isUpdating ? "Guardando..." : "Guardar Cambios"}
                     </Button>
                     <Button
                       type="button"
@@ -311,7 +292,7 @@ export default function ProfilePage() {
                   animate={{ opacity: 1 }}
                   exit={{ opacity: 0 }}
                   transition={{ duration: 0.3 }}
-                    >
+                >
                   <motion.div
                     className="border-b pb-3"
                     initial={{ y: 10, opacity: 0 }}
@@ -345,12 +326,22 @@ export default function ProfilePage() {
                   </motion.div>
 
                   <motion.div
+                    className="flex space-x-3"
                     initial={{ y: 10, opacity: 0 }}
                     animate={{ y: 0, opacity: 1 }}
                     transition={{ delay: 0.4 }}
                   >
-                    <Button onClick={() => setIsEditing(true)} className="w-full">
+                    <Button
+                      onClick={() => setIsEditing(true)}
+                      className="w-full"
+                    >
                       Editar Perfil
+                    </Button>
+                    <Button
+                      onClick={signOut}
+                      className="w-full bg-red-500 hover:bg-red-600"
+                    >
+                      Cerrar Sesión
                     </Button>
                   </motion.div>
 

@@ -22,7 +22,7 @@ export async function onRequest({
     if (!authorization?.startsWith("Bearer ")) {
       return Response.json(
         { success: false, message: "Unauthorized" },
-        { status: 401 },
+        { status: 401 }
       );
     }
 
@@ -43,7 +43,7 @@ export async function onRequest({
     } catch {
       return Response.json(
         { success: false, message: "Invalid token" },
-        { status: 401 },
+        { status: 401 }
       );
     }
 
@@ -58,7 +58,7 @@ export async function onRequest({
     if (!user) {
       return Response.json(
         { success: false, message: "User not found" },
-        { status: 404 },
+        { status: 404 }
       );
     }
 
@@ -75,7 +75,7 @@ export async function onRequest({
       error instanceof Error ? error.message : "Failed to load user profile";
     return Response.json(
       { success: false, message: message || "Failed to load user profile" },
-      { status: 500 },
+      { status: 500 }
     );
   }
 }

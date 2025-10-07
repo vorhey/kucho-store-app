@@ -36,7 +36,7 @@ interface BreadcrumbOptions {
 
 export function getBreadcrumbs(
   type: BreadcrumbType,
-  options?: BreadcrumbOptions,
+  options?: BreadcrumbOptions
 ): BreadcrumbItem[] {
   switch (type) {
     case BreadcrumbType.Shop:
